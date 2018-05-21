@@ -25,6 +25,7 @@ This new password can then be used to open a standard ROS P12 file.
 // The password on the P12 is not the same as the password entered by the customer. It is in fact the MD5 hash of that password, followed by the Base64-encoding of the resultant bytes. To calculate the hashed password, follow these steps:
 
 // First get the bytes of the original password, assuming a "Latin-1" encoding:
+/*
 var byteBuffer = [];
 const password = 'Password123'; // af4eb226
 var buffer1 = new Buffer(password, 'latin1');
@@ -33,18 +34,33 @@ for (var i = 0; i < buffer1.length; i++) {
 }
 
 console.log(byteBuffer);
+*/
+
+var byteArray = [];
+const password = 'Password123'; // af4eb226
+var buffer = new Buffer(password, 'latin1');
+for (var i = 0; i < buffer.length; i++) {
+  byteArray.push(buffer[i]);
+}
+
+console.log(byteArray);
 
 // Then get the MD5 hash of these bytes
-var md5Buffer = [];
-var buffer2 = new Buffer(byteBuffer, 'latin1');
-for (var i = 0; i < buffer2.length; i++) {
-  md5Buffer.push(md5(md5Buffer[i]));
+
+console.log(CryptoJS.md5.encrypt('Password123'));
+
+CryptoJS.md5.H;
+
+for (var i = 0; i < byteArray.length; i++) {
+  console.log(byteArray[i]);
+  console.log(md5(byteArray[i]));
 }
+
 //var md5Buffer = hasha(byteBuffer, { encoding: 'latin1', algorithm: 'md5' });
 
 //var md5Buffer = CryptoJS.Buffer.md5Buffer(byteBuffer);
 
-console.log(md5Buffer);
+//console.log(md5Buffer);
 
 /*
 
