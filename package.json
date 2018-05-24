@@ -24,7 +24,14 @@
     "buffer": "^5.1.0",
     "express": "^4.16.3",
     "express-openapi": "^1.6.2",
+<<<<<<< HEAD
+    "hasha": "^3.0.0",
+    "md5": "^2.2.1",
+    "mongoose": "^5.1.1",
+    "node-forge": "^0.7.5"
+=======
     "mongoose": "^5.1.1"
+>>>>>>> 9d16571142aea337434e239c0e2d2748e9643ba0
   },
   "devDependencies": {
     "nodemon": "^1.17.4"
