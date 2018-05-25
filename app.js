@@ -31,6 +31,8 @@ function extractPrivateKey(pwd) {
   return privateKeyPem;
 }
 
+var testcomment = 'testcomment';
+
 var password = '5fd93c74';
 // Then get the MD5 hash of these bytes
 var hashed = hex2a(md5(password)); // md5 src: https://stackoverflow.com/a/33486055/7519287
