@@ -3,43 +3,31 @@ const btoa = require('btoa');
 var forge = require('node-forge');
 var fs = require('fs');
 
-
-
 // Use the node crypto module to get the md5 hash of the password
-
 
 /* NOTE: The above code has achieved the same as the functions commented out below */
 
-
-// src: https://stackoverflow.com/a/3745677/3181933
-function hex2a(hexx) {
-  var hex = hexx.toString(); //force conversion
-  var str = '';
-  for (var i = 0; i < hex.length; i += 2)
-    str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
-  return str;
-}
 // scr: https://stackoverflow.com/questions/37833952/getting-the-private-key-from-p12-file-using-javascript
 function extractPrivateKey(pwd) {
   var keyFile = fs.readFileSync('digital-certs/999963665.p12');
   var keyBase64 = keyFile.toString('base64');
-  
+
   var p12Der = forge.util.decode64(keyBase64);
 
   var p12Asn1 = forge.asn1.fromDer(p12Der);
   var p12 = forge.pkcs12.pkcs12FromAsn1(p12Asn1, pwd);
   //https://stackoverflow.com/questions/17182848/best-approch-to-decode-the-pkcs12-file-and-get-the-encrypted-private-key-from-it
-   // get bags by type
-   var certBags = p12.getBags({bagType: forge.pki.oids.certBag});
-   var pkeyBags = p12.getBags({bagType: forge.pki.oids.pkcs8ShroudedKeyBag});
-// fetching certBag
-var certBag = certBags[forge.pki.oids.certBag][0];
-// fetching keyBag
-var keybag = pkeyBags[forge.pki.oids.pkcs8ShroudedKeyBag][0];
-// generate pem from private key
-var privateKeyPem = forge.pki.privateKeyToPem(keybag.key);
-// generate pem from cert
-var certificate = forge.pki.certificateToPem(certBag.cert);
+  // get bags by type
+  var certBags = p12.getBags({ bagType: forge.pki.oids.certBag });
+  var pkeyBags = p12.getBags({ bagType: forge.pki.oids.pkcs8ShroudedKeyBag });
+  // fetching certBag
+  var certBag = certBags[forge.pki.oids.certBag][0];
+  // fetching keyBag
+  var keybag = pkeyBags[forge.pki.oids.pkcs8ShroudedKeyBag][0];
+  // generate pem from private key
+  var privateKeyPem = forge.pki.privateKeyToPem(keybag.key);
+  // generate pem from cert
+  var certificate = forge.pki.certificateToPem(certBag.cert);
   return privateKeyPem;
 }
 
@@ -50,10 +38,9 @@ console.log(btoa(hashed));
 
 var pk = extractPrivateKey(btoa(hashed));
 
-
 console.log(pk);
 
-
+// src: https://stackoverflow.com/a/3745677/3181933
 function hex2a(hexx) {
   var hex = hexx.toString(); //force conversion
   var str = '';
@@ -61,12 +48,3 @@ function hex2a(hexx) {
     str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
   return str;
 }
-
-function getHashedPassword(password) {
-  // Get the MD5 hash of these bytes
-  var hashed = hex2a(md5(password)); // md5 src: https://stackoverflow.com/a/33486055/7519287
-  return btoa(hex2a(md5(password)));
-}
-
-module.exports = getHashedPassword;
-
