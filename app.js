@@ -1,31 +1,16 @@
-<<<<<<< HEAD
 const md5 = require('md5');
 const btoa = require('btoa');
 var forge = require('node-forge');
 var fs = require('fs');
-/*
-const getHashedPassword = require('./cryptography/getHashedPassword')
-  .getHashedPassword;
-=======
-const crypto = require('crypto');
 
-var password = 'Password123';
->>>>>>> 9d16571142aea337434e239c0e2d2748e9643ba0
 
-console.log(`password: ${password}`);
 
 // Use the node crypto module to get the md5 hash of the password
 
-var hashedPassword = crypto
-  .createHash('md5')
-  .update(password)
-  .digest('base64');
-
-console.log(`hashed: ${hashedPassword}`);
 
 /* NOTE: The above code has achieved the same as the functions commented out below */
 
-/*
+
 // src: https://stackoverflow.com/a/3745677/3181933
 function hex2a(hexx) {
   var hex = hexx.toString(); //force conversion
@@ -58,7 +43,6 @@ var certificate = forge.pki.certificateToPem(certBag.cert);
   return privateKeyPem;
 }
 
-<<<<<<< HEAD
 var password = '5fd93c74';
 // Then get the MD5 hash of these bytes
 var hashed = hex2a(md5(password)); // md5 src: https://stackoverflow.com/a/33486055/7519287
@@ -69,14 +53,7 @@ var pk = extractPrivateKey(btoa(hashed));
 
 console.log(pk);
 
-/*
-=======
-// Then get the MD5 hash of these bytes
-// var hashed = hex2a(md5(password)); // md5 src: https://stackoverflow.com/a/33486055/7519287
 
-// var hashed = console.log(btoa(hashed));
-
->>>>>>> 9d16571142aea337434e239c0e2d2748e9643ba0
 function hex2a(hexx) {
   var hex = hexx.toString(); //force conversion
   var str = '';
@@ -92,4 +69,4 @@ function getHashedPassword(password) {
 }
 
 module.exports = getHashedPassword;
- */
+
