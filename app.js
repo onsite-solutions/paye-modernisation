@@ -3,10 +3,6 @@ const btoa = require('btoa');
 var forge = require('node-forge');
 var fs = require('fs');
 
-// Use the node crypto module to get the md5 hash of the password
-
-/* NOTE: The above code has achieved the same as the functions commented out below */
-
 // scr: https://stackoverflow.com/questions/37833952/getting-the-private-key-from-p12-file-using-javascript
 function extractPrivateKey(pwd) {
   var keyFile = fs.readFileSync('digital-certs/999963665.p12');
@@ -30,8 +26,6 @@ function extractPrivateKey(pwd) {
   var certificate = forge.pki.certificateToPem(certBag.cert);
   return privateKeyPem;
 }
-
-var testcomment = 'testcomment';
 
 var password = '5fd93c74';
 // Then get the MD5 hash of these bytes
