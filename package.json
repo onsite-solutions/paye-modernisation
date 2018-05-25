@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mikeigoe/paye-modernisation.git"
+    "url": "git+https://github.com/onsite-solutions/paye-modernisation.git"
   },
-  "author": "Mike Igoe",
+  "author": "OSS",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/mikeigoe/paye-modernisation/issues"
+    "url": "https://github.com/onsite-solutions/paye-modernisation/issues"
   },
-  "homepage": "https://github.com/mikeigoe/paye-modernisation#readme",
+  "homepage": "https://github.com/onsite-solutions/paye-modernisation#readme",
   "dependencies": {
     "atob": "^2.1.1",
     "btoa": "^1.2.1",
