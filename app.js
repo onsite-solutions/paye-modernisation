@@ -22,30 +22,31 @@ www.ros.ie (is this the live host? )
 */
 
 // Signature Header Components
-var requestTarget;
-var host;
-var date;
-var digest; // Mandatory for POST requests
-var contentType; // Not mandatory per ROS, but is included in example from ROS
-// var xHttpMethodOverride // See ROS docs on this, it might be required later
 
-// Set the Header component values
-
-//https://softwaretest.ros.ie/paye-employers/v1/rest/rpn/{employerRegistrationNumber}/{taxYear}
-
-requestTarget = getRequestTarget('', 2018);
-host = 'www.ros.ie';
-
-console.log(requestTarget);
-console.log(host);
+var header = {};
+var signatureString; // string to be signed consists of all the above header fields
+var signature;
 
 // Fetch the digital certificate from the certs array
 
 var cert = certs.find(c => c.id == '999963666'); // or 999963665
 
-console.log(cert.id);
-console.log(cert.epn);
-console.log(cert.password);
+console.log(cert.id + ' ' + cert.epn);
+
+// Set the Header component values
+
+//https://softwaretest.ros.ie/paye-employers/v1/rest/rpn/{employerRegistrationNumber}/{taxYear}
+
+header.requestTarget = getRequestTarget(cert.epn, 2018);
+header.host = 'www.ros.ie';
+header.date = new Date().toUTCString();
+header.contentType = 'application/json;charset=UTF-8';
+header.digest = ''; // How to get this?
+
+signatureString = getSignatureString(header);
+
+// Logging Header component values
+console.log(signatureString);
 
 // Get the private key from the cert
 
@@ -85,6 +86,26 @@ function extractPrivateKey(pwd, certId) {
 function getRequestTarget(epn, taxYear) {
   // 'post /v1/rest/rpn/{employerRegistrationNumber}/{taxYear}'
   return 'post /v1/rest/rpn/' + epn + '/' + taxYear;
+}
+
+function getSignatureString(hdr) {
+  hdr.requestTarget = '(request-target): ' + hdr.requestTarget;
+  hdr.host = 'Host: ' + hdr.host;
+  hdr.date = 'Date: ' + hdr.date;
+  hdr.contentType = 'Content-Type: ' + hdr.contentType;
+  hdr.digest = 'Digest: ' + hdr.digest;
+
+  return (
+    hdr.requestTarget +
+    '\n' +
+    hdr.host +
+    '\n' +
+    hdr.date +
+    '\n' +
+    hdr.contentType +
+    '\n' +
+    hdr.digest
+  );
 }
 
 // src: https://stackoverflow.com/a/3745677/3181933
