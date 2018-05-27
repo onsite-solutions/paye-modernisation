@@ -1,12 +1,16 @@
-export const Certs = [
+const Certs = [
   {
-    name: 'PIT Access',
-    fileName: '999963666.p12',
-    password: '01e06536'
+    id: 999963665,
+    epn: '8000135UH',
+    name: 'Fake company',
+    password: '5fd93c74'
   },
   {
+    id: 999963666,
+    epn: '8000135UH',
     name: 'Fake company',
-    fileName: '999963666.p12',
     password: 'af4eb226'
   }
 ];
+
+module.exports = Certs;
