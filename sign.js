@@ -2,6 +2,8 @@ const md5 = require('md5');
 const btoa = require('btoa');
 var forge = require('node-forge');
 var fs = require('fs');
+var crypto = require('crypto');
+const constants = require('constants');
 
 // scr: http://stackoverflow.com/questions/37833952/getting-the-private-key-from-p12-file-using-javascript
 function extractPrivateKey(pwd, certId) {
@@ -76,7 +78,13 @@ function getSigningString(header) {
   return result;
 }
 
-function getHttpSignatureHeader(signingString, pk, publicKey, cert) {
+function getHttpSignatureHeader(
+  signingString,
+  privateKey,
+  publicKey,
+  cert,
+  pwd
+) {
   // keyId
   var result = 'Signature: keyId="' + forge.util.encode64(publicKey) + '",';
   // algorithm
@@ -85,6 +93,18 @@ function getHttpSignatureHeader(signingString, pk, publicKey, cert) {
   result += 'headers="(request-target) host date",';
   //result += 'headers="(request-target) host date digest",'
   // signature
+
+  // var signature = crypto.privateEncrypt(
+  //   privateKey,
+  //   new Buffer(signingString, 'base64')
+  // );
+
+  // var key = publicKey.toString('base64');
+  // var sign = crypto.createSign('RSA-SHA256');
+  // sign.update(signingString);
+  // var signature = sign.sign(key, pwd);
+
+  result += 'signature="' + signature + '"';
 
   return result;
 }

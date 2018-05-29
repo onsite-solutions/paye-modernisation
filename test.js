@@ -71,30 +71,30 @@ var headers = {
 
 signingString = sign.getSigningString(headers);
 
-console.log(signingString);
-
 // Get the MD5 hash of the password
 var hashedPwd = sign.getMd5Hash(cert.password);
 
 // Get the private key from the cert
-var pk = sign.extractPrivateKey(hashedPwd, cert.id);
+
+var privateKey = sign.extractPrivateKey(hashedPwd, cert.id);
 
 // Get the public key from the cert
 
 var publicKey = sign.extractPublicKey(hashedPwd, cert.id);
 
-console.log(publicKey);
-
 // Get the HTTP Signature Header
 
 var signatureHeader = sign.getHttpSignatureHeader(
   signingString,
-  pk,
+  privateKey,
   publicKey,
-  cert
+  cert,
+  hashedPwd
 );
 
-console.log(signatureHeader);
+headers.signature = signatureHeader;
+
+console.log(headers);
 
 // md5 src: https://stackoverflow.com/a/33486055/7519287
 
@@ -107,7 +107,7 @@ var options = {
 };
 
 // 'https://softwaretest.ros.ie/paye-employers/v1/rest/rpn/8000135UH/2018'
-/* uncomment this for testing, don't want to send request to revenue on every save
+//* uncomment this for testing, don't want to send request to revenue on every save
 https
   .get(options, res => {
     let data = '';
@@ -126,7 +126,7 @@ https
     console.log('Error: ' + err.message);
   });
 
-*/
+/*/
 
 /*
 var y = https.request('https://softwaretest.ros.ie/paye-employers/v1/rest/rpn/8000135UH/2018', function(res){
