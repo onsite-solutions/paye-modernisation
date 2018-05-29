@@ -3,11 +3,7 @@ const btoa = require('btoa');
 var forge = require('node-forge');
 var fs = require('fs');
 var certs = require('./digital-certs/certs');
-<<<<<<< HEAD
-const https = require('https');
-=======
 var https = require('https');
->>>>>>> 0c14aa0e433e76af262c9676be37dbdad295dce5
 
 /*
 Private key is extracted. 
@@ -48,7 +44,7 @@ var cert = certs.find(c => c.id == '999963666'); // or 999963665
 
 //HTTP://softwaretest.ros.ie/paye-employers/v1/rest/rpn/{employerRegistrationNumber}/{taxYear}
 
-<<<<<<< HEAD
+
 header.requestTarget = "/paye-employers/v1/rest/rpn/" + getRequestTarget(cert.epn, 2018);
 header.path = header.requestTarget;
 console.log(header.path);
@@ -59,7 +55,7 @@ header.protocol = 'https:';
 header.method = 'GET';
 
 header.digest = ''; // How to get this?
-=======
+
 //https://softwaretest.ros.ie/paye-employers/v1/rest/rpn/{employerRegistrationNumber}/{taxYear}
 
 https
@@ -88,7 +84,7 @@ header.requestTarget = getRequestTarget(cert.epn, 2018);
 header.host = 'https://softwaretest.ros.ie';
 header.date = new Date().toUTCString();
 header.contentType = 'application/json;charset=UTF-8';
->>>>>>> 0c14aa0e433e76af262c9676be37dbdad295dce5
+
 
 if (header.method == 'GET') {
   // Digest is derived from the payload, only applies to requests of type POST
@@ -105,12 +101,8 @@ console.log(signingString);
 // Get the private key from the cert
 
 // Get the MD5 hash of the password
-<<<<<<< HEAD
-var hashed = btoa(hex2a(md5(cert.password))); // md5 src: http://stackoverflow.com/a/33486055/7519287
-=======
 var hashedPwd = btoa(hex2a(md5(cert.password)));
 // md5 src: https://stackoverflow.com/a/33486055/7519287
->>>>>>> 0c14aa0e433e76af262c9676be37dbdad295dce5
 
 // console.log(hashed);
 
@@ -175,10 +167,6 @@ function extractPrivateKey(pwd, certId) {
 }
 
 function getRequestTarget(epn, taxYear) {
-<<<<<<< HEAD
-  // 'post /v1/rest/rpn/{employerRegistrationNumber}/{taxYear}'
-  return epn + '/' + taxYear;
-=======
   // 'get /v1/rest/rpn/{employerRegistrationNumber}/{taxYear}'
   return 'get /v1/rest/rpn/' + epn + '/' + taxYear;
 }
@@ -197,7 +185,6 @@ function getSigningString(hdr) {
   }
 
   return lines.join('\n');
->>>>>>> 0c14aa0e433e76af262c9676be37dbdad295dce5
 }
 
 function getHttpSignatureHeader(signingString) {
