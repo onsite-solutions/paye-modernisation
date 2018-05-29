@@ -94,17 +94,14 @@ function getHttpSignatureHeader(
   //result += 'headers="(request-target) host date digest",'
   // signature
 
-  // var signature = crypto.privateEncrypt(
-  //   privateKey,
-  //   new Buffer(signingString, 'base64')
-  // );
+  var signature = crypto.privateEncrypt(privateKey, new Buffer(signingString));
 
   // var key = publicKey.toString('base64');
   // var sign = crypto.createSign('RSA-SHA256');
   // sign.update(signingString);
   // var signature = sign.sign(key, pwd);
 
-  result += 'signature="' + signature + '"';
+  result += 'signature="' + forge.util.encode64(signature) + '"';
 
   return result;
 }
