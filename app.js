@@ -3,6 +3,7 @@ const btoa = require('btoa');
 var forge = require('node-forge');
 var fs = require('fs');
 var certs = require('./digital-certs/certs');
+const https = require('https');
 
 /*
 Private key is extracted. 
@@ -35,12 +36,17 @@ console.log(cert.id + ' ' + cert.epn);
 
 // Set the Header component values
 
-//https://softwaretest.ros.ie/paye-employers/v1/rest/rpn/{employerRegistrationNumber}/{taxYear}
+//HTTP://softwaretest.ros.ie/paye-employers/v1/rest/rpn/{employerRegistrationNumber}/{taxYear}
 
-header.requestTarget = getRequestTarget(cert.epn, 2018);
-header.host = 'www.ros.ie';
+header.requestTarget = "/paye-employers/v1/rest/rpn/" + getRequestTarget(cert.epn, 2018);
+header.path = header.requestTarget;
+console.log(header.path);
+header.host = 'softwaretest.ros.ie';
 header.date = new Date().toUTCString();
 header.contentType = 'application/json;charset=UTF-8';
+header.protocol = 'https:';
+header.method = 'GET';
+
 header.digest = ''; // How to get this?
 
 signatureString = getSignatureString(header);
@@ -48,18 +54,51 @@ signatureString = getSignatureString(header);
 // Logging Header component values
 console.log(signatureString);
 
+
 // Get the private key from the cert
 
 // Get the MD5 hash of the password
-var hashed = btoa(hex2a(md5(cert.password))); // md5 src: https://stackoverflow.com/a/33486055/7519287
+var hashed = btoa(hex2a(md5(cert.password))); // md5 src: http://stackoverflow.com/a/33486055/7519287
 
 // console.log(hashed);
 
 var pk = extractPrivateKey(hashed, cert.id);
 
+https.get('https://softwaretest.ros.ie/paye-employers/v1/rest/rpn/8000135UH/2018', (resp) => {
+  let data = '';
+ 
+  // A chunk of data has been recieved.
+  resp.on('data', (chunk) => {
+    data += chunk;
+  });
+ 
+  // The whole response has been received. Print out the result.
+  resp.on('end', () => {
+    console.log(data);
+  });
+ 
+}).on("error", (err) => {
+  console.log("Error: " + err.message);
+});
+/*
+var y = https.request('https://softwaretest.ros.ie/paye-employers/v1/rest/rpn/8000135UH/2018', function(res){
+  console.log("Connected");
+  res.on('data',function(data){
+    console.log(data);
+  });
+});
+/*
+var x = https.request(header,function(res){
+  console.log("Connected");
+  res.on('data',function(data){
+    console.log(data);
+  });
+});
+x.end();
+*/
 // console.log(pk);
 
-// scr: https://stackoverflow.com/questions/37833952/getting-the-private-key-from-p12-file-using-javascript
+// scr: http://stackoverflow.com/questions/37833952/getting-the-private-key-from-p12-file-using-javascript
 function extractPrivateKey(pwd, certId) {
   var keyFile = fs.readFileSync('digital-certs/' + certId + '.p12');
   var keyBase64 = keyFile.toString('base64');
@@ -68,7 +107,7 @@ function extractPrivateKey(pwd, certId) {
 
   var p12Asn1 = forge.asn1.fromDer(p12Der);
   var p12 = forge.pkcs12.pkcs12FromAsn1(p12Asn1, pwd);
-  //https://stackoverflow.com/questions/17182848/best-approch-to-decode-the-pkcs12-file-and-get-the-encrypted-private-key-from-it
+  //http://stackoverflow.com/questions/17182848/best-approch-to-decode-the-pkcs12-file-and-get-the-encrypted-private-key-from-it
   // get bags by type
   var certBags = p12.getBags({ bagType: forge.pki.oids.certBag });
   var pkeyBags = p12.getBags({ bagType: forge.pki.oids.pkcs8ShroudedKeyBag });
@@ -85,7 +124,7 @@ function extractPrivateKey(pwd, certId) {
 
 function getRequestTarget(epn, taxYear) {
   // 'post /v1/rest/rpn/{employerRegistrationNumber}/{taxYear}'
-  return 'post /v1/rest/rpn/' + epn + '/' + taxYear;
+  return epn + '/' + taxYear;
 }
 
 function getSignatureString(hdr) {
@@ -108,7 +147,7 @@ function getSignatureString(hdr) {
   );
 }
 
-// src: https://stackoverflow.com/a/3745677/3181933
+// src: http://stackoverflow.com/a/3745677/3181933
 function hex2a(hexx) {
   var hex = hexx.toString(); //force conversion
   var str = '';
