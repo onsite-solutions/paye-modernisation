@@ -3,7 +3,11 @@ const btoa = require('btoa');
 var forge = require('node-forge');
 var fs = require('fs');
 var certs = require('./digital-certs/certs');
+<<<<<<< HEAD
 const https = require('https');
+=======
+var https = require('https');
+>>>>>>> 0c14aa0e433e76af262c9676be37dbdad295dce5
 
 /*
 Private key is extracted. 
@@ -16,28 +20,35 @@ request path headers. See below for sample
 (request-target): post /v1/rest/rpn/{ employerRegistrationNumber }/{taxYear}
 
 2. host
-www.ros.ie (is this the live host? )
-
+www.ros.ie (is this the live host? or https://softwaretest.ros.ie/paye-employers)
 
 3. date
+
+4. Digest
+
+The ‘Digest’ HTTP header is created using the POST body/payload. The payload should be
+converted to a byte array, hashed using the SHA-512 algorithm and finally base64 encoded before
+adding it as a HTTP header.
 */
 
 // Signature Header Components
 
 var header = {};
-var signatureString; // string to be signed consists of all the above header fields
+var body;
+var signingString; // string to be signed consists of all the above header fields
 var signature;
 
 // Fetch the digital certificate from the certs array
 
 var cert = certs.find(c => c.id == '999963666'); // or 999963665
 
-console.log(cert.id + ' ' + cert.epn);
+// console.log(cert.id + ' ' + cert.epn);
 
 // Set the Header component values
 
 //HTTP://softwaretest.ros.ie/paye-employers/v1/rest/rpn/{employerRegistrationNumber}/{taxYear}
 
+<<<<<<< HEAD
 header.requestTarget = "/paye-employers/v1/rest/rpn/" + getRequestTarget(cert.epn, 2018);
 header.path = header.requestTarget;
 console.log(header.path);
@@ -48,21 +59,62 @@ header.protocol = 'https:';
 header.method = 'GET';
 
 header.digest = ''; // How to get this?
+=======
+//https://softwaretest.ros.ie/paye-employers/v1/rest/rpn/{employerRegistrationNumber}/{taxYear}
 
-signatureString = getSignatureString(header);
+https
+  .get(
+    'https://softwaretest.ros.ie/paye-employers/v1/rest/rpn/8000135UH/2018',
+    resp => {
+      let data = '';
+
+      // A chunk of data has been recieved.
+      resp.on('data', chunk => {
+        data += chunk;
+      });
+
+      // The whole response has been received. Print out the result.
+      resp.on('end', () => {
+        console.log(data);
+      });
+    }
+  )
+  .on('error', err => {
+    console.log('Error: ' + err.message);
+  });
+
+header.method = 'GET';
+header.requestTarget = getRequestTarget(cert.epn, 2018);
+header.host = 'https://softwaretest.ros.ie';
+header.date = new Date().toUTCString();
+header.contentType = 'application/json;charset=UTF-8';
+>>>>>>> 0c14aa0e433e76af262c9676be37dbdad295dce5
+
+if (header.method == 'GET') {
+  // Digest is derived from the payload, only applies to requests of type POST
+  header.digest = '';
+  // If request is of type POST Digest is derived from the POST body/payload, so we need to build that before we add signature to the header
+}
+
+signingString = getSigningString(header);
 
 // Logging Header component values
-console.log(signatureString);
+console.log(signingString);
 
 
 // Get the private key from the cert
 
 // Get the MD5 hash of the password
+<<<<<<< HEAD
 var hashed = btoa(hex2a(md5(cert.password))); // md5 src: http://stackoverflow.com/a/33486055/7519287
+=======
+var hashedPwd = btoa(hex2a(md5(cert.password)));
+// md5 src: https://stackoverflow.com/a/33486055/7519287
+>>>>>>> 0c14aa0e433e76af262c9676be37dbdad295dce5
 
 // console.log(hashed);
 
-var pk = extractPrivateKey(hashed, cert.id);
+var pk = extractPrivateKey(hashedPwd, cert.id);
 
 https.get('https://softwaretest.ros.ie/paye-employers/v1/rest/rpn/8000135UH/2018', (resp) => {
   let data = '';
@@ -123,28 +175,33 @@ function extractPrivateKey(pwd, certId) {
 }
 
 function getRequestTarget(epn, taxYear) {
+<<<<<<< HEAD
   // 'post /v1/rest/rpn/{employerRegistrationNumber}/{taxYear}'
   return epn + '/' + taxYear;
+=======
+  // 'get /v1/rest/rpn/{employerRegistrationNumber}/{taxYear}'
+  return 'get /v1/rest/rpn/' + epn + '/' + taxYear;
 }
 
-function getSignatureString(hdr) {
-  hdr.requestTarget = '(request-target): ' + hdr.requestTarget;
-  hdr.host = 'Host: ' + hdr.host;
-  hdr.date = 'Date: ' + hdr.date;
-  hdr.contentType = 'Content-Type: ' + hdr.contentType;
-  hdr.digest = 'Digest: ' + hdr.digest;
+// Composes the string to be signed to for the Signature header
+function getSigningString(hdr) {
+  var lines = [];
 
-  return (
-    hdr.requestTarget +
-    '\n' +
-    hdr.host +
-    '\n' +
-    hdr.date +
-    '\n' +
-    hdr.contentType +
-    '\n' +
-    hdr.digest
-  );
+  lines.push('(request-target): ' + hdr.requestTarget);
+  lines.push('Host: ' + hdr.host);
+  lines.push('Date: ' + hdr.date);
+  lines.push('Content-Type: ' + hdr.contentType);
+
+  if (hdr.method == 'POST') {
+    lines.push('Digest: ' + hdr.digest);
+  }
+
+  return lines.join('\n');
+>>>>>>> 0c14aa0e433e76af262c9676be37dbdad295dce5
+}
+
+function getHttpSignatureHeader(signingString) {
+  //
 }
 
 // src: http://stackoverflow.com/a/3745677/3181933
