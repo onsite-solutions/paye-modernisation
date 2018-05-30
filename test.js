@@ -66,7 +66,7 @@ var headers = {
   path: '/v1/rest/rpn/' + cert.epn + '/' + 2018,
   host: 'softwaretest.ros.ie',
   date: new Date().toUTCString(),
-  signature: ''
+  Signature: ''
 };
 
 signingString = sign.getSigningString(headers);
@@ -92,9 +92,7 @@ var signatureHeader = sign.getHttpSignatureHeader(
   hashedPwd
 );
 
-headers.signature = signatureHeader;
-
-console.log(headers);
+headers.Signature = signatureHeader;
 
 // md5 src: https://stackoverflow.com/a/33486055/7519287
 
@@ -105,6 +103,8 @@ var options = {
   method: 'GET',
   headers: headers
 };
+
+console.log(options);
 
 // 'https://softwaretest.ros.ie/paye-employers/v1/rest/rpn/8000135UH/2018'
 //* uncomment this for testing, don't want to send request to revenue on every save
