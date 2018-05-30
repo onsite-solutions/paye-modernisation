@@ -104,7 +104,7 @@ function getHttpSignatureHeader(
   sign.update(signingString);
   var signature = sign.sign(privateKey, 'base64');
 
-  result += 'signature="' + signature + '"';
+  result += 'signature="' + forge.util.encode64(signature) + '"';
 
   return result;
 }
