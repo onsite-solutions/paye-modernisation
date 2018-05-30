@@ -62,14 +62,17 @@ if (header.method == 'GET') {
 */
 
 var headers = {
-  method: 'GET',
-  path: '/v1/rest/rpn/' + cert.epn + '/' + 2018,
+ // method: 'GET',
+ // path: '/v1/rest/rpn/' + cert.epn + '/' + 2018,
   host: 'softwaretest.ros.ie',
   date: new Date().toUTCString(),
   Signature: ''
 };
+var method = 'GET'
+var target = '/v1/rest/rpn/' + cert.epn + '/' + 2018
 
-signingString = sign.getSigningString(headers);
+signingString = sign.getSigningString(headers, method, target);
+//console.log(signingString);
 
 // Get the MD5 hash of the password
 var hashedPwd = sign.getMd5Hash(cert.password);
@@ -77,10 +80,11 @@ var hashedPwd = sign.getMd5Hash(cert.password);
 // Get the private key from the cert
 
 var privateKey = sign.extractPrivateKey(hashedPwd, cert.id);
+var publicKey = sign.extractPublicKey(hashedPwd, cert.id);
 
 // Get the public key from the cert
 
-var publicKey = sign.extractPublicKey(hashedPwd, cert.id);
+var certificate = sign.extractCertificate(hashedPwd, cert.id);
 
 // Get the HTTP Signature Header
 
@@ -88,7 +92,7 @@ var signatureHeader = sign.getHttpSignatureHeader(
   signingString,
   privateKey,
   publicKey,
-  cert,
+  certificate,
   hashedPwd
 );
 
@@ -99,8 +103,8 @@ headers.Signature = signatureHeader;
 // console.log(hashed);
 var options = {
   host: 'softwaretest.ros.ie',
-  path: '/paye-employers/v1/rest/rpn/8000135UH/2018',
-  method: 'GET',
+  //path: '/paye-employers/v1/rest/rpn/8000135UH/2018',
+  //method: 'GET',
   headers: headers
 };
 
@@ -111,12 +115,17 @@ console.log(options);
 https
   .get(options, res => {
     let data = '';
-
-    // A chunk of data has been recieved.
-    res.on('data', chunk => {
-      console.log('Receiving:' + chunk);
-      data += chunk;
+    console.log('STATUS: ' + res.statusCode);
+    console.log('HEADERS: ' + JSON.stringify(res.headers));
+    res.setEncoding('utf8');
+    res.on('data', function (chunk) {
+      console.log('BODY: ' + chunk);
     });
+    // A chunk of data has been recieved.
+   // res.on('data', chunk => {
+   //   console.log('Receiving:' + chunk);
+   //   data += chunk;
+   // });
 
     // The whole response has been received. Print out the result.
     res.on('end', () => {

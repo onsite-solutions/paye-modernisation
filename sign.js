@@ -47,12 +47,34 @@ function extractPublicKey(pwd, certId) {
   // fetching keyBag
   var keybag = pkeyBags[forge.pki.oids.pkcs8ShroudedKeyBag][0];
   // generate pem from private key
+  var publicKeyPem = forge.pki.publicKeyToPem(keybag.key);
+  // generate pem from cert
+  var certificate = forge.pki.certificateToPem(certBag.cert);
+  return publicKeyPem;
+}
+
+function extractCertificate(pwd, certId) {
+  var keyFile = fs.readFileSync('digital-certs/' + certId + '.p12');
+  var keyBase64 = keyFile.toString('base64');
+
+  var p12Der = forge.util.decode64(keyBase64);
+
+  var p12Asn1 = forge.asn1.fromDer(p12Der);
+  var p12 = forge.pkcs12.pkcs12FromAsn1(p12Asn1, pwd);
+  //http://stackoverflow.com/questions/17182848/best-approch-to-decode-the-pkcs12-file-and-get-the-encrypted-private-key-from-it
+  // get bags by type
+  var certBags = p12.getBags({ bagType: forge.pki.oids.certBag });
+  var pkeyBags = p12.getBags({ bagType: forge.pki.oids.pkcs8ShroudedKeyBag });
+  // fetching certBag
+  var certBag = certBags[forge.pki.oids.certBag][0];
+  // fetching keyBag
+  var keybag = pkeyBags[forge.pki.oids.pkcs8ShroudedKeyBag][0];
+  // generate pem from private key
   var privateKeyPem = forge.pki.privateKeyToPem(keybag.key);
   // generate pem from cert
   var certificate = forge.pki.certificateToPem(certBag.cert);
   return certificate;
 }
-
 function isEmpty(value) {
   return (
     value === undefined ||
@@ -63,13 +85,14 @@ function isEmpty(value) {
 }
 
 // Gets the string to be signed as part of the Signature String Construction
-function getSigningString(header) {
+function getSigningString(header, method, target, digest) {
   // (request-target)
-  var result = header.method + ' ' + header.path + '\n';
+  //var result = header.method + ' ' + header.path + '\n';
+  var result = method + " " + target  + '\n'
   // host
-  result += header.host + '\n';
+  result += "Host: " + header.host + '\n';
   // date
-  result += header.date + '\n';
+  result += "Date: " + header.date + '\n';
   // digest
   if (!isEmpty(header.digest)) {
     result += header.digest + '\n';
@@ -86,8 +109,11 @@ function getHttpSignatureHeader(
   pwd
 ) {
   // keyId
-  var result = 'keyId="' + forge.util.encode64(publicKey) + '",';
+  var result = 'keyId="' + forge.util.encode64(cert) + '",';
+  //var result = 'keyId="' + privateKey + '",';
   // algorithm
+
+
   result += 'algorithm="rsa-sha512",';
   // headers
   result += 'headers="(request-target) host date",';
@@ -102,10 +128,10 @@ function getHttpSignatureHeader(
   // var key = publicKey.toString('base64');
   var sign = crypto.createSign('RSA-SHA256');
   sign.update(signingString);
-  var signature = sign.sign(privateKey, 'base64');
+  var signature = sign.sign(privateKey, "base64");
 
-  result += 'signature="' + forge.util.encode64(signature) + '"';
-
+  //result += 'signature="' + forge.util.encode64(signature) + '"';
+  result += 'signature="' + signature + '"';
   return result;
 }
 
@@ -125,6 +151,7 @@ function getMd5Hash(value) {
 module.exports = {
   extractPrivateKey,
   extractPublicKey,
+  extractCertificate,
   getSigningString,
   getHttpSignatureHeader,
   hex2a,
