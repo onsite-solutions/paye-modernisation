@@ -114,12 +114,13 @@ https
 
     // A chunk of data has been recieved.
     res.on('data', chunk => {
+      console.log('Receiving:' + chunk);
       data += chunk;
     });
 
     // The whole response has been received. Print out the result.
     res.on('end', () => {
-      console.log(data);
+      console.log('Returned:' + data);
     });
   })
   .on('error', err => {
