@@ -88,14 +88,14 @@ function isEmpty(value) {
 function getSigningString(header, method, target, digest) {
   // (request-target)
   //var result = header.method + ' ' + header.path + '\n';
-  var result = method + " " + target  + '\n'
+  var result = method + ' ' + target + '\n';
   // host
-  result += "Host: " + header.host + '\n';
+  result += 'Host: ' + header.host + '\n';
   // date
-  result += "Date: " + header.date + '\n';
+  result += 'Date: ' + header.date;
   // digest
   if (!isEmpty(header.digest)) {
-    result += header.digest + '\n';
+    result += '\n' + header.digest;
   }
 
   return result;
@@ -113,7 +113,6 @@ function getHttpSignatureHeader(
   //var result = 'keyId="' + privateKey + '",';
   // algorithm
 
-
   result += 'algorithm="rsa-sha512",';
   // headers
   result += 'headers="(request-target) host date",';
@@ -128,7 +127,7 @@ function getHttpSignatureHeader(
   // var key = publicKey.toString('base64');
   var sign = crypto.createSign('RSA-SHA256');
   sign.update(signingString);
-  var signature = sign.sign(privateKey, "base64");
+  var signature = sign.sign(privateKey, 'base64');
 
   //result += 'signature="' + forge.util.encode64(signature) + '"';
   result += 'signature="' + signature + '"';

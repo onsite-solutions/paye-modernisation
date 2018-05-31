@@ -62,17 +62,17 @@ if (header.method == 'GET') {
 */
 
 var headers = {
- // method: 'GET',
- // path: '/v1/rest/rpn/' + cert.epn + '/' + 2018,
+  // method: 'GET',
+  // path: '/v1/rest/rpn/' + cert.epn + '/' + 2018,
   host: 'softwaretest.ros.ie',
   date: new Date().toUTCString(),
   Signature: ''
 };
-var method = 'GET'
-var target = '/v1/rest/rpn/' + cert.epn + '/' + 2018
+var method = 'GET';
+var target = '/v1/rest/rpn/' + cert.epn + '/' + 2018;
 
 signingString = sign.getSigningString(headers, method, target);
-//console.log(signingString);
+console.log(signingString);
 
 // Get the MD5 hash of the password
 var hashedPwd = sign.getMd5Hash(cert.password);
@@ -118,14 +118,14 @@ https
     console.log('STATUS: ' + res.statusCode);
     console.log('HEADERS: ' + JSON.stringify(res.headers));
     res.setEncoding('utf8');
-    res.on('data', function (chunk) {
+    res.on('data', function(chunk) {
       console.log('BODY: ' + chunk);
     });
     // A chunk of data has been recieved.
-   // res.on('data', chunk => {
-   //   console.log('Receiving:' + chunk);
-   //   data += chunk;
-   // });
+    // res.on('data', chunk => {
+    //   console.log('Receiving:' + chunk);
+    //   data += chunk;
+    // });
 
     // The whole response has been received. Print out the result.
     res.on('end', () => {
