@@ -79,17 +79,12 @@ var target = '/v1/rest/rpn/' + cert.epn + '/' + 2018;
 // Get the MD5 hash of the password
 var hashedPwd = sign.getMd5Hash(cert.password);
 
-// Get the private key from the cert
+// Get the details from the cert
 
-var privateKey = sign.extractPrivateKey(hashedPwd, cert.id);
-var publicKey = sign.extractPublicKey(hashedPwd, cert.id);
-
-// Get the public key from the cert
-
-var certificate = sign.extractCertificate(hashedPwd, cert.id);
+var keys = sign.extractKeys(hashedPwd, cert.id);
 
 if (method === 'POST') {
-  headers.Digest = sign.getDigest(body, privateKey);
+  headers.Digest = sign.getDigest(body, keys.privateKey);
 }
 
 signingString = sign.getSigningString(headers, method, target, body);
@@ -99,9 +94,9 @@ console.log(signingString);
 
 var signatureHeader = sign.getHttpSignatureHeader(
   signingString,
-  privateKey,
-  publicKey,
-  certificate
+  keys.privateKey,
+  keys.publicKey,
+  keys.certificate
 );
 
 headers.Signature = signatureHeader;
@@ -175,7 +170,6 @@ if (method === 'GET') {
 
 // 'https://softwaretest.ros.ie/paye-employers/v1/rest/rpn/8000135UH/2018'
 //* uncomment this for testing, don't want to send request to revenue on every save
-
 /*/
 
 /*

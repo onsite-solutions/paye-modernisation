@@ -6,7 +6,7 @@ var crypto = require('crypto');
 const constants = require('constants');
 
 // scr: http://stackoverflow.com/questions/37833952/getting-the-private-key-from-p12-file-using-javascript
-function extractPrivateKey(pwd, certId) {
+function extractKeys(pwd, certId) {
   var keyFile = fs.readFileSync('digital-certs/' + certId + '.p12');
   var keyBase64 = keyFile.toString('base64');
 
@@ -26,55 +26,16 @@ function extractPrivateKey(pwd, certId) {
   var privateKeyPem = forge.pki.privateKeyToPem(keybag.key);
   // generate pem from cert
   var certificate = forge.pki.certificateToPem(certBag.cert);
-  return privateKeyPem;
+
+  var keys = {
+    privateKey: privateKeyPem,
+    publicKey: publicKeyPem,
+    certificate: certificate
+  };
+
+  return keys;
 }
 
-// scr: http://stackoverflow.com/questions/37833952/getting-the-private-key-from-p12-file-using-javascript
-function extractPublicKey(pwd, certId) {
-  var keyFile = fs.readFileSync('digital-certs/' + certId + '.p12');
-  var keyBase64 = keyFile.toString('base64');
-
-  var p12Der = forge.util.decode64(keyBase64);
-
-  var p12Asn1 = forge.asn1.fromDer(p12Der);
-  var p12 = forge.pkcs12.pkcs12FromAsn1(p12Asn1, pwd);
-  //http://stackoverflow.com/questions/17182848/best-approch-to-decode-the-pkcs12-file-and-get-the-encrypted-private-key-from-it
-  // get bags by type
-  var certBags = p12.getBags({ bagType: forge.pki.oids.certBag });
-  var pkeyBags = p12.getBags({ bagType: forge.pki.oids.pkcs8ShroudedKeyBag });
-  // fetching certBag
-  var certBag = certBags[forge.pki.oids.certBag][0];
-  // fetching keyBag
-  var keybag = pkeyBags[forge.pki.oids.pkcs8ShroudedKeyBag][0];
-  // generate pem from private key
-  var publicKeyPem = forge.pki.publicKeyToPem(keybag.key);
-  // generate pem from cert
-  var certificate = forge.pki.certificateToPem(certBag.cert);
-  return publicKeyPem;
-}
-
-function extractCertificate(pwd, certId) {
-  var keyFile = fs.readFileSync('digital-certs/' + certId + '.p12');
-  var keyBase64 = keyFile.toString('base64');
-
-  var p12Der = forge.util.decode64(keyBase64);
-
-  var p12Asn1 = forge.asn1.fromDer(p12Der);
-  var p12 = forge.pkcs12.pkcs12FromAsn1(p12Asn1, pwd);
-  //http://stackoverflow.com/questions/17182848/best-approch-to-decode-the-pkcs12-file-and-get-the-encrypted-private-key-from-it
-  // get bags by type
-  var certBags = p12.getBags({ bagType: forge.pki.oids.certBag });
-  var pkeyBags = p12.getBags({ bagType: forge.pki.oids.pkcs8ShroudedKeyBag });
-  // fetching certBag
-  var certBag = certBags[forge.pki.oids.certBag][0];
-  // fetching keyBag
-  var keybag = pkeyBags[forge.pki.oids.pkcs8ShroudedKeyBag][0];
-  // generate pem from private key
-  var privateKeyPem = forge.pki.privateKeyToPem(keybag.key);
-  // generate pem from cert
-  var certificate = forge.pki.certificateToPem(certBag.cert);
-  return certificate;
-}
 function isEmpty(value) {
   return (
     value === undefined ||
@@ -157,9 +118,7 @@ function getMd5Hash(value) {
 }
 
 module.exports = {
-  extractPrivateKey,
-  extractPublicKey,
-  extractCertificate,
+  extractKeys,
   getSigningString,
   getHttpSignatureHeader,
   getDigest,
