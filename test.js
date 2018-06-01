@@ -62,17 +62,19 @@ if (header.method == 'GET') {
 */
 
 var headers = {
-  // method: 'GET',
-  // path: '/v1/rest/rpn/' + cert.epn + '/' + 2018,
-  host: 'softwaretest.ros.ie',
-  date: new Date().toUTCString(),
+  // Method: 'GET',
+  // Path: '/v1/rest/rpn/' + cert.epn + '/' + 2018,
+  Host: 'softwaretest.ros.ie',
+  Date: new Date().toUTCString(),
+  'Content-Type': 'application/json;charset=UTF-8',
   Signature: ''
 };
-var method = 'GET';
-var target = '/v1/rest/rpn/' + cert.epn + '/' + 2018;
 
-signingString = sign.getSigningString(headers, method, target);
-console.log(signingString);
+body = {};
+
+var method = 'POST';
+// var target = '/paye-employers/v1/rest/rpn' + cert.epn + '/' + 2018;
+var target = '/v1/rest/rpn/' + cert.epn + '/' + 2018;
 
 // Get the MD5 hash of the password
 var hashedPwd = sign.getMd5Hash(cert.password);
@@ -86,14 +88,20 @@ var publicKey = sign.extractPublicKey(hashedPwd, cert.id);
 
 var certificate = sign.extractCertificate(hashedPwd, cert.id);
 
+if (method === 'POST') {
+  headers.Digest = sign.getDigest(body, privateKey);
+}
+
+signingString = sign.getSigningString(headers, method, target, body);
+console.log(signingString);
+
 // Get the HTTP Signature Header
 
 var signatureHeader = sign.getHttpSignatureHeader(
   signingString,
   privateKey,
   publicKey,
-  certificate,
-  hashedPwd
+  certificate
 );
 
 headers.Signature = signatureHeader;
@@ -102,39 +110,71 @@ headers.Signature = signatureHeader;
 
 // console.log(hashed);
 var options = {
-  host: 'softwaretest.ros.ie',
-  //path: '/paye-employers/v1/rest/rpn/8000135UH/2018',
+  hostname: 'softwaretest.ros.ie',
+  // path: target,
+  path:
+    '/paye-employers/v1/rest/rpn/8000135UH/2019?softwareUsed=SOftwareABC&softwareVersion=1',
   //method: 'GET',
-  headers: headers
+  headers: headers,
+  body: body
 };
 
 console.log(options);
 
+if (method === 'GET') {
+  https
+    .get(options, res => {
+      let data = '';
+      console.log('STATUS: ' + res.statusCode);
+      console.log('HEADERS: ' + JSON.stringify(res.headers));
+      res.setEncoding('utf8');
+      res.on('data', function(chunk) {
+        console.log('BODY: ' + chunk);
+      });
+      // A chunk of data has been recieved.
+      // res.on('data', chunk => {
+      //   console.log('Receiving:' + chunk);
+      //   data += chunk;
+      // });
+
+      // The whole response has been received. Print out the result.
+      res.on('end', () => {
+        console.log('Returned:' + data);
+      });
+    })
+    .on('error', err => {
+      console.log('Error: ' + err.message);
+    });
+} else if (method === 'POST') {
+  var postOptions = {
+    hostname: 'softwaretest.ros.ie',
+    path:
+      '/paye-employers/v1/rest/rpn/8000135UH/2019?softwareUsed=SOftwareABC&softwareVersion=1',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  };
+
+  var req = https.request(postOptions, res => {
+    console.log('statusCode:', res.statusCode);
+    console.log('headers:', res.headers);
+
+    res.on('data', d => {
+      console.log(d);
+    });
+  });
+
+  req.on('error', e => {
+    console.log(e);
+  });
+
+  req.write(body);
+  req.end();
+}
+
 // 'https://softwaretest.ros.ie/paye-employers/v1/rest/rpn/8000135UH/2018'
 //* uncomment this for testing, don't want to send request to revenue on every save
-https
-  .get(options, res => {
-    let data = '';
-    console.log('STATUS: ' + res.statusCode);
-    console.log('HEADERS: ' + JSON.stringify(res.headers));
-    res.setEncoding('utf8');
-    res.on('data', function(chunk) {
-      console.log('BODY: ' + chunk);
-    });
-    // A chunk of data has been recieved.
-    // res.on('data', chunk => {
-    //   console.log('Receiving:' + chunk);
-    //   data += chunk;
-    // });
-
-    // The whole response has been received. Print out the result.
-    res.on('end', () => {
-      console.log('Returned:' + data);
-    });
-  })
-  .on('error', err => {
-    console.log('Error: ' + err.message);
-  });
 
 /*/
 

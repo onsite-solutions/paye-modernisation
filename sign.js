@@ -88,26 +88,24 @@ function isEmpty(value) {
 function getSigningString(header, method, target, digest) {
   // (request-target)
   //var result = header.method + ' ' + header.path + '\n';
-  var result = method + ' ' + target + '\n';
+  var result =
+    '(request-target): ' + method.toLowerCase() + ' ' + target + '\n';
   // host
-  result += 'Host: ' + header.host + '\n';
+  result += 'host: ' + header.Host + '\n';
   // date
-  result += 'Date: ' + header.date;
+  result += 'date: ' + header.Date;
   // digest
   if (!isEmpty(header.digest)) {
     result += '\n' + header.digest;
   }
+  // content-type
+  result += '\n' + 'content-type: application/json;charset=utf-8';
+  // x-http-method-override
 
   return result;
 }
 
-function getHttpSignatureHeader(
-  signingString,
-  privateKey,
-  publicKey,
-  cert,
-  pwd
-) {
+function getHttpSignatureHeader(signingString, privateKey, publicKey, cert) {
   // keyId
   var result = 'keyId="' + forge.util.encode64(cert) + '",';
   //var result = 'keyId="' + privateKey + '",';
@@ -115,8 +113,9 @@ function getHttpSignatureHeader(
 
   result += 'algorithm="rsa-sha512",';
   // headers
-  result += 'headers="(request-target) host date",';
+  result += 'headers="(request-target) host date content-type",';
   //result += 'headers="(request-target) host date digest",'
+
   // signature
 
   // var signature = crypto.privateEncrypt(
@@ -125,13 +124,23 @@ function getHttpSignatureHeader(
   // );
 
   // var key = publicKey.toString('base64');
-  var sign = crypto.createSign('RSA-SHA256');
-  sign.update(signingString);
+  var sign = crypto.createSign('RSA-SHA512');
+
+  sign.update(JSON.stringify(signingString));
   var signature = sign.sign(privateKey, 'base64');
 
   //result += 'signature="' + forge.util.encode64(signature) + '"';
   result += 'signature="' + signature + '"';
+  console.log(signature);
   return result;
+}
+
+function getDigest(postBody, privateKey) {
+  var sign = crypto.createSign('RSA-SHA512');
+  sign.update(JSON.stringify(postBody));
+  var digest = sign.sign(privateKey, 'base64');
+
+  return digest;
 }
 
 // src: http://stackoverflow.com/a/3745677/3181933
@@ -153,6 +162,7 @@ module.exports = {
   extractCertificate,
   getSigningString,
   getHttpSignatureHeader,
+  getDigest,
   hex2a,
   getMd5Hash
 };
