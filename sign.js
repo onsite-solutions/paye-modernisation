@@ -24,6 +24,8 @@ function extractKeys(pwd, certId) {
   var keybag = pkeyBags[forge.pki.oids.pkcs8ShroudedKeyBag][0];
   // generate pem from private key
   var privateKeyPem = forge.pki.privateKeyToPem(keybag.key);
+  // public key
+  var publicKeyPem = forge.pki.publicKeyToPem(keybag.key);
   // generate pem from cert
   var certificate = forge.pki.certificateToPem(certBag.cert);
 
