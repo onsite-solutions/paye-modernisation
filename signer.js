@@ -4,6 +4,7 @@ var forge = require('node-forge');
 var fs = require('fs');
 var crypto = require('crypto');
 const constants = require('constants');
+const utils = require('./utils');
 
 // scr: http://stackoverflow.com/questions/37833952/getting-the-private-key-from-p12-file-using-javascript
 function extractKeys(pwd, certId) {
@@ -38,63 +39,39 @@ function extractKeys(pwd, certId) {
   return keys;
 }
 
-function isEmpty(value) {
-  return (
-    value === undefined ||
-    value === null ||
-    (typeof value === 'object' && Object.keys(value).length === 0) ||
-    (typeof value === 'string' && value.trim().length === 0)
-  );
-}
-
 // Gets the string to be signed as part of the Signature String Construction
-function getSigningString(header, method, target, digest) {
+function getSigningString(header, digest) {
   // (request-target)
   //var result = header.method + ' ' + header.path + '\n';
   var result =
-    '(request-target): ' + method.toLowerCase() + ' ' + target + '\n';
+    '(request-target): ' + header.method.toLowerCase() + ' ' + header.path + '\n';
   // host
-  result += 'host: ' + header.Host + '\n';
+  result += 'host: ' + header.host + '\n';
   // date
-  result += 'date: ' + header.Date;
+  result += 'date: ' + header.date;
   // digest
   if (!isEmpty(header.digest)) {
     result += '\n' + header.digest;
   }
-  // content-type
-  result += '\n' + 'content-type: application/json;charset=utf-8';
-  // x-http-method-override
-
+  
   return result;
 }
 
-function getHttpSignatureHeader(signingString, privateKey, publicKey, cert) {
+function getHttpSignatureHeader(signingString, keys) {
   // keyId
-  var result = 'keyId="' + forge.util.encode64(cert) + '",';
-  //var result = 'keyId="' + privateKey + '",';
+  var result = 'keyId="' + forge.util.encode64(keys.certificate) + '",';
   // algorithm
-
   result += 'algorithm="rsa-sha512",';
   // headers
-  result += 'headers="(request-target) host date content-type",';
+  result += 'headers="(request-target) host date",';
   //result += 'headers="(request-target) host date digest",'
-
   // signature
-
-  // var signature = crypto.privateEncrypt(
-  //   privateKey,
-  //   new Buffer(signingString, 'base64')
-  // );
-
-  // var key = publicKey.toString('base64');
   var sign = crypto.createSign('RSA-SHA512');
-
-  sign.update(JSON.stringify(signingString));
-  var signature = sign.sign(privateKey, 'base64');
+  sign.update(signingString);
+  var signature = sign.sign(keys.privateKey, 'base64');
 
   //result += 'signature="' + forge.util.encode64(signature) + '"';
   result += 'signature="' + signature + '"';
-  console.log(signature);
   return result;
 }
 
@@ -119,11 +96,19 @@ function getMd5Hash(value) {
   return btoa(hex2a(md5(value)));
 }
 
+function isEmpty(value) {
+  return (
+    value === undefined ||
+    value === null ||
+     (typeof value === 'object' && Object.keys(value).length === 0) ||
+    (typeof value === 'string' && value.trim().length === 0)
+  );
+}
+
 module.exports = {
   extractKeys,
   getSigningString,
   getHttpSignatureHeader,
   getDigest,
-  hex2a,
   getMd5Hash
 };

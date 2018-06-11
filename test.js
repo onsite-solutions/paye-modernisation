@@ -9,7 +9,7 @@ var sign = require('./sign');
 
 // Signature String Components
 
-var body;
+
 var signingString; // string to be signed consists of all the above headers fields
 var signature;
 
@@ -21,22 +21,22 @@ var cert = certs.find(c => c.id == '999963666'); // or 999963665
 
 // Set the Header component values
 
-//HTTP://softwaretest.ros.ie/paye-employers/v1/rest/rpn/{employerRegistrationNumber}/{taxYear}
+//https://softwaretest.ros.ie/paye-employers/v1/rest/rpn/{employerRegistrationNumber}/{taxYear}
+// 8000135UH/2019
 
 var headers = {
-  Method: 'POST',
-  // Path: '/v1/rest/rpn/' + cert.epn + '/' + 2018,
+  Method: 'GET',
+  Path: '/paye-employers/v1/rest/rpn/' + cert.epn + '/' + 2019,
   Host: 'softwaretest.ros.ie',
   Date: new Date().toUTCString(),
-  'Content-Type': 'application/json;charset=UTF-8',
   Signature: ''
 };
 
-body = { Test: 'test' };
+//body = { Test: 'test' };
 
-var method = 'POST';
-// var target = '/paye-employers/v1/rest/rpn' + cert.epn + '/' + 2018;
-var target = '/v1/rest/rpn/' + cert.epn + '/' + 2018;
+var method = 'GET';
+var target = '/paye-employers/v1/rest/rpn' + cert.epn + '/' + 2018;
+//var target = '/v1/rest/rpn/' + cert.epn + '/' + 2018;
 
 // Get the MD5 hash of the password
 var hashedPwd = sign.getMd5Hash(cert.password);
@@ -49,7 +49,7 @@ if (method === 'POST') {
   headers.Digest = sign.getDigest(body, keys.privateKey);
 }
 
-signingString = sign.getSigningString(headers, method, target, body);
+signingString = sign.getSigningString(headers, method, target, '');
 //console.log(signingString);
 
 // Get the HTTP Signature Header
@@ -69,12 +69,10 @@ headers.Signature = signatureHeader;
 
 var options = {
   hostname: 'softwaretest.ros.ie',
-  // path: target,
-  path:
-    '/paye-employers/v1/rest/rpn/8000135UH/2019?softwareUsed=SOftwareABC&softwareVersion=1',
-  method: 'POST',
-  headers: headers,
-  body: body
+  path: target,
+  //path: '/paye-employers/v1/rest/rpn/8000135UH/2019?softwareUsed=SOftwareABC&softwareVersion=1',
+  method: 'GET',
+  headers: headers
 };
 
 console.log(options);
@@ -131,7 +129,7 @@ if (method === 'GET') {
   req.end();
 }
 
-console.log(req.body);
+//console.log(req.body);
 
 // 'https://softwaretest.ros.ie/paye-employers/v1/rest/rpn/8000135UH/2018'
 //* uncomment this for testing, don't want to send request to revenue on every save

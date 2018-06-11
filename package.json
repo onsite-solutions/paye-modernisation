@@ -6,7 +6,8 @@
   "scripts": {
     "server": "nodemon server.js",
     "app": "nodemon app.js",
-    "test": "nodemon test.js"
+		"test": "nodemon test.js",
+		"gettest": "nodemon getTest.js"
   },
   "repository": {
     "type": "git",
