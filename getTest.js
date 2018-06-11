@@ -42,7 +42,9 @@ options.headers = {
 	Signature: signatureHeader
 }
 
-console.log(options);
+console.log(signingString);
+console.log(signatureHeader);
+//console.log(options);
 
 https
     .get(options, res => {
