@@ -31,6 +31,7 @@ function extractKeys(pwd, certId) {
   var certificate = forge.pki.certificateToPem(certBag.cert);
 
   var keys = {
+		keyBase64: keyBase64,
     privateKey: privateKeyPem,
     publicKey: publicKeyPem,
     certificate: certificate
@@ -59,8 +60,8 @@ function getSigningString(header, digest) {
 
 function getHttpSignatureHeader(signingString, keys) {
   // keyId
-  var result = 'keyId="' + forge.util.encode64(keys.certificate) + '",';
-  // algorithm
+	var result = 'keyId="' + forge.util.encode64(keys.certificate) + '",';
+	// algorithm
   result += 'algorithm="rsa-sha512",';
   // headers
   result += 'headers="(request-target) host date",';
