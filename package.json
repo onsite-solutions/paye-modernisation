@@ -6,8 +6,8 @@
   "scripts": {
     "server": "nodemon server.js",
     "app": "nodemon app.js",
-		"test": "nodemon test.js",
-		"gettest": "nodemon getTest.js"
+    "test": "nodemon test.js",
+    "gettest": "nodemon getTest.js"
   },
   "repository": {
     "type": "git",
@@ -27,7 +27,8 @@
     "express": "^4.16.3",
     "hasha": "^3.0.0",
     "md5": "^2.2.1",
-    "node-forge": "^0.7.5"
+    "node-forge": "^0.7.5",
+    "request": "^2.87.0"
   },
   "devDependencies": {
     "nodemon": "^1.17.4"

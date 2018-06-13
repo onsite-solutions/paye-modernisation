@@ -1,5 +1,3 @@
-var forge = require('node-forge');
-var fs = require('fs');
 var certs = require('./digital-certs/certs');
 var https = require('https');
 var signer = require('./signer');
@@ -14,10 +12,11 @@ var cert = certs.find(c => c.id == '999963666'); // or 999963665
 
 var options = {
   method: 'GET',
-  path: '/paye-employers/v1/rest/rpn/' + cert.epn + '/' + 2019,
+	path: '/paye-employers/v1/rest/rpn/' + cert.epn + '/' + 2019 + '?softwareUsed=abc&softwareVersion=1.0',
   host: 'softwaretest.ros.ie',
 	date: new Date().toUTCString(),
 	headers: {
+		'Content-Type': 'application/json',
 		Signature: ''
 	}
 };
@@ -36,15 +35,17 @@ var keys = signer.extractKeys(hashedPwd, cert.id);
 
 // Get the signature header
 
-var signatureHeader = signer.getHttpSignatureHeader(signingString, keys);
+var signatureHeader = signer.getSignatureHeader(signingString, keys);
 
 options.headers = {
 	Signature: signatureHeader
 }
 
+
 console.log(signingString);
 console.log(signatureHeader);
-//console.log(options);
+console.log(options);
+
 
 https
     .get(options, res => {
@@ -69,4 +70,3 @@ https
     .on('error', err => {
       console.log('Error: ' + err.message);
 		});
-		
