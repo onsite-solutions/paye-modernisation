@@ -4,6 +4,8 @@ var forge = require('node-forge');
 var fs = require('fs');
 var crypto = require('crypto');
 
+
+
 // scr: http://stackoverflow.com/questions/37833952/getting-the-private-key-from-p12-file-using-javascript
 function extractKeys(pwd, certId) {
   var keyFile = fs.readFileSync('digital-certs/' + certId + '.p12');
@@ -58,6 +60,11 @@ function getSigningString(header, digest) {
   return result;
 }
 
+/**
+ * Generates the signature header
+ * @param {string} signingString 
+ * @param {object} keys 
+ */
 function getSignatureHeader(signingString, keys) {
   // keyId
 	var result = 'keyId="' + forge.util.encode64(keys.certificate) + '",';
