@@ -1,11 +1,12 @@
 //@ts-check
-"use strict";
+'use strict';
 
-var md5 = require("md5");
-var btoa = require("btoa");
-var forge = require("node-forge");
-var fs = require("fs");
-var crypto = require("crypto");
+var md5 = require('md5');
+var btoa = require('btoa');
+var forge = require('node-forge');
+var fs = require('fs');
+var crypto = require('crypto');
+var utils = require('./utils');
 
 /**
  * Represents a Digital certificate
@@ -30,9 +31,11 @@ function Cert(id, epn, name, password) {
 /**
  * Returns the MD5 hash of the provided string
  * @param {string} value The string to be hashed
+ * @returns {string}
  */
 Cert.prototype.getMd5Hash = function(value) {
-  return btoa(this.hex2a(md5(value)));
+  var hex = utils.hex2a(md5(value));
+  return btoa(hex);
 };
 
 // scr: http://stackoverflow.com/questions/37833952/getting-the-private-key-from-p12-file-using-javascript
@@ -41,8 +44,8 @@ Cert.prototype.getMd5Hash = function(value) {
  * Extracts the keys from the p12 file
  */
 Cert.prototype.extractKeys = function() {
-  var keyFile = fs.readFileSync("digital-certs/" + this.id + ".p12");
-  var keyBase64 = keyFile.toString("base64");
+  var keyFile = fs.readFileSync('digital-certs/' + this.id + '.p12');
+  var keyBase64 = keyFile.toString('base64');
 
   var p12Der = forge.util.decode64(keyBase64);
 
@@ -80,21 +83,21 @@ Cert.prototype.getSigningString = function(header, digest) {
   // (request-target)
   //var result = header.method + ' ' + header.path + '\n';
   var result =
-    "(request-target): " +
+    '(request-target): ' +
     header.method.toLowerCase() +
-    " " +
+    ' ' +
     header.path +
-    "\n";
+    '\n';
   // host
-  result += "host: " + header.host + "\n";
+  result += 'host: ' + header.host + '\n';
   // date
-  result += "date: " + header.date;
+  result += 'date: ' + header.date;
   // digest
   if (!this.isEmpty(header.digest)) {
-    result += "\n" + header.digest;
+    result += '\n' + header.digest;
   }
 
-  result += "\n" + "content-type: application/json";
+  result += '\n' + 'content-type: application/json';
 
   return result;
 };
@@ -112,9 +115,9 @@ Cert.prototype.getSignatureHeader = function(signingString) {
   result += 'headers="(request-target) host date content-type",';
   //result += 'headers="(request-target) host date digest",'
   // signature
-  var sign = crypto.createSign("RSA-SHA512");
+  var sign = crypto.createSign('RSA-SHA512');
   sign.update(signingString);
-  var signature = sign.sign(this.keys.privateKey, "base64");
+  var signature = sign.sign(this.keys.privateKey, 'base64');
 
   //result += 'signature="' + forge.util.encode64(signature) + '"';
   result += 'signature="' + signature + '"';
@@ -127,33 +130,11 @@ Cert.prototype.getSignatureHeader = function(signingString) {
  * @param {string} privateKey
  */
 Cert.prototype.getDigest = function(postBody, privateKey) {
-  var sign = crypto.createSign("RSA-SHA512");
+  var sign = crypto.createSign('RSA-SHA512');
   sign.update(JSON.stringify(postBody));
-  var digest = sign.sign(privateKey, "base64");
+  var digest = sign.sign(privateKey, 'base64');
 
   return digest;
-};
-
-// src: http://stackoverflow.com/a/3745677/3181933
-Cert.prototype.hex2a = function(hexx) {
-  var hex = hexx.toString(); //force conversion
-  var str = "";
-  for (var i = 0; i < hex.length; i += 2)
-    str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
-  return str;
-};
-
-/**
- * Indicates whether an object or primitive is empty
- * @param {any} value Object to check if is empty
- */
-Cert.prototype.isEmpty = function(value) {
-  return (
-    value === undefined ||
-    value === null ||
-    (typeof value === "object" && Object.keys(value).length === 0) ||
-    (typeof value === "string" && value.trim().length === 0)
-  );
 };
 
 module.exports = Cert;

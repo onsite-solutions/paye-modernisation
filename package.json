@@ -6,7 +6,7 @@
   "scripts": {
     "server": "nodemon server.js",
     "app": "nodemon app.js",
-    "test": "nodemon test.js",
+    "test": "nodemon ./test/tests.js",
     "client": "nodemon client.js"
   },
   "repository": {
@@ -30,6 +30,8 @@
     "node-forge": "^0.7.5"
   },
   "devDependencies": {
-    "nodemon": "^1.17.4"
+    "@types/node": "^10.3.4",
+    "nodemon": "^1.17.4",
+    "typescript": "^2.9.2"
   }
 }

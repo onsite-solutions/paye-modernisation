@@ -1,3 +1,6 @@
+//@ts-check
+'use strict';
+
 const Certs = [
   {
     id: 999963665,
