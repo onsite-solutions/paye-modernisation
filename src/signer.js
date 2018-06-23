@@ -1,10 +1,11 @@
+//@ts-check
+'use strict';
+
 const md5 = require('md5');
 const btoa = require('btoa');
 var forge = require('node-forge');
 var fs = require('fs');
 var crypto = require('crypto');
-
-
 
 // scr: http://stackoverflow.com/questions/37833952/getting-the-private-key-from-p12-file-using-javascript
 function extractKeys(pwd, certId) {
@@ -31,8 +32,8 @@ function extractKeys(pwd, certId) {
   var certificate = forge.pki.certificateToPem(certBag.cert);
 
   var keys = {
-		keyBase64: keyBase64,
-		privateKey: privateKeyPem,
+    keyBase64: keyBase64,
+    privateKey: privateKeyPem,
     publicKey: publicKeyPem,
     certificate: certificate
   };
@@ -45,7 +46,11 @@ function getSigningString(header, digest) {
   // (request-target)
   //var result = header.method + ' ' + header.path + '\n';
   var result =
-    '(request-target): ' + header.method.toLowerCase() + ' ' + header.path + '\n';
+    '(request-target): ' +
+    header.method.toLowerCase() +
+    ' ' +
+    header.path +
+    '\n';
   // host
   result += 'host: ' + header.host + '\n';
   // date
@@ -54,21 +59,21 @@ function getSigningString(header, digest) {
   if (!isEmpty(header.digest)) {
     result += '\n' + header.digest;
   }
-	
-	result += '\n' + 'content-type: application/json';
+
+  result += '\n' + 'content-type: application/json';
 
   return result;
 }
 
 /**
  * Generates the signature header
- * @param {string} signingString 
- * @param {object} keys 
+ * @param {string} signingString
+ * @param {object} keys
  */
 function getSignatureHeader(signingString, keys) {
   // keyId
-	var result = 'keyId="' + forge.util.encode64(keys.certificate) + '",';
-	// algorithm
+  var result = 'keyId="' + forge.util.encode64(keys.certificate) + '",';
+  // algorithm
   result += 'algorithm="rsa-sha512",';
   // headers
   result += 'headers="(request-target) host date content-type",';
@@ -108,7 +113,7 @@ function isEmpty(value) {
   return (
     value === undefined ||
     value === null ||
-     (typeof value === 'object' && Object.keys(value).length === 0) ||
+    (typeof value === 'object' && Object.keys(value).length === 0) ||
     (typeof value === 'string' && value.trim().length === 0)
   );
 }

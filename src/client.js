@@ -3,7 +3,7 @@
 
 const http = require('http');
 const certs = require('../test/certs');
-var cert = require('./Cert');
+const Cert = require('./cert');
 
 /*
 Following response from ROS this is a verbatim attempt to replicate their sample 'successful request' file.

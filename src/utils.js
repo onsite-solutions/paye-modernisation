@@ -1,8 +1,9 @@
 //@ts-check
 'use strict';
 
-var md5 = require('md5');
+var forge = require('node-forge');
 var btoa = require('btoa');
+var crypto = require('crypto');
 
 /**
  * Converts a hexadecimal string to an ASCII string
@@ -29,18 +30,7 @@ function isEmpty(value) {
   );
 }
 
-/**
- * Returns the MD5 hash of the provided string
- * @param {string} value The string to be hashed
- */
-function getMd5Hash(value) {
-  //var hex = hexToAscii(md5(value));
-  //console.log(hex);
-  //return btoa(hex);
-}
-
 module.exports = {
   hexToAscii,
-  isEmpty,
-  getMd5Hash
+  isEmpty
 };

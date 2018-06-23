@@ -4,6 +4,9 @@
 var forge = require('node-forge');
 var fs = require('fs');
 var crypto = require('crypto');
+var btoa = require('btoa');
+var md5 = require('md5');
+
 var utils = require('./utils');
 
 /**
@@ -20,26 +23,33 @@ function Cert(id, epn, name, password) {
   this.password = password;
 
   // Get the MD5 hash of the password
-  this.hashedPassword = this.getMd5Hash(password);
+  this.hashedPassword = this.getHashedPassword(password);
 
   // Extract the keys
   this.extractKeys();
 }
 
-// scr: http://stackoverflow.com/questions/37833952/getting-the-private-key-from-p12-file-using-javascript
+/**
+ * Converts the customer password to an MD5 hashed password that can open a PKCS#12 file
+ * @param {string} password The customer password to be converted
+ */
+Cert.prototype.getHashedPassword = function(password) {
+  // Get the MD5 hash of the input password. This btoa error is a TypeScript warning, but code is working
+  return btoa(utils.hexToAscii(md5(password)));
+};
 
 /**
- * Extracts the keys from the p12 file
+ * Extracts the keys from the PKCS#12 file
+ * @link http://stackoverflow.com/questions/37833952/getting-the-private-key-from-p12-file-using-javascript
+ * @link http://stackoverflow.com/questions/17182848/best-approch-to-decode-the-pkcs12-file-and-get-the-encrypted-private-key-from-it
  */
 Cert.prototype.extractKeys = function() {
-  var keyFile = fs.readFileSync('digital-certs/' + this.id + '.p12');
+  var keyFile = fs.readFileSync(`./test/certs/${this.id}.p12`);
   var keyBase64 = keyFile.toString('base64');
-
   var p12Der = forge.util.decode64(keyBase64);
-
   var p12Asn1 = forge.asn1.fromDer(p12Der);
   var p12 = forge.pkcs12.pkcs12FromAsn1(p12Asn1, this.hashedPassword);
-  //http://stackoverflow.com/questions/17182848/best-approch-to-decode-the-pkcs12-file-and-get-the-encrypted-private-key-from-it
+
   // get bags by type
   var certBags = p12.getBags({ bagType: forge.pki.oids.certBag });
   var pkeyBags = p12.getBags({ bagType: forge.pki.oids.pkcs8ShroudedKeyBag });
