@@ -2,6 +2,9 @@
 'use strict';
 
 /* Script for testing the various components of the encryption process */
+
+const forge = require('node-forge');
+
 const Cert = require('../src/cert');
 const utils = require('../src/utils');
 const certs = require('../test/certs');
@@ -51,7 +54,22 @@ if (cert.getHashedPassword(testPassword) !== expectedHash) {
   console.log('FAIL: Password MD5 hash calculated incorrectly');
 }
 
-// Check that keys have been extracted:
-//console.log(cert.keys.)
+// Check that PEM keys have been extracted:
+if (
+  cert.keys.privateKeyPem.split('\n')[0].indexOf('BEGIN RSA PRIVATE KEY') === -1
+) {
+  console.log('FAIL: Private Key PEM was not extracted');
+} else if (
+  cert.keys.PublicKeyPem.split('\n')[0].indexOf('BEGIN PUBLIC KEY') === -1
+) {
+  console.log('FAIL: Public Key PEM was not extracted');
+} else if (
+  cert.keys.CertificatePem.split('\n')[0].indexOf('BEGIN CERTIFICATE') === -1
+) {
+  console.log('FAIL: Certificate PEM was not extracted');
+}
+
+var keyId = cert.keys.removeBeginEnd(cert.keys.CertificatePem);
+console.log(keyId);
 
 console.log(`Testing completed. ${failed} test(s) failed`);
