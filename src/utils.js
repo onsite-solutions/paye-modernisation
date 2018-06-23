@@ -1,6 +1,9 @@
 //@ts-check
 'use strict';
 
+var md5 = require('md5');
+var btoa = require('btoa');
+
 /**
  * Converts a hexadecimal string to an ASCII string
  * @param {string} hex The hexadecimal string to be converted
@@ -26,7 +29,18 @@ function isEmpty(value) {
   );
 }
 
+/**
+ * Returns the MD5 hash of the provided string
+ * @param {string} value The string to be hashed
+ */
+function getMd5Hash(value) {
+  //var hex = hexToAscii(md5(value));
+  //console.log(hex);
+  //return btoa(hex);
+}
+
 module.exports = {
   hexToAscii,
-  isEmpty
+  isEmpty,
+  getMd5Hash
 };

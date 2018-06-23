@@ -4,8 +4,6 @@
   "description": "PAYE Modernisation API Server",
   "main": "server.js",
   "scripts": {
-    "server": "nodemon server.js",
-    "app": "nodemon app.js",
     "test": "nodemon ./test/tests.js",
     "client": "nodemon client.js"
   },
@@ -27,7 +25,8 @@
     "express": "^4.16.3",
     "hasha": "^3.0.0",
     "md5": "^2.2.1",
-    "node-forge": "^0.7.5"
+    "node-forge": "^0.7.5",
+    "swagger-client": "^3.8.6"
   },
   "devDependencies": {
     "@types/node": "^10.3.4",
