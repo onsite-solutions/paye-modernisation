@@ -1,9 +1,9 @@
 //@ts-check
 'use strict';
 
-const http = require('http');
-const certs = require('../test/certs');
-const Cert = require('./cert');
+var request = require('request');
+var certs = require('../test/certs');
+var Cert = require('./cert');
 
 /*
 Following response from ROS this is a verbatim attempt to replicate their sample 'successful request' file.
@@ -31,9 +31,9 @@ var options = {
       cert.epn +
       '/' +
       2018 +
-      '/Payroll1/submission01?softwareUsed=SOftwareABC&softwareVersion=1.0.0',
+      '?softwareUsed=SOftwareABC&softwareVersion=1.0.0',
     Date: new Date().toUTCString(),
-    'Content-Type': 'application/json',
+    'Content-Type': 'application/json;charset=UTF-8',
     Signature: ''
   }
 };
@@ -52,28 +52,28 @@ var signatureHeader = cert.getSignatureHeader(signingString);
 
 options.headers.Signature = signatureHeader;
 
-console.log(signingString);
-console.log(signatureHeader);
-console.log(options);
+//console.log(signingString);
+//console.log(signatureHeader);
+//console.log(options);
 
-http
+request
   .get(options, res => {
     let data = '';
-    console.log('STATUS: ' + res.statusCode);
-    console.log('HEADERS: ' + JSON.stringify(res.headers));
+    //console.log('STATUS: ' + res.statusCode);
+    //console.log('HEADERS: ' + JSON.stringify(res.headers));
     res.setEncoding('utf8');
-    res.on('data', function(chunk) {
-      console.log('BODY: ' + chunk);
-    });
+    //res.on('data', function(chunk) {
+    //console.log('BODY: ' + chunk);
+    //});
     // A chunk of data has been recieved.
-    //  res.on('data', chunk => {
-    //    console.log('Receiving:' + chunk);
-    //    data += chunk;
-    // });
+    res.on('data', chunk => {
+      //console.log('Receiving:' + chunk);
+      data += chunk;
+    });
 
     // The whole response has been received. Print out the result.
     res.on('end', () => {
-      console.log('Returned:' + data);
+      console.log(data);
     });
   })
   .on('error', err => {

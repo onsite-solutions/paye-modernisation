@@ -1,14 +1,14 @@
 //@ts-check
 'use strict';
 
-const forge = require('node-forge');
-const fs = require('fs');
-const crypto = require('crypto');
-const btoa = require('btoa');
-const md5 = require('md5');
+var forge = require('node-forge');
+var fs = require('fs');
+var crypto = require('crypto');
+var btoa = require('btoa');
+var md5 = require('md5');
 
-const keys = require('./keys');
-const utils = require('./utils');
+var keys = require('./keys');
+var utils = require('./utils');
 
 /**
  * Represents a Digital certificate
@@ -35,7 +35,7 @@ function Cert(id, epn, name, password) {
  * @param {string} password The customer password to be converted
  */
 Cert.prototype.getHashedPassword = function(password) {
-  // Get the MD5 hash of the input password. This btoa error is a TypeScript warning, but code is working
+  // This btoa error is a TypeScript warning, but code is working
   return btoa(utils.hexToAscii(md5(password)));
 };
 
@@ -70,72 +70,7 @@ Cert.prototype.extractKeys = function() {
   var publicKeyPem = forge.pki.publicKeyToPem(keyBag.key);
   var certificatePem = forge.pki.certificateToPem(certBag.cert);
 
-  console.log(certBag.cert);
-
   this.keys = new keys(privateKeyPem, publicKeyPem, certificatePem);
-};
-
-/**
- * Gets the string to be signed as part of the Signature String Construction
- * @param {any} header
- * @param {string} digest
- */
-Cert.prototype.getSigningString = function(header, digest) {
-  // (request-target)
-  //var result = header.method + ' ' + header.path + '\n';
-  var result =
-    '(request-target): ' +
-    header.method.toLowerCase() +
-    ' ' +
-    header.path +
-    '\n';
-  // host
-  result += 'host: ' + header.host + '\n';
-  // date
-  result += 'date: ' + header.date;
-  // digest
-  if (!utils.isEmpty(header.digest)) {
-    result += '\n' + header.digest;
-  }
-
-  result += '\n' + 'content-type: application/json';
-
-  return result;
-};
-
-/**
- * Generates the signature header
- * @param {string} signingString
- */
-Cert.prototype.getSignatureHeader = function(signingString) {
-  // keyId
-  var result = 'keyId="' + forge.util.encode64(this.keys.certificate) + '",';
-  // algorithm
-  result += 'algorithm="rsa-sha512",';
-  // headers
-  result += 'headers="(request-target) host date content-type",';
-  //result += 'headers="(request-target) host date digest",'
-  // signature
-  var sign = crypto.createSign('RSA-SHA512');
-  sign.update(signingString);
-  var signature = sign.sign(this.keys.privateKey, 'base64');
-
-  //result += 'signature="' + forge.util.encode64(signature) + '"';
-  result += 'signature="' + signature + '"';
-  return result;
-};
-
-/**
- *
- * @param {any} postBody
- * @param {string} privateKey
- */
-Cert.prototype.getDigest = function(postBody, privateKey) {
-  var sign = crypto.createSign('RSA-SHA512');
-  sign.update(JSON.stringify(postBody));
-  var digest = sign.sign(privateKey, 'base64');
-
-  return digest;
 };
 
 module.exports = Cert;

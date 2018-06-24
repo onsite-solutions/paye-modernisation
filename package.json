@@ -2,10 +2,9 @@
   "name": "paye-modernisation",
   "version": "0.1.0",
   "description": "PAYE Modernisation API Server",
-  "main": "server.js",
   "scripts": {
     "test": "nodemon ./test/tests.js",
-    "client": "nodemon client.js"
+    "client": "nodemon ./src/client.js"
   },
   "repository": {
     "type": "git",
@@ -26,6 +25,7 @@
     "hasha": "^3.0.0",
     "md5": "^2.2.1",
     "node-forge": "^0.7.5",
+    "request": "^2.87.0",
     "swagger-client": "^3.8.6"
   },
   "devDependencies": {

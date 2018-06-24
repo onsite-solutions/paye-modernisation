@@ -1,10 +1,6 @@
 //@ts-check
 'use strict';
 
-var forge = require('node-forge');
-var btoa = require('btoa');
-var crypto = require('crypto');
-
 /**
  * Converts a hexadecimal string to an ASCII string
  * @param {string} hex The hexadecimal string to be converted

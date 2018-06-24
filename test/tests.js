@@ -3,11 +3,9 @@
 
 /* Script for testing the various components of the encryption process */
 
-const forge = require('node-forge');
-
-const Cert = require('../src/cert');
-const utils = require('../src/utils');
-const certs = require('../test/certs');
+var Cert = require('../src/cert');
+var utils = require('../src/utils');
+var certs = require('../test/certs');
 
 let failed = 0;
 
@@ -52,24 +50,34 @@ let expectedHash = 'QvdJref54ZW/R183pEyvyw==';
 
 if (cert.getHashedPassword(testPassword) !== expectedHash) {
   console.log('FAIL: Password MD5 hash calculated incorrectly');
+  failed++;
 }
 
 // Check that PEM keys have been extracted:
 if (
-  cert.keys.privateKeyPem.split('\n')[0].indexOf('BEGIN RSA PRIVATE KEY') === -1
+  cert.keys.privatePem.split('\n')[0].indexOf('BEGIN RSA PRIVATE KEY') === -1
 ) {
   console.log('FAIL: Private Key PEM was not extracted');
+  failed++;
 } else if (
-  cert.keys.PublicKeyPem.split('\n')[0].indexOf('BEGIN PUBLIC KEY') === -1
+  cert.keys.publicPem.split('\n')[0].indexOf('BEGIN PUBLIC KEY') === -1
 ) {
   console.log('FAIL: Public Key PEM was not extracted');
+  failed++;
 } else if (
-  cert.keys.CertificatePem.split('\n')[0].indexOf('BEGIN CERTIFICATE') === -1
+  cert.keys.certPem.split('\n')[0].indexOf('BEGIN CERTIFICATE') === -1
 ) {
   console.log('FAIL: Certificate PEM was not extracted');
+  failed++;
 }
 
-var keyId = cert.keys.removeBeginEnd(cert.keys.CertificatePem);
-console.log(keyId);
+// keyId for the signing string
+if (utils.isEmpty(cert.keys.keyId)) {
+  console.log('FAIL: Certificate keyId not set');
+  failed++;
+}
+
+//var keyId = cert.keys.removeBeginEnd(cert.keys.CertificatePem);
+//console.log(keyId);
 
 console.log(`Testing completed. ${failed} test(s) failed`);
