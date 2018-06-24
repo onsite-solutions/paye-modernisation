@@ -1,6 +1,10 @@
 //@ts-check
 'use strict';
 
+var crypto = require('crypto');
+
+var utils = require('./utils');
+
 /**
  * Gets the string to be signed as part of the Signature String Construction
  * @param {any} options
@@ -33,7 +37,7 @@ function getSigningString(options, digest) {
  * Generates the signature header
  * @param {string} signingString
  */
-Cert.prototype.getSignatureHeader = function(signingString) {
+function getSignatureHeader(signingString) {
   // keyId
   //var result = 'keyId="' + this.keys.keyId + '",';
   var result = `keyId="${this.keys.keyId}"`;
@@ -50,7 +54,7 @@ Cert.prototype.getSignatureHeader = function(signingString) {
   //result += 'signature="' + forge.util.encode64(signature) + '"';
   result += 'signature="' + signature + '"';
   return result;
-};
+}
 
 /**
  *

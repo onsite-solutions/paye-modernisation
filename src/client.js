@@ -2,14 +2,18 @@
 'use strict';
 
 var request = require('request');
+
 var certs = require('../test/certs');
 var Cert = require('./cert');
-
+var config = require('../config/config');
 /*
 Following response from ROS this is a verbatim attempt to replicate their sample 'successful request' file.
 Where there are contradictions between their documentation, the Cavage documentation and the sample file, 
 the approach taken in the sample file will take precedence.
 */
+
+// Get config for the test environment
+var conf = config.find(x => x.env === 'test');
 
 // Fetch the digital certificate from the certs array
 var certParams = certs.find(c => c.id == 999963666); // or 999963665
@@ -23,15 +27,12 @@ var cert = new Cert(
 
 // Create options
 var options = {
-  host: 'softwaretest.ros.ie',
+  host: conf.host,
   headers: {
     Method: 'GET',
-    Path:
-      '/v1/rest/payroll/' +
-      cert.epn +
-      '/' +
-      2018 +
-      '?softwareUsed=SOftwareABC&softwareVersion=1.0.0',
+    Path: `${conf.pathRoot}${
+      cert.epn
+    }/${2018}?softwareUsed=SOftwareABC&softwareVersion=1.0.0`,
     Date: new Date().toUTCString(),
     'Content-Type': 'application/json;charset=UTF-8',
     Signature: ''
