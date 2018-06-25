@@ -42,7 +42,8 @@ var options = {
     'Content-Type': 'application/json;charset=UTF-8',
     Digest: '',
     Signature: ''
-  }
+  },
+  form: testBody
 };
 
 // Create the message object

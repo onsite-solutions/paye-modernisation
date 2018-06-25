@@ -6,7 +6,6 @@ var crypto = require('crypto');
 
 var utils = require('./utils');
 var Cert = require('./cert');
-var config = require('../config/config');
 
 /**
  * Wrapper for a https request conforming to the proposed Cavage HTTP Signature Header standard
@@ -19,7 +18,8 @@ function Message(options, cert) {
   this.cert = cert;
   let headers = options.headers;
 
-  if (headers.Method === 'POST' && !utils.isEmpty(headers.Digest)) {
+  //If there is a POST body/payload, create the Digest header
+  if (headers.Method === 'POST' && !utils.isEmpty(this.options.form)) {
     this.setDigest();
   }
 
@@ -29,11 +29,18 @@ function Message(options, cert) {
 }
 
 /**
- * If there is a message body, creates the Digest header from the MD5 hash
+ * Set the digest header from the POST body/payload
  */
 Message.prototype.setDigest = function() {
+  /*
+  * The ‘Digest’ HTTP header is created using the POST body/payload. The payload should be
+  * converted to a byte array, hashed using the SHA-512 algorithm and finally base64 encoded before
+  * adding it as a HTTP header.
+  */
   // Convert payload to byte array
-  var bytes = this.options.postBody.toString().getBytes('UTF-8');
+  var bytes = this.options.form.toString().getBytes('UTF-8');
+  console.log(this.options);
+
   var md = forge.md.md5.create();
   md.update(bytes);
   let digest = forge.util.encode64(md.digest().toString());
@@ -50,27 +57,25 @@ Message.prototype.setSigningString = function() {
   var result = [];
   let headerString = '';
   let options = this.options;
-  let headers = this.options.headers;
+  let hdrs = this.options.headers;
 
   // (request-target)
-  result.push(
-    `(request-target): ${headers.Method.toLowerCase()} ${headers.Path}`
-  );
+  result.push(`(request-target): ${hdrs.Method.toLowerCase()} ${hdrs.Path}`);
   headerString += '(request-target) ';
 
   // host
-  result.push(`host: ${options.host}`);
+  result.push(`host: ${hdrs.Host}`);
   headerString += 'host ';
 
   // date
-  result.push(`date: ${headers.Date}`);
+  result.push(`date: ${hdrs.Date}`);
   headerString += 'date ';
 
   // x-date
 
   // digest
-  if (headers.Method === 'POST' && !utils.isEmpty(headers.Digest)) {
-    result.push(`digest: ${headers.Digest}`);
+  if (hdrs.Method === 'POST' && !utils.isEmpty(hdrs.Digest)) {
+    result.push(`digest: ${hdrs.Digest}`);
     headerString += 'digest ';
   }
 
