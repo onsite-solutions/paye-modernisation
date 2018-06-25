@@ -6,6 +6,10 @@ var request = require('request');
 var certs = require('../test/certs');
 var Cert = require('./cert');
 var config = require('../config/config');
+var Message = require('./message');
+
+var testBody = require('../test/requests/testBody');
+
 /*
 Following response from ROS this is a verbatim attempt to replicate their sample 'successful request' file.
 Where there are contradictions between their documentation, the Cavage documentation and the sample file, 
@@ -18,6 +22,7 @@ var conf = config.find(x => x.env === 'test');
 // Fetch the digital certificate from the certs array
 var certParams = certs.find(c => c.id == 999963666); // or 999963665
 
+// Create the Cert object
 var cert = new Cert(
   certParams.id,
   certParams.epn,
@@ -27,35 +32,37 @@ var cert = new Cert(
 
 // Create options
 var options = {
-  host: conf.host,
   headers: {
-    Method: 'GET',
+    Method: 'POST',
     Path: `${conf.pathRoot}${
       cert.epn
     }/${2018}?softwareUsed=SOftwareABC&softwareVersion=1.0.0`,
+    Host: `${conf.host}`,
     Date: new Date().toUTCString(),
     'Content-Type': 'application/json;charset=UTF-8',
+    Digest: '',
     Signature: ''
   }
 };
 
+// Create the message object
+var message = new Message(options, cert);
+
 // Create headers
 
-// Build the plaintext signing string from the headers
-
-var signingString = cert.getSigningString(options, '');
-
-// console.log(signingString);
-
-// Get the signature header
-
-var signatureHeader = cert.getSignatureHeader(signingString);
-
-options.headers.Signature = signatureHeader;
+options.headers.Signature = message.httpSignatureHeader;
 
 //console.log(signingString);
 //console.log(signatureHeader);
 //console.log(options);
+/*
+request()
+  .then(function(res) {
+    // Handle the response
+  })
+  .catch(function(err) {
+    // Deal with the error
+  });
 
 request
   .get(options, res => {
@@ -80,3 +87,4 @@ request
   .on('error', err => {
     console.log('Error: ' + err.message);
   });
+  */
