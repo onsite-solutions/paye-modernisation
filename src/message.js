@@ -29,25 +29,22 @@ function Message(options, cert) {
 }
 
 /**
- * Set the digest header from the POST body/payload
+ * Sets the digest header from the POST body/payload.
+ * Calculates the SHA512 digest hash of the JSON document and converts it to a BASE64 encoded String
+ *
+ * @link https://gist.github.com/RevenueGitHubAdmin/22566bb275f5b084d78e3532c0947d3c
  */
 Message.prototype.setDigest = function() {
-  /*
-  * The ‘Digest’ HTTP header is created using the POST body/payload. The payload should be
-  * converted to a byte array, hashed using the SHA-512 algorithm and finally base64 encoded before
-  * adding it as a HTTP header.
-  */
-  // Convert payload to byte array
-  var bytes = this.options.form.toString().getBytes('UTF-8');
-  console.log(this.options);
+  // The sha512 warning is a TypeScript issue, the property does exist but is not
+  this.digest = forge.util.encode64(
+    forge.md.sha512
+      .create()
+      .update(this.options.form)
+      .digest()
+      .getBytes()
+  );
 
-  var md = forge.md.md5.create();
-  md.update(bytes);
-  let digest = forge.util.encode64(md.digest().toString());
-
-  console.log(digest);
-
-  this.options.headers.Digest = digest;
+  this.options.headers.Digest = this.digest;
 };
 
 /**

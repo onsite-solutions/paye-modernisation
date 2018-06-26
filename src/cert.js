@@ -3,9 +3,6 @@
 
 var forge = require('node-forge');
 var fs = require('fs');
-var crypto = require('crypto');
-var btoa = require('btoa');
-var md5 = require('md5');
 
 var keys = require('./keys');
 var utils = require('./utils');
@@ -35,8 +32,13 @@ function Cert(id, epn, name, password) {
  * @param {string} password The customer password to be converted
  */
 Cert.prototype.getHashedPassword = function(password) {
-  // This btoa error is a TypeScript warning, but code is working
-  return btoa(utils.hexToAscii(md5(password)));
+  return forge.util.encode64(
+    forge.md.md5
+      .create()
+      .update(password)
+      .digest()
+      .getBytes()
+  );
 };
 
 /**
