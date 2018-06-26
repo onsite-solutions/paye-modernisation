@@ -5,7 +5,7 @@ const Config = [
   {
     env: 'test',
     host: 'softwaretest.ros.ie',
-    pathRoot: '/v1/rest/payroll/'
+    basePath: '/paye-employers/v1/rest'
   }
 ];
 
