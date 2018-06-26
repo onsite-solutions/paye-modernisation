@@ -2,6 +2,8 @@
 'use strict';
 
 var forge = require('node-forge');
+var crypto = require('crypto');
+
 var utils = require('./utils');
 var Cert = require('./cert');
 
@@ -21,7 +23,7 @@ function Message(options, cert) {
     this.setDigest();
   }
 
-  this.signingString = this.setSigningString();
+  this.setSigningString();
 
   this.httpSignatureHeader = this.setSignatureHeader();
 }
@@ -50,7 +52,6 @@ Message.prototype.setDigest = function() {
 Message.prototype.setSigningString = function() {
   var result = [];
   let headerString = '';
-  let options = this.options;
   let hdrs = this.options.headers;
 
   // (request-target)
@@ -74,8 +75,10 @@ Message.prototype.setSigningString = function() {
   }
 
   // content-type
-  result.push('content-type: application/json;charset=UTF-8');
-  headerString += 'content-type ';
+  if (hdrs.Method === 'POST') {
+    result.push('content-type: application/x-www-formurlencoded');
+    headerString += 'content-type ';
+  }
 
   // x-http-method-override
 
@@ -98,9 +101,12 @@ Message.prototype.setSignatureHeader = function() {
   result += `headers="${this.headerString}",`;
 
   // signature
+
   var sign = crypto.createSign('RSA-SHA512');
-  sign.update(this.signingString);
+  sign.update(Buffer.from(this.signingString));
   var signature = sign.sign(this.cert.privateKey, 'base64');
+
+  console.log(signature);
 
   //TODO: does this need to be encoded?
   //result += 'signature="' + forge.util.encode64(signature) + '"';

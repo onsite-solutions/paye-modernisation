@@ -5,7 +5,7 @@ const Config = [
   {
     env: 'test',
     host: 'softwaretest.ros.ie',
-    basePath: '/paye-employers/v1/rest'
+    basePath: '/v1/rest/rpn' //
   }
 ];
 

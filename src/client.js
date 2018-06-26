@@ -33,27 +33,27 @@ var cert = new Cert(
 // Create options
 var options = {
   headers: {
-    Method: 'POST',
-    Path: `${conf.pathRoot}${
-      cert.epn
-    }/${2018}?softwareUsed=SOftwareABC&softwareVersion=1.0.0`,
+    Method: 'GET',
+    Path: `${conf.basePath}/${cert.epn}/2019/1/1`,
     Host: `${conf.host}`,
     Date: new Date().toUTCString(),
     'Content-Type': 'application/json;charset=UTF-8',
-    Digest: '',
+    // Digest: '',
     Signature: ''
-  },
-  form: testBody
+  }
+  // form: testBody
 };
 
 // Create the message object
 var message = new Message(options, cert);
 
+console.log(message.signingString);
+// console.log(message.headerString);
+
 // Create headers
 
 options.headers.Signature = message.httpSignatureHeader;
 
-//console.log(signingString);
 //console.log(signatureHeader);
 //console.log(options);
 /*
