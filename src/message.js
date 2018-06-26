@@ -2,8 +2,6 @@
 'use strict';
 
 var forge = require('node-forge');
-var crypto = require('crypto');
-
 var utils = require('./utils');
 var Cert = require('./cert');
 
@@ -31,11 +29,10 @@ function Message(options, cert) {
 /**
  * Sets the digest header from the POST body/payload.
  * Calculates the SHA512 digest hash of the JSON document and converts it to a BASE64 encoded String
- *
  * @link https://gist.github.com/RevenueGitHubAdmin/22566bb275f5b084d78e3532c0947d3c
  */
 Message.prototype.setDigest = function() {
-  // The sha512 warning is a TypeScript issue, the property does exist but is not
+  // The sha512 warning is a TypeScript false alarm
   this.digest = forge.util.encode64(
     forge.md.sha512
       .create()
@@ -92,7 +89,7 @@ Message.prototype.setSigningString = function() {
  */
 Message.prototype.setSignatureHeader = function() {
   // keyId
-  var result = `keyId="${this.cert.keys.keyId}"`;
+  var result = `keyId="${this.cert.keyId}"`;
 
   // algorithm
   result += 'algorithm="rsa-sha512",';
@@ -103,7 +100,7 @@ Message.prototype.setSignatureHeader = function() {
   // signature
   var sign = crypto.createSign('RSA-SHA512');
   sign.update(this.signingString);
-  var signature = sign.sign(this.cert.keys.privatePem, 'base64');
+  var signature = sign.sign(this.cert.privateKey, 'base64');
 
   //TODO: does this need to be encoded?
   //result += 'signature="' + forge.util.encode64(signature) + '"';

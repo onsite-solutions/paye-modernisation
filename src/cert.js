@@ -4,9 +4,6 @@
 var forge = require('node-forge');
 var fs = require('fs');
 
-var keys = require('./keys');
-var utils = require('./utils');
-
 /**
  * Represents a Digital certificate
  * @param {number} id Digital certificate identification number
@@ -20,16 +17,31 @@ function Cert(id, epn, name, password) {
   this.name = name;
   this.password = password;
 
+  this.keyStoreFilePath = `./test/certs/${this.id}.p12`;
+
   // Get the MD5 hash of the password
   this.hashedPassword = this.getHashedPassword(password);
 
-  // Extract the keys
-  this.extractKeys();
+  // set the keyStore object
+  this.pkcs12KeyStore = this.openKeyStore(
+    this.keyStoreFilePath,
+    this.hashedPassword
+  );
+
+  // Set the certificate and private key
+  let keys = this.getCertificateAndKeyFromKeyStore(this.pkcs12KeyStore);
+
+  this.certificate = keys.certificate;
+  this.privateKey = keys.privateKey;
+
+  // Get the encoded certificate (keyId component of the signing string)
+  this.keyId = this.encodeCertificate(this.certificate);
 }
 
 /**
  * Converts the customer password to an MD5 hashed password that can open a PKCS#12 file
  * @param {string} password The customer password to be converted
+ * @link https://gist.github.com/RevenueGitHubAdmin/17073ac5724d19c69d950b76f41fa0fa
  */
 Cert.prototype.getHashedPassword = function(password) {
   return forge.util.encode64(
@@ -42,37 +54,46 @@ Cert.prototype.getHashedPassword = function(password) {
 };
 
 /**
- * Extracts the keys from the PKCS#12 file
- * @link https://stackoverflow.com/q/37833952/5049533
- * @link https://stackoverflow.com/q/17182848/5049533
+ * Gets the PKCS#12 KeyStore from the .p12 file
+ * @param {string} keyStoreFilePath
+ * @param {string} hashedPassword
+ * @link https://gist.github.com/RevenueGitHubAdmin/325b4f3451529a2cf29c646596e99b5f
  */
-Cert.prototype.extractKeys = function() {
-  // Read the key file and convert to base64 encoded string
-  var keyFile = fs
-    .readFileSync(`./test/certs/${this.id}.p12`)
-    .toString('base64');
+Cert.prototype.openKeyStore = function(keyStoreFilePath, hashedPassword) {
+  var asn1 = forge.asn1.fromDer(fs.readFileSync(keyStoreFilePath, 'binary'));
 
-  // Decode p12 from base64
-  var p12Der = forge.util.decode64(keyFile);
-  // Get p12 as an ASN.1 object
-  var p12Asn1 = forge.asn1.fromDer(p12Der);
-  // Decrypt p12 using the hashed password
-  var p12 = forge.pkcs12.pkcs12FromAsn1(p12Asn1, this.hashedPassword);
+  return forge.pkcs12.pkcs12FromAsn1(asn1, hashedPassword);
+};
 
-  // Get bags by type
-  var certBags = p12.getBags({ bagType: forge.pki.oids.certBag });
-  var keyBags = p12.getBags({ bagType: forge.pki.oids.pkcs8ShroudedKeyBag });
+/**
+ * Get the certificate and private key from the PKCS#12 KeyStore file
+ * @param {any} pkcs12KeyStore The PKCS#12 KeyStore object
+ * @link https://gist.github.com/RevenueGitHubAdmin/8e63418835e1eb12c67169e532bed599
+ */
+Cert.prototype.getCertificateAndKeyFromKeyStore = function(pkcs12KeyStore) {
+  var certificateBag = pkcs12KeyStore.getBags({
+    bagType: forge.pki.oids.certBag
+  });
+  var privateKeyBag = pkcs12KeyStore.getBags({
+    bagType: forge.pki.oids.pkcs8ShroudedKeyBag
+  });
+  var certificate = certificateBag[forge.pki.oids.certBag][0].cert;
+  var privateKey = privateKeyBag[forge.pki.oids.pkcs8ShroudedKeyBag][0].key;
+  return {
+    certificate: certificate,
+    privateKey: privateKey
+  };
+};
 
-  // Get certBag and keyBag
-  var certBag = certBags[forge.pki.oids.certBag][0];
-  var keyBag = keyBags[forge.pki.oids.pkcs8ShroudedKeyBag][0];
-
-  // generate PEMs from private key, public key and certificate
-  var privateKeyPem = forge.pki.privateKeyToPem(keyBag.key);
-  var publicKeyPem = forge.pki.publicKeyToPem(keyBag.key);
-  var certificatePem = forge.pki.certificateToPem(certBag.cert);
-
-  this.keys = new keys(privateKeyPem, publicKeyPem, certificatePem);
+/**
+ * Encodes the binary representation of the certificate into a Base 64 string
+ * @param {any} certificate
+ * @link https://gist.github.com/RevenueGitHubAdmin/c7191d975599e381c45f21782305d06d
+ */
+Cert.prototype.encodeCertificate = function(certificate) {
+  return forge.util.encode64(
+    forge.asn1.toDer(forge.pki.certificateToAsn1(certificate)).getBytes()
+  );
 };
 
 module.exports = Cert;
