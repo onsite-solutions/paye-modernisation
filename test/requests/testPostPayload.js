@@ -1,7 +1,7 @@
 //@ts-check
 'use strict';
 
-const testBody = {
+const testPostPayload = {
   payslips: [
     {
       lineItemID: 'E1-v1',
@@ -46,4 +46,4 @@ const testBody = {
   ]
 };
 
-module.exports = testBody;
+module.exports = testPostPayload;

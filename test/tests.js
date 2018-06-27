@@ -1,11 +1,17 @@
 //@ts-check
 'use strict';
 
-/* Script for testing the various components of the encryption process */
+/* Script for testing the various components of the encryption and messaging process */
 
 var Cert = require('../src/cert');
+var Message = require('../src/message');
 var utils = require('../src/utils');
+var config = require('../config/config');
 var certs = require('../test/certs');
+
+var testGet = require('./requests/testGet');
+var testPost = require('./requests/testPost');
+var testPostPayload = require('../test/requests/testPostPayload');
 
 let failed = 0;
 
@@ -27,6 +33,9 @@ if (
 ) {
   logError('utils.isEmpty');
 }
+
+// Get config for the test environment
+var conf = config.find(x => x.env === 'test');
 
 // Fetch a digital certificate from the certs array
 var certParams = certs.find(c => c.id == 999963666); // or 999963665
@@ -74,5 +83,37 @@ if (utils.isEmpty(cert.privateKey)) {
 if (utils.isEmpty(cert.keyId)) {
   logError('Private Key was not extracted from PKCS#12 KeyStore');
 }
+
+// Create a test GET message
+var options = testGet(conf, cert);
+
+// Has the options object instantiated
+if (utils.isEmpty(options)) {
+  logError('options object not instantiated for GET request');
+}
+
+// Are all the fields populated
+if (
+  utils.isEmpty(options.headers) ||
+  utils.isEmpty(options.headers.Method) ||
+  utils.isEmpty(
+    options.headers.Path ||
+      utils.isEmpty(options.headers.Host) ||
+      utils.isEmpty(options.headers.Date)
+  )
+) {
+  logError('Some field(s) were not populated for the options object');
+}
+
+// Create the message object
+var getMsg = new Message(options, cert);
+
+// Is the GET message instantiated
+if (utils.isEmpty(getMsg)) {
+  logError('getMsg object was not instantiated');
+}
+
+// Test a GET endpoint
+console.log(getMsg.options.headers.Signature);
 
 console.log(`Testing completed. ${failed} test(s) failed`);

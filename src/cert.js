@@ -3,6 +3,7 @@
 
 var forge = require('node-forge');
 var fs = require('fs');
+var crypto = require('crypto');
 
 /**
  * Represents a Digital certificate
@@ -79,6 +80,7 @@ Cert.prototype.getCertificateAndKeyFromKeyStore = function(pkcs12KeyStore) {
   });
   var certificate = certificateBag[forge.pki.oids.certBag][0].cert;
   var privateKey = privateKeyBag[forge.pki.oids.pkcs8ShroudedKeyBag][0].key;
+
   return {
     certificate: certificate,
     privateKey: privateKey
@@ -94,6 +96,20 @@ Cert.prototype.encodeCertificate = function(certificate) {
   return forge.util.encode64(
     forge.asn1.toDer(forge.pki.certificateToAsn1(certificate)).getBytes()
   );
+};
+
+/**
+ * Signs the provided string with the with the private key and rsa-sha512 algorithm and returns a base 64 encoded string
+ * @param {string} signingString The string to be signed with th
+ */
+Cert.prototype.signStringWithPrivateKey = function(signingString) {
+  var sign = crypto.createSign('RSA-SHA512');
+  sign.update(signingString);
+  var signature = sign.sign(
+    forge.pki.privateKeyToPem(this.privateKey),
+    'base64'
+  );
+  return signature;
 };
 
 module.exports = Cert;

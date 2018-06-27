@@ -8,7 +8,7 @@ var Cert = require('./cert');
 var config = require('../config/config');
 var Message = require('./message');
 
-var testBody = require('../test/requests/testBody');
+var testBody = require('../test/requests/testPostPayload');
 
 /*
 Following response from ROS this is a verbatim attempt to replicate their sample 'successful request' file.

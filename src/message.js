@@ -17,101 +17,115 @@ function Message(options, cert) {
   this.options = options;
   this.cert = cert;
   let headers = options.headers;
+  let payload = this.options.form;
 
   //If there is a POST body/payload, create the Digest header
-  if (headers.Method === 'POST' && !utils.isEmpty(this.options.form)) {
-    this.setDigest();
+  if (headers.Method === 'POST' && !utils.isEmpty(payload)) {
+    this.digest = this.getDigest(payload);
+    this.options.headers.Digest = this.digest;
   }
 
-  this.setSigningString();
+  this.headerString = this.getHeaderString();
+  this.signingString = this.getSigningString();
+  this.httpSignatureHeader = this.getSignatureHeader();
 
-  this.httpSignatureHeader = this.setSignatureHeader();
+  this.options.headers.Signature = this.httpSignatureHeader;
 }
 
 /**
- * Sets the digest header from the POST body/payload.
- * Calculates the SHA512 digest hash of the JSON document and converts it to a BASE64 encoded String
+ * Calculates the SHA512 digest hash of the JSON payload and converts it to a BASE64 encoded String
+ * @param {any} payload
  * @link https://gist.github.com/RevenueGitHubAdmin/22566bb275f5b084d78e3532c0947d3c
  */
-Message.prototype.setDigest = function() {
+Message.prototype.getDigest = function(payload) {
   // The sha512 warning is a TypeScript false alarm
-  this.digest = forge.util.encode64(
+  return forge.util.encode64(
     forge.md.sha512
       .create()
-      .update(this.options.form)
+      .update(payload)
       .digest()
       .getBytes()
   );
-
-  this.options.headers.Digest = this.digest;
 };
 
 /**
- * Sets the string to be signed as part of the Signature String Construction
+ * Generates the headers string that forms part of the Signature header
  */
-Message.prototype.setSigningString = function() {
-  var result = [];
+Message.prototype.getHeaderString = function() {
   let headerString = '';
   let hdrs = this.options.headers;
 
   // (request-target)
-  result.push(`(request-target): ${hdrs.Method.toLowerCase()} ${hdrs.Path}`);
   headerString += '(request-target) ';
 
   // host
-  result.push(`host: ${hdrs.Host}`);
   headerString += 'host ';
 
   // date
-  result.push(`date: ${hdrs.Date}`);
   headerString += 'date ';
 
   // x-date
 
   // digest
   if (hdrs.Method === 'POST' && !utils.isEmpty(hdrs.Digest)) {
-    result.push(`digest: ${hdrs.Digest}`);
     headerString += 'digest ';
   }
 
   // content-type
   if (hdrs.Method === 'POST') {
-    result.push('content-type: application/x-www-formurlencoded');
     headerString += 'content-type ';
   }
 
   // x-http-method-override
 
-  // Set the headerString and signingString
-  this.headerString = headerString.trimRight();
-  this.signingString = result.join('\n');
+  return headerString.trimRight();
 };
 
 /**
- * Generates the signature header
+ * Gets the string to be signed as part of the Signature String Construction
  */
-Message.prototype.setSignatureHeader = function() {
-  // keyId
-  var result = `keyId="${this.cert.keyId}"`;
+Message.prototype.getSigningString = function() {
+  let signString = [];
+  let hdrs = this.options.headers;
 
-  // algorithm
-  result += 'algorithm="rsa-sha512",';
+  // (request-target)
+  signString.push(
+    `(request-target): ${hdrs.Method.toLowerCase()} ${hdrs.Path}`
+  );
 
-  // headers
-  result += `headers="${this.headerString}",`;
+  // host
+  signString.push(`host: ${hdrs.Host}`);
 
-  // signature
+  // date
+  signString.push(`date: ${hdrs.Date}`);
 
-  var sign = crypto.createSign('RSA-SHA512');
-  sign.update(Buffer.from(this.signingString));
-  var signature = sign.sign(this.cert.privateKey, 'base64');
+  // x-date
 
-  console.log(signature);
+  // digest
+  if (hdrs.Method === 'POST' && !utils.isEmpty(hdrs.Digest)) {
+    signString.push(`digest: ${hdrs.Digest}`);
+  }
 
-  //TODO: does this need to be encoded?
-  //result += 'signature="' + forge.util.encode64(signature) + '"';
-  result += 'signature="' + signature + '"';
-  return result;
+  // content-type
+  if (hdrs.Method === 'POST') {
+    signString.push('content-type: application/x-www-formurlencoded');
+  }
+
+  // x-http-method-override
+
+  return signString.join('\n');
+};
+
+/**
+ * Generates the signature header (keyId, algorithm, headers, signature)
+ */
+Message.prototype.getSignatureHeader = function() {
+  return (
+    `keyId="${this.cert.keyId}",` +
+    'algorithm="rsa-sha512",' +
+    `headers="${this.headerString}",` +
+    `signature="${this.cert.signStringWithPrivateKey(this.signingString)}"`
+  );
 };
 
 module.exports = Message;
