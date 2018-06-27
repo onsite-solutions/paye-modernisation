@@ -11,6 +11,9 @@ var Cert = require('../../src/cert');
  */
 function getOptions(conf, cert, payload) {
   var result = {
+    hostname: `${conf.host}`,
+    path: `${conf.basePath}/${cert.epn}/${conf.year}`,
+    method: 'POST',
     headers: {
       Method: 'POST',
       Path: `${conf.basePath}/${cert.epn}/2019/1/1`,

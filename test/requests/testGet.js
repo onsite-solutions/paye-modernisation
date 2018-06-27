@@ -15,7 +15,7 @@ function testGet(conf, cert) {
     method: 'GET',
     headers: {
       Method: 'GET',
-      Path: `${conf.basePath}/${cert.epn}/${conf.year}/1/1`,
+      Path: `${conf.basePath}/${cert.epn}/${conf.year}`,
       Host: `${conf.host}`,
       Date: new Date().toUTCString(),
       Signature: null
