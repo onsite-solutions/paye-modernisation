@@ -2,53 +2,34 @@
 'use strict';
 
 var request = require('request');
+var https = require('https');
 
 var certs = require('../test/certs');
 var Cert = require('./cert');
 var config = require('../config/config');
 var Message = require('./message');
 
-var testBody = require('../test/requests/testPostPayload');
-
-/*
-Following response from ROS this is a verbatim attempt to replicate their sample 'successful request' file.
-Where there are contradictions between their documentation, the Cavage documentation and the sample file, 
-the approach taken in the sample file will take precedence.
-*/
+var testGet = require('../test/requests/testGet');
+var testPost = require('../test/requests/testPost');
+var testPostPayload = require('../test/requests/testPostPayload');
 
 // Get config for the test environment
 var conf = config.find(x => x.env === 'test');
 
 // Fetch the digital certificate from the certs array
-var certParams = certs.find(c => c.id == 999963666); // or 999963665
+var cer = certs.find(c => c.id == 999963666); // or 999963665
 
 // Create the Cert object
-var cert = new Cert(
-  certParams.id,
-  certParams.epn,
-  certParams.name,
-  certParams.password
-);
+var cert = new Cert(cer.id, cer.epn, cer.name, cer.password);
 
-// Create options
-var options = {
-  headers: {
-    Method: 'GET',
-    Path: `${conf.basePath}/${cert.epn}/2019/1/1`,
-    Host: `${conf.host}`,
-    Date: new Date().toUTCString(),
-    'Content-Type': 'application/json;charset=UTF-8',
-    // Digest: '',
-    Signature: ''
-  }
-  // form: testBody
-};
+// Create a test GET message. Fetch the options from our test/requests folder
+var options = testGet(conf, cert);
 
 // Create the message object
 var message = new Message(options, cert);
 
 console.log(message.signingString);
-// console.log(message.headerString);
+//console.log(message.headerString);
 
 // Create headers
 
@@ -64,12 +45,15 @@ request()
   .catch(function(err) {
     // Deal with the error
   });
+*/
 
-request
+console.log(options);
+
+https
   .get(options, res => {
     let data = '';
-    //console.log('STATUS: ' + res.statusCode);
-    //console.log('HEADERS: ' + JSON.stringify(res.headers));
+    console.log('STATUS: ' + res.statusCode);
+    console.log('HEADERS: ' + JSON.stringify(res.headers));
     res.setEncoding('utf8');
     //res.on('data', function(chunk) {
     //console.log('BODY: ' + chunk);
@@ -88,4 +72,3 @@ request
   .on('error', err => {
     console.log('Error: ' + err.message);
   });
-  */

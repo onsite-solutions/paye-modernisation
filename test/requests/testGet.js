@@ -10,9 +10,12 @@ var Cert = require('../../src/cert');
  */
 function testGet(conf, cert) {
   return {
+    hostname: `${conf.host}`,
+    path: `${conf.basePath}/${cert.epn}/${conf.year}`,
+    method: 'GET',
     headers: {
       Method: 'GET',
-      Path: `${conf.basePath}/${cert.epn}/2019/1/1`,
+      Path: `${conf.basePath}/${cert.epn}/${conf.year}/1/1`,
       Host: `${conf.host}`,
       Date: new Date().toUTCString(),
       Signature: null

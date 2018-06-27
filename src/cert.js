@@ -105,11 +105,7 @@ Cert.prototype.encodeCertificate = function(certificate) {
 Cert.prototype.signStringWithPrivateKey = function(signingString) {
   var sign = crypto.createSign('RSA-SHA512');
   sign.update(signingString);
-  var signature = sign.sign(
-    forge.pki.privateKeyToPem(this.privateKey),
-    'base64'
-  );
-  return signature;
+  return sign.sign(forge.pki.privateKeyToPem(this.privateKey), 'base64');
 };
 
 module.exports = Cert;

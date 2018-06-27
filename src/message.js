@@ -2,7 +2,6 @@
 'use strict';
 
 var forge = require('node-forge');
-var crypto = require('crypto');
 
 var utils = require('./utils');
 var Cert = require('./cert');
