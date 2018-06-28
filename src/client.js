@@ -32,7 +32,7 @@ var cert = new Cert(cer.id, cer.epn, cer.name, cer.password);
 // var options = getPayrollRun(conf, cert);
 
 // POST Payroll Submission
-var options = postPayrollSubmission(conf, cert, postPayrollSubmissionPayload());
+var options = postPayrollSubmission(conf, cert, postPayrollSubmissionPayload);
 
 // Create the message object
 var message = new Message(options, cert);
