@@ -1,14 +1,14 @@
 //@ts-check
 'use strict';
 
-var Cert = require('../../src/cert');
+var Cert = require('../../../src/cert');
 
 /**
- * Request options for testing a GET endpoint
+ * GET https://softwaretest.ros.ie/paye-employers/v1/rest/payroll/{employerRegistrationNumber}/{taxYear}/{payrollRunReference}
  * @param {any} conf
  * @param {Cert} cert
  */
-function testGet(conf, cert) {
+function getPayrollRun(conf, cert) {
   var hostName = conf.host;
   var endPoint = `${conf.basePath}/payroll/${cert.epn}/${
     conf.year
@@ -31,4 +31,4 @@ function testGet(conf, cert) {
   };
 }
 
-module.exports = testGet;
+module.exports = getPayrollRun;
