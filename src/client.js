@@ -55,12 +55,8 @@ https
     console.log('STATUS: ' + res.statusCode);
     console.log('HEADERS: ' + JSON.stringify(res.headers));
     res.setEncoding('utf8');
-    //res.on('data', function(chunk) {
-    //console.log('BODY: ' + chunk);
-    //});
     // A chunk of data has been recieved.
     res.on('data', chunk => {
-      //console.log('Receiving:' + chunk);
       data += chunk;
     });
 

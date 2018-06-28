@@ -9,15 +9,23 @@ var Cert = require('../../src/cert');
  * @param {Cert} cert
  */
 function testGet(conf, cert) {
+  var hostName = conf.host;
+  var endPoint = `${conf.basePath}/payroll/${cert.epn}/${
+    conf.year
+  }/1?softwareUsed=${encodeURIComponent(
+    'xyz'
+  )}&softwareVersion=${encodeURIComponent('1.0')}`;
+  var utcDate = new Date().toUTCString();
+
   return {
-    hostname: `${conf.host}`,
-    path: `${conf.basePath}/${cert.epn}/${conf.year}`,
+    hostname: hostName,
+    path: endPoint,
     method: 'GET',
     headers: {
       Method: 'GET',
-      Path: `${conf.basePath}/${cert.epn}/${conf.year}`,
-      Host: `${conf.host}`,
-      Date: new Date().toUTCString(),
+      Path: endPoint,
+      Host: hostName,
+      Date: utcDate,
       Signature: null
     }
   };
