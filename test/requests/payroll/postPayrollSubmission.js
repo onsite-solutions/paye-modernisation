@@ -7,9 +7,8 @@ var Cert = require('../../../src/cert');
  * POST https://softwaretest.ros.ie/paye-employers/v1/rest/payroll/{employerRegistrationNumber}/{taxYear}/{payrollRunReference}/{submissionID}
  * @param {any} conf
  * @param {Cert} cert
- * @param {any} payload
  */
-function postPayrollSubmission(conf, cert, payload) {
+function postPayrollSubmission(conf, cert) {
   var hostName = conf.host;
   var endPoint = `${conf.basePath}/payroll/${cert.epn}/${
     conf.year
@@ -30,8 +29,7 @@ function postPayrollSubmission(conf, cert, payload) {
       'Content-Type': 'application/json;charset=UTF-8',
       Digest: null,
       Signature: null
-    },
-    form: payload
+    }
   };
 
   return result;

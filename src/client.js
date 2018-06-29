@@ -1,7 +1,6 @@
 //@ts-check
 'use strict';
 
-var request = require('request');
 var https = require('https');
 
 var certs = require('../test/certs');
@@ -32,7 +31,8 @@ var cert = new Cert(cer.id, cer.epn, cer.name, cer.password);
 // var options = getPayrollRun(conf, cert);
 
 // POST Payroll Submission
-var options = postPayrollSubmission(conf, cert, postPayrollSubmissionPayload);
+var options = postPayrollSubmission(conf, cert);
+var payload = postPayrollSubmissionPayload;
 
 // Create the message object
 var message = new Message(options, cert);
@@ -45,7 +45,7 @@ var message = new Message(options, cert);
 options.headers.Signature = message.httpSignatureHeader;
 
 //console.log(signatureHeader);
-console.log(options);
+//console.log(options);
 /*
 request()
   .then(function(res) {
@@ -79,4 +79,23 @@ if (options.method === 'GET') {
       console.log('Error: ' + err.message);
     });
 } else if (options.method === 'POST') {
+  var req = https.request(options, res => {
+    let postResData = '';
+    console.log(`StatusCode: ${res.statusCode}`);
+    console.log(`Headers: ${JSON.stringify(res.headers)}`);
+
+    res.on('data', chunk => {
+      postResData += chunk;
+    });
+    res.on('end', () => {
+      console.log(postResData);
+    });
+  });
+
+  req.on('error', e => {
+    console.error(e);
+  });
+
+  req.write(JSON.stringify(payload));
+  req.end();
 }
