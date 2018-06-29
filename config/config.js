@@ -8,7 +8,7 @@ const Config = [
     //basePath: '/v1/rest/payroll',
     //basePath: '/v1/rest/rpn',
     basePath: '/paye-employers/v1/rest',
-    year: 2019
+    year: 2018
   }
 ];
 

@@ -12,15 +12,15 @@ var Cert = require('./cert');
  * @param {Cert} cert the digital certificate
  * @link https://tools.ietf.org/html/draft-cavage-http-signatures-08#section-4
  */
-function Message(options, cert) {
+function Message(options, cert, payload = null) {
   this.options = options;
   this.cert = cert;
+  this.payload = payload;
   let headers = options.headers;
-  let payload = this.options.form;
 
   //If there is a POST body/payload, create the Digest header
-  if (headers.Method === 'POST' && !utils.isEmpty(payload)) {
-    this.digest = this.getDigest(payload);
+  if (headers.Method === 'POST' && !utils.isEmpty(this.payload)) {
+    this.digest = this.getDigest(this.payload);
     this.options.headers.Digest = this.digest;
   }
 

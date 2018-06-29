@@ -9,9 +9,14 @@ var config = require('../config/config');
 var Message = require('./message');
 
 var getPayrollRun = require('../test/requests/payroll/getPayrollRun');
-var getRpn = require('../test/requests/rpn/getRpn');
 var postPayrollSubmission = require('../test/requests/payroll/postPayrollSubmission');
 var postPayrollSubmissionPayload = require('../test/requests/payroll/postPayrollSubmissionPayload');
+
+var getRpnByEmployee = require('../test/requests/rpn/getRpnByEmployee');
+var getRpnByEmployer = require('../test/requests/rpn/getRpnByEmployer');
+
+var options;
+var payload;
 
 // Get config for the test environment
 var conf = config.find(x => x.env === 'test');
@@ -25,20 +30,29 @@ var cert = new Cert(cer.id, cer.epn, cer.name, cer.password);
 // Create a test message. Construct the options from our test/requests folder
 
 // GET Look up RPN by Employer
-//var options = getRpn(conf, cert);
+// options = getRpnByEmployer(conf, cert);
+
+// GET Look up RPN by Employee
+options = getRpnByEmployee(conf, cert);
 
 // GET Check Payroll Run
-// var options = getPayrollRun(conf, cert);
+//var options = getPayrollRun(conf, cert);
 
 // POST Payroll Submission
-var options = postPayrollSubmission(conf, cert);
-var payload = postPayrollSubmissionPayload;
+// var options = postPayrollSubmission(conf, cert);
+// var payload = postPayrollSubmissionPayload;
 
-// Create the message object
+// Create the GET message object
 var message = new Message(options, cert);
 
+// Create the POST message object
+//var message = new Message(options, cert, payload);
+
+if (options.method === 'POST') {
+}
+
 //console.log(message.signingString);
-//console.log(message.headerString);
+console.log(message.options);
 
 // Create headers
 
@@ -46,15 +60,6 @@ options.headers.Signature = message.httpSignatureHeader;
 
 //console.log(signatureHeader);
 //console.log(options);
-/*
-request()
-  .then(function(res) {
-    // Handle the response
-  })
-  .catch(function(err) {
-    // Deal with the error
-  });
-*/
 
 // console.log(options);
 
@@ -83,7 +88,7 @@ if (options.method === 'GET') {
     let postResData = '';
     console.log(`StatusCode: ${res.statusCode}`);
     console.log(`Headers: ${JSON.stringify(res.headers)}`);
-
+    res.setEncoding('utf8');
     res.on('data', chunk => {
       postResData += chunk;
     });
