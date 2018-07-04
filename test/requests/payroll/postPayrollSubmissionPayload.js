@@ -6,12 +6,12 @@ const postPayrollSubmissionPayload = {
     {
       lineItemID: 'E1-v1',
       employeeID: {
-        employeePpsn: '00000008P',
+        employeePpsn: '7007162KA',
         employmentID: '1'
       },
       name: {
-        firstName: 'Ann',
-        familyName: 'Doe'
+        firstName: 'Caleb',
+        familyName: 'Merritt_TEST'
       },
       payFrequency: 'WEEKLY',
       rpnNumber: '5',
@@ -23,7 +23,7 @@ const postPayrollSubmissionPayload = {
         }
       ],
       calculationBasis: 'CUMULATIVE',
-      payDate: '2019-02-01',
+      payDate: '2018-02-01',
       grossPay: 307.5,
       payForIncomeTax: 307.5,
       incomeTaxPaid: 0,

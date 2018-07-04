@@ -107,7 +107,7 @@ Message.prototype.getSigningString = function() {
 
   // content-type
   if (hdrs.Method === 'POST') {
-    signString.push('content-type: application/x-www-formurlencoded');
+    signString.push('content-type: application/json');
   }
 
   // x-http-method-override

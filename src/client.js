@@ -16,7 +16,6 @@ var getRpnByEmployee = require('../test/requests/rpn/getRpnByEmployee');
 var getRpnByEmployer = require('../test/requests/rpn/getRpnByEmployer');
 
 var options;
-var payload;
 
 // Get config for the test environment
 var conf = config.find(x => x.env === 'test');
@@ -36,30 +35,32 @@ var cert = new Cert(cer.id, cer.epn, cer.name, cer.password);
 options = getRpnByEmployee(conf, cert);
 
 // GET Check Payroll Run
-//var options = getPayrollRun(conf, cert);
+// options = getPayrollRun(conf, cert);
 
 // POST Payroll Submission
-// var options = postPayrollSubmission(conf, cert);
-// var payload = postPayrollSubmissionPayload;
+options = postPayrollSubmission(conf, cert, '1', '1');
+var payload = JSON.stringify(postPayrollSubmissionPayload);
 
-// Create the GET message object
-var message = new Message(options, cert);
+// Create the message object
+var message;
 
-// Create the POST message object
-//var message = new Message(options, cert, payload);
-
-if (options.method === 'POST') {
+if (options.method === 'GET') {
+  message = new Message(options, cert);
+} else if (options.method === 'POST') {
+  message = new Message(options, cert, payload);
 }
 
+console.log(payload);
 //console.log(message.signingString);
-console.log(message.options);
+//console.log(message.options);
 
 // Create headers
 
 options.headers.Signature = message.httpSignatureHeader;
 
-//console.log(signatureHeader);
-//console.log(options);
+//console.log(options.headers.Digest);
+console.log(message.headerString);
+console.log(message.signingString);
 
 // console.log(options);
 
@@ -101,6 +102,7 @@ if (options.method === 'GET') {
     console.error(e);
   });
 
-  req.write(JSON.stringify(payload));
+  req.write(payload);
+  //req.write(JSON.stringify(payload));
   req.end();
 }
