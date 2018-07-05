@@ -15,8 +15,8 @@ function postPayrollSubmission(conf, cert, payrollRunReference, submissionId) {
   var endPoint = `${conf.basePath}/payroll/${cert.epn}/${
     conf.year
   }/${payrollRunReference}/${submissionId}?softwareUsed=${encodeURIComponent(
-    'xyz'
-  )}&softwareVersion=${encodeURIComponent('1.0')}`;
+    conf.softwareName
+  )}&softwareVersion=${encodeURIComponent(conf.softwareVersion)}`;
   var utcDate = new Date().toUTCString();
 
   var result = {

@@ -18,8 +18,7 @@
   "homepage": "https://github.com/onsite-solutions/paye-modernisation#readme",
   "dependencies": {
     "buffer": "^5.1.0",
-    "node-forge": "^0.7.5",
-    "swagger-client": "^3.8.6"
+    "node-forge": "^0.7.5"
   },
   "devDependencies": {
     "@types/node": "^10.3.4",

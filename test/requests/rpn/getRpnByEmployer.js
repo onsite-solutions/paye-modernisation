@@ -13,8 +13,8 @@ function getRpnByEmployer(conf, cert) {
   var endPoint = `${conf.basePath}/rpn/${cert.epn}/${
     conf.year
   }?softwareUsed=${encodeURIComponent(
-    'xyz'
-  )}&softwareVersion=${encodeURIComponent('1.0')}`;
+    conf.softwareName
+  )}&softwareVersion=${encodeURIComponent(conf.softwareVersion)}`;
   var utcDate = new Date().toUTCString();
 
   return {

@@ -4,15 +4,15 @@
 var Cert = require('../../../src/cert');
 
 /**
- * GET https://softwaretest.ros.ie/paye-employers/v1/rest/payroll/{employerRegistrationNumber}/{taxYear}/{payrollRunReference}
+ * POST rpn/{employerRegistrationNumber}/{taxYear}
  * @param {any} conf
  * @param {Cert} cert
  */
-function getPayrollRun(conf, cert) {
+function postRpnNew(conf, cert) {
   var hostName = conf.host;
-  var endPoint = `${conf.basePath}/payroll/${cert.epn}/${
+  var endPoint = `${conf.basePath}/rpn/${cert.epn}/${
     conf.year
-  }/1?softwareUsed=${encodeURIComponent(
+  }?softwareUsed=${encodeURIComponent(
     conf.softwareName
   )}&softwareVersion=${encodeURIComponent(conf.softwareVersion)}`;
   var utcDate = new Date().toUTCString();
@@ -20,9 +20,9 @@ function getPayrollRun(conf, cert) {
   return {
     hostname: hostName,
     path: endPoint,
-    method: 'GET',
+    method: 'POST',
     headers: {
-      Method: 'GET',
+      Method: 'POST',
       Path: endPoint,
       Host: hostName,
       Date: utcDate,
@@ -31,4 +31,4 @@ function getPayrollRun(conf, cert) {
   };
 }
 
-module.exports = getPayrollRun;
+module.exports = postRpnNew;

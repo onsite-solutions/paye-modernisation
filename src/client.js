@@ -15,7 +15,11 @@ var postPayrollSubmissionPayload = require('../test/requests/payroll/postPayroll
 var getRpnByEmployee = require('../test/requests/rpn/getRpnByEmployee');
 var getRpnByEmployer = require('../test/requests/rpn/getRpnByEmployer');
 
+var postRpnNew = require('../test/requests/rpn/postRpnNew');
+var postRpnNewPayload = require('../test/requests/rpn/postRpnNewPayload');
+
 var options;
+var payload = '';
 
 // Get config for the test environment
 var conf = config.find(x => x.env === 'test');
@@ -29,17 +33,21 @@ var cert = new Cert(cer.id, cer.epn, cer.name, cer.password);
 // Create a test message. Construct the options from our test/requests folder
 
 // GET Look up RPN by Employer
-// options = getRpnByEmployer(conf, cert);
+options = getRpnByEmployer(conf, cert);
 
 // GET Look up RPN by Employee
-options = getRpnByEmployee(conf, cert);
+// options = getRpnByEmployee(conf, cert, '7007162KA-');
 
 // GET Check Payroll Run
 // options = getPayrollRun(conf, cert);
 
 // POST Payroll Submission
-options = postPayrollSubmission(conf, cert, '1', '1');
-var payload = JSON.stringify(postPayrollSubmissionPayload);
+//options = postPayrollSubmission(conf, cert, '1', '1');
+//payload = JSON.stringify(postPayrollSubmissionPayload);
+
+// POST RPN New Employee
+//options = postRpnNew(conf, cert);
+//payload = JSON.stringify(postRpnNewPayload);
 
 // Create the message object
 var message;
@@ -50,7 +58,7 @@ if (options.method === 'GET') {
   message = new Message(options, cert, payload);
 }
 
-console.log(payload);
+//console.log(payload);
 //console.log(message.signingString);
 //console.log(message.options);
 
@@ -94,7 +102,7 @@ if (options.method === 'GET') {
       postResData += chunk;
     });
     res.on('end', () => {
-      console.log(postResData);
+      console.log(`RESPONSE: ${postResData}`);
     });
   });
 
