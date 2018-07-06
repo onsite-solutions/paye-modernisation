@@ -33,10 +33,10 @@ var cert = new Cert(cer.id, cer.epn, cer.name, cer.password);
 // Create a test message. Construct the options from our test/requests folder
 
 // GET Look up RPN by Employer
-options = getRpnByEmployer(conf, cert);
+// options = getRpnByEmployer(conf, cert);
 
 // GET Look up RPN by Employee
-// options = getRpnByEmployee(conf, cert, '7007162KA-');
+options = getRpnByEmployee(conf, cert, '7007162KA-');
 
 // GET Check Payroll Run
 // options = getPayrollRun(conf, cert);
@@ -67,8 +67,8 @@ if (options.method === 'GET') {
 options.headers.Signature = message.httpSignatureHeader;
 
 //console.log(options.headers.Digest);
-console.log(message.headerString);
-console.log(message.signingString);
+//console.log(message.headerString);
+//console.log(message.signingString);
 
 // console.log(options);
 
@@ -77,7 +77,7 @@ if (options.method === 'GET') {
     .get(options, res => {
       let data = '';
       console.log('STATUS: ' + res.statusCode);
-      console.log('HEADERS: ' + JSON.stringify(res.headers));
+      //console.log('HEADERS: ' + JSON.stringify(res.headers));
       res.setEncoding('utf8');
       // A chunk of data has been recieved.
       res.on('data', chunk => {
