@@ -5,12 +5,20 @@ var Cert = require('../../../src/cert');
 
 /**
  * POST https://softwaretest.ros.ie/paye-employers/v1/rest/payroll/{employerRegistrationNumber}/{taxYear}/{payrollRunReference}/{submissionID}
+ *
+ * Create a payroll submission
+ *
  * @param {any} conf
  * @param {Cert} cert
  * @param {string} payrollRunReference
  * @param {string} submissionId
  */
-function postPayrollSubmission(conf, cert, payrollRunReference, submissionId) {
+function createPayrollSubmission(
+  conf,
+  cert,
+  payrollRunReference,
+  submissionId
+) {
   var hostName = conf.host;
   var endPoint = `${conf.basePath}/payroll/${cert.epn}/${
     conf.year
@@ -37,4 +45,4 @@ function postPayrollSubmission(conf, cert, payrollRunReference, submissionId) {
   return result;
 }
 
-module.exports = postPayrollSubmission;
+module.exports = createPayrollSubmission;

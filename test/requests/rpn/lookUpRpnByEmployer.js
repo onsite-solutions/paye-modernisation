@@ -4,11 +4,14 @@
 var Cert = require('../../../src/cert');
 
 /**
- * POST rpn/{employerRegistrationNumber}/{taxYear}
+ * GET rpn/{employerRegistrationNumber}/{taxYear}
+ *
+ * Look up Revenue Payroll Notification (RPN) by employer and optionally filter by date last updated and/or employee ids
+ *
  * @param {any} conf
  * @param {Cert} cert
  */
-function postRpnNew(conf, cert) {
+function lookUpRpnByEmployer(conf, cert) {
   var hostName = conf.host;
   var endPoint = `${conf.basePath}/rpn/${cert.epn}/${
     conf.year
@@ -20,9 +23,9 @@ function postRpnNew(conf, cert) {
   return {
     hostname: hostName,
     path: endPoint,
-    method: 'POST',
+    method: 'GET',
     headers: {
-      Method: 'POST',
+      Method: 'GET',
       Path: endPoint,
       Host: hostName,
       Date: utcDate,
@@ -31,4 +34,4 @@ function postRpnNew(conf, cert) {
   };
 }
 
-module.exports = postRpnNew;
+module.exports = lookUpRpnByEmployer;

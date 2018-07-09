@@ -5,10 +5,13 @@ var Cert = require('../../../src/cert');
 
 /**
  * GET https://softwaretest.ros.ie/paye-employers/v1/rest/payroll/{employerRegistrationNumber}/{taxYear}/{payrollRunReference}
+ *
+ * Check that the processing of a payroll run is completed
+ *
  * @param {any} conf
  * @param {Cert} cert
  */
-function getPayrollRun(conf, cert) {
+function checkPayrollRunComplete(conf, cert) {
   var hostName = conf.host;
   var endPoint = `${conf.basePath}/payroll/${cert.epn}/${
     conf.year
@@ -31,4 +34,4 @@ function getPayrollRun(conf, cert) {
   };
 }
 
-module.exports = getPayrollRun;
+module.exports = checkPayrollRunComplete;

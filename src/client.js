@@ -8,15 +8,15 @@ var Cert = require('./cert');
 var config = require('../config/config');
 var Message = require('./message');
 
-var getPayrollRun = require('../test/requests/payroll/getPayrollRun');
-var postPayrollSubmission = require('../test/requests/payroll/postPayrollSubmission');
-var postPayrollSubmissionPayload = require('../test/requests/payroll/postPayrollSubmissionPayload');
+var checkPayrollRunComplete = require('../test/requests/payroll/checkPayrollRunComplete');
+var createPayrollSubmission = require('../test/requests/payroll/createPayrollSubmission');
+var createPayrollSubmissionPayload = require('../test/requests/payroll/createPayrollSubmissionPayload');
 
-var getRpnByEmployee = require('../test/requests/rpn/getRpnByEmployee');
-var getRpnByEmployer = require('../test/requests/rpn/getRpnByEmployer');
+var lookUpRpnByEmployee = require('../test/requests/rpn/lookUpRpnByEmployee');
+var lookUpRpnByEmployer = require('../test/requests/rpn/lookUpRpnByEmployer');
 
-var postRpnNew = require('../test/requests/rpn/postRpnNew');
-var postRpnNewPayload = require('../test/requests/rpn/postRpnNewPayload');
+var createNewRpn = require('../test/requests/rpn/createNewRpn');
+var createNewRpnPayload = require('../test/requests/rpn/createNewRpnPayload');
 
 var options;
 var payload = '';
@@ -33,21 +33,21 @@ var cert = new Cert(cer.id, cer.epn, cer.name, cer.password);
 // Create a test message. Construct the options from our test/requests folder
 
 // GET Look up RPN by Employer
-// options = getRpnByEmployer(conf, cert);
+// options = lookUpRpnByEmployer(conf, cert);
 
 // GET Look up RPN by Employee
-options = getRpnByEmployee(conf, cert, '7007162KA-');
+options = lookUpRpnByEmployee(conf, cert, '7007162KA-');
 
-// GET Check Payroll Run
-// options = getPayrollRun(conf, cert);
+// GET Check Payroll Run Complete
+// options = checkPayrollRunComplete(conf, cert);
 
-// POST Payroll Submission
-//options = postPayrollSubmission(conf, cert, '1', '1');
-//payload = JSON.stringify(postPayrollSubmissionPayload);
+// POST Create Payroll Submission
+//options = createPayrollSubmission(conf, cert, '1', '1');
+//payload = JSON.stringify(createPayrollSubmissionPayload);
 
-// POST RPN New Employee
-//options = postRpnNew(conf, cert);
-//payload = JSON.stringify(postRpnNewPayload);
+// POST New RPN
+//options = createNewRpn(conf, cert);
+//payload = JSON.stringify(createNewRpnPayload);
 
 // Create the message object
 var message;

@@ -4,15 +4,19 @@
 var Cert = require('../../../src/cert');
 
 /**
- * GET rpn/{employerRegistrationNumber}/{taxYear}
+ * GET /rpn/{employerRegistrationNumber}/{taxYear}/{employeeId}
+ *
+ * Look up Revenue Payroll Notification (RPN) by employee
+ *
  * @param {any} conf
  * @param {Cert} cert
+ * @param {string} employeeId
  */
-function getRpnByEmployer(conf, cert) {
+function lookUpRpnByEmployee(conf, cert, employeeId) {
   var hostName = conf.host;
   var endPoint = `${conf.basePath}/rpn/${cert.epn}/${
     conf.year
-  }?softwareUsed=${encodeURIComponent(
+  }/${employeeId}?softwareUsed=${encodeURIComponent(
     conf.softwareName
   )}&softwareVersion=${encodeURIComponent(conf.softwareVersion)}`;
   var utcDate = new Date().toUTCString();
@@ -31,4 +35,4 @@ function getRpnByEmployer(conf, cert) {
   };
 }
 
-module.exports = getRpnByEmployer;
+module.exports = lookUpRpnByEmployee;

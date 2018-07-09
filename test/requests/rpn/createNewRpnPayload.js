@@ -1,7 +1,7 @@
 //@ts-check
 'use strict';
 
-const postRpnNewPayload = {
+const createNewRpnPayload = {
   requestId: '1',
   newEmployeeDetails: [
     {
@@ -18,4 +18,4 @@ const postRpnNewPayload = {
   ]
 };
 
-module.exports = postRpnNewPayload;
+module.exports = createNewRpnPayload;
