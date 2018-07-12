@@ -3,20 +3,20 @@
 
 var https = require('https');
 
-var certs = require('../test/certs');
+var certs = require('./client/certs/certs');
 var Cert = require('./cert');
 var config = require('../config/config');
 var Message = require('./message');
 
-var checkPayrollRunComplete = require('../test/requests/payroll/checkPayrollRunComplete');
-var createPayrollSubmission = require('../test/requests/payroll/createPayrollSubmission');
-var createPayrollSubmissionPayload = require('../test/requests/payroll/createPayrollSubmissionPayload');
+var checkPayrollRunComplete = require('../src/client/requests/payroll/checkPayrollRunComplete');
+var createPayrollSubmission = require('../src/client/requests/payroll/createPayrollSubmission');
+var createPayrollSubmissionPayload = require('../src/client/requests/payroll/createPayrollSubmissionPayload');
 
-var lookUpRpnByEmployee = require('../test/requests/rpn/lookUpRpnByEmployee');
-var lookUpRpnByEmployer = require('../test/requests/rpn/lookUpRpnByEmployer');
+var lookUpRpnByEmployee = require('../src/client/requests/rpn/lookUpRpnByEmployee');
+var lookUpRpnByEmployer = require('../src/client/requests/rpn/lookUpRpnByEmployer');
 
-var createNewRpn = require('../test/requests/rpn/createNewRpn');
-var createNewRpnPayload = require('../test/requests/rpn/createNewRpnPayload');
+var createNewRpn = require('../src/client/requests/rpn/createNewRpn');
+var createNewRpnPayload = require('../src/client/requests/rpn/createNewRpnPayload');
 
 var options;
 var payload = '';
@@ -45,7 +45,7 @@ options = lookUpRpnByEmployee(conf, cert, '7007162KA-');
 //options = createPayrollSubmission(conf, cert, '1', '1');
 //payload = JSON.stringify(createPayrollSubmissionPayload);
 
-// POST New RPN
+// POST Create New RPN
 //options = createNewRpn(conf, cert);
 //payload = JSON.stringify(createNewRpnPayload);
 
@@ -61,6 +61,7 @@ if (options.method === 'GET') {
 //console.log(payload);
 //console.log(message.signingString);
 //console.log(message.options);
+console.log(payload);
 
 // Create headers
 

@@ -1,21 +1,22 @@
 //@ts-check
 'use strict';
 
-var Cert = require('../../../src/cert');
+var Cert = require('../../../cert');
 
 /**
- * POST rpn/{employerRegistrationNumber}/{taxYear}
+ * GET /rpn/{employerRegistrationNumber}/{taxYear}/{employeeId}
  *
- * Create new Revenue Payroll Notification (RPN)
+ * Look up Revenue Payroll Notification (RPN) by employee
  *
  * @param {any} conf
  * @param {Cert} cert
+ * @param {string} employeeId
  */
-function createNewRpn(conf, cert) {
+function lookUpRpnByEmployee(conf, cert, employeeId) {
   var hostName = conf.host;
   var endPoint = `${conf.basePath}/rpn/${cert.epn}/${
     conf.year
-  }?softwareUsed=${encodeURIComponent(
+  }/${employeeId}?softwareUsed=${encodeURIComponent(
     conf.softwareName
   )}&softwareVersion=${encodeURIComponent(conf.softwareVersion)}`;
   var utcDate = new Date().toUTCString();
@@ -23,9 +24,9 @@ function createNewRpn(conf, cert) {
   return {
     hostname: hostName,
     path: endPoint,
-    method: 'POST',
+    method: 'GET',
     headers: {
-      Method: 'POST',
+      Method: 'GET',
       Path: endPoint,
       Host: hostName,
       Date: utcDate,
@@ -34,4 +35,4 @@ function createNewRpn(conf, cert) {
   };
 }
 
-module.exports = createNewRpn;
+module.exports = lookUpRpnByEmployee;

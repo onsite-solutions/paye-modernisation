@@ -1,17 +1,19 @@
 //@ts-check
 'use strict';
 
+var assert = require('assert');
+
 /* Script for testing the various components of the encryption and messaging process */
 
 var Cert = require('../src/cert');
 var Message = require('../src/message');
 var utils = require('../src/utils');
 var config = require('../config/config');
-var certs = require('../test/certs');
+var certs = require('../src/client/certs/certs');
 
-var testGet = require('./requests/testGet');
-var testPost = require('./requests/testPost');
-var testPostPayload = require('../test/requests/testPostPayload');
+//var testGet = require('./requests/testGet');
+//var testPost = require('./requests/testPost');
+//var testPostPayload = require('../test/requests/testPostPayload');
 
 let failed = 0;
 

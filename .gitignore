@@ -59,3 +59,7 @@ typings/
 
 # next.js build output
 .next
+
+# certs
+*.p12
+certs.js

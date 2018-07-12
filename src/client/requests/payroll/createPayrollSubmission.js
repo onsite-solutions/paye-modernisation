@@ -1,7 +1,7 @@
 //@ts-check
 'use strict';
 
-var Cert = require('../../../src/cert');
+var Cert = require('../../../cert');
 
 /**
  * POST https://softwaretest.ros.ie/paye-employers/v1/rest/payroll/{employerRegistrationNumber}/{taxYear}/{payrollRunReference}/{submissionID}

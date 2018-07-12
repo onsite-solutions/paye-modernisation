@@ -1,21 +1,21 @@
 //@ts-check
 'use strict';
 
-var Cert = require('../../../src/cert');
+var Cert = require('../../../cert');
 
 /**
- * GET https://softwaretest.ros.ie/paye-employers/v1/rest/payroll/{employerRegistrationNumber}/{taxYear}/{payrollRunReference}
+ * GET rpn/{employerRegistrationNumber}/{taxYear}
  *
- * Check that the processing of a payroll run is completed
+ * Look up Revenue Payroll Notification (RPN) by employer and optionally filter by date last updated and/or employee ids
  *
  * @param {any} conf
  * @param {Cert} cert
  */
-function checkPayrollRunComplete(conf, cert) {
+function lookUpRpnByEmployer(conf, cert) {
   var hostName = conf.host;
-  var endPoint = `${conf.basePath}/payroll/${cert.epn}/${
+  var endPoint = `${conf.basePath}/rpn/${cert.epn}/${
     conf.year
-  }/1?softwareUsed=${encodeURIComponent(
+  }?softwareUsed=${encodeURIComponent(
     conf.softwareName
   )}&softwareVersion=${encodeURIComponent(conf.softwareVersion)}`;
   var utcDate = new Date().toUTCString();
@@ -34,4 +34,4 @@ function checkPayrollRunComplete(conf, cert) {
   };
 }
 
-module.exports = checkPayrollRunComplete;
+module.exports = lookUpRpnByEmployer;
