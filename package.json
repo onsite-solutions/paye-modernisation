@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "PAYE Modernisation API Server",
   "scripts": {
-    "test": "nodemon ./test/tests.js",
+    "test": "mocha",
     "client": "nodemon ./src/client.js"
   },
   "repository": {
