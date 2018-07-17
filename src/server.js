@@ -3,7 +3,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const tests = require('./server/routes/api/tests');
+const rpn = require('./server/routes/api/rpn');
 
 const app = express();
 
@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // Use routes
-app.use('/api/tests', tests);
+app.use('/api/rpn', rpn);
 
 // Testing locally on port 5000
 const port = 5000;

@@ -21,7 +21,8 @@
     "body-parser": "^1.18.3",
     "buffer": "^5.1.0",
     "express": "^4.16.3",
-    "node-forge": "^0.7.5"
+    "node-forge": "^0.7.5",
+    "xml": "^1.0.1"
   },
   "devDependencies": {
     "@types/node": "^10.3.4",
