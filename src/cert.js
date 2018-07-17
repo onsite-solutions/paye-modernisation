@@ -18,7 +18,7 @@ function Cert(id, epn, name, password) {
   this.name = name;
   this.password = password;
 
-  this.keyStoreFilePath = `./test/certs/${this.id}.p12`;
+  this.keyStoreFilePath = `./src/client/certs/${this.id}.p12`;
 
   // Get the MD5 hash of the password
   this.hashedPassword = this.getHashedPassword(password);
