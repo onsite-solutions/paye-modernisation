@@ -10,50 +10,59 @@ const Message = require('./message');
  * Sends the provided Message object to ROS as a GET request
  * @param {Message} message
  */
-function getMessage(message) {
-  https
-    .get(message.options, res => {
-      let data = '';
+function get(message) {
+  // TESTING REJECTION: message.options.headers.Signature = null;
+  return new Promise((resolve, reject) => {
+    https
+      .get(message.options, res => {
+        let data = '';
 
-      res.setEncoding('utf8');
-      res.on('data', chunk => {
-        data += chunk;
+        res.setEncoding('utf8');
+        res.on('data', chunk => {
+          data += chunk;
+        });
+        res.on('end', () => {
+          if (res.statusCode === 200) {
+            resolve(data);
+          } else {
+            reject({ statusCode: res.statusCode, message: data });
+          }
+        });
+      })
+      .on('error', err => {
+        reject(err);
       });
-      res.on('end', () => {
-        return data;
-      });
-    })
-    .on('error', err => {
-      return err.message;
-    });
+  });
 }
 
 /**
  * Sends the provided Message object to ROS as a POST request
  * @param {Message} message
  */
-function postMessage(message) {
-  var req = https
-    .request(message.options, res => {
-      let data = '';
+function post(message) {
+  return new Promise((resolve, reject) => {
+    var req = https
+      .request(message.options, res => {
+        let data = '';
 
-      res.setEncoding('utf8');
-      res.on('data', chunk => {
-        data += chunk;
+        res.setEncoding('utf8');
+        res.on('data', chunk => {
+          data += chunk;
+        });
+        res.on('end', () => {
+          resolve(data);
+        });
+      })
+      .on('error', err => {
+        reject(Error(err.message));
       });
-      res.on('end', () => {
-        return data;
-      });
-    })
-    .on('error', err => {
-      throw new Error(err.message);
-    });
 
-  req.write(message.payload);
-  req.end();
+    req.write(message.payload);
+    req.end();
+  });
 }
 
 module.exports = {
-  getMessage,
-  postMessage
+  get,
+  post
 };

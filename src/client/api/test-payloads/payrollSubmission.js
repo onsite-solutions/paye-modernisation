@@ -1,7 +1,7 @@
 //@ts-check
 'use strict';
 
-const createPayrollSubmissionPayload = {
+const payrollSubmission = {
   payslips: [
     {
       lineItemID: 'E1-v1',
@@ -46,4 +46,4 @@ const createPayrollSubmissionPayload = {
   ]
 };
 
-module.exports = createPayrollSubmissionPayload;
+module.exports = payrollSubmission;

@@ -2,11 +2,9 @@
 
 const express = require('express');
 const router = express.Router();
-const xml = require('xml');
+const js2xmlparser = require('js2xmlparser');
 
 const client = require('../../../client');
-const clientSync = require('../../../clientSync');
-const Message = require('../../../message');
 const rpn = require('../../../client/api/rpn');
 
 /**
@@ -21,18 +19,43 @@ router.get('/rpnByEmployee', async (req, res) => {
     employees.employees.push({ employee: emp });
   });
 
-  let rosResponse;
-
-  await clientSync.getMessage(rpn.lookUpRpnByEmployer()).then(res => {
-    rosResponse = res;
+  employees.employees.forEach(emp => {
+    console.log(`${new Date().toUTCString()}: ${emp.employee}`);
   });
 
-  console.log(JSON.stringify(rosResponse));
-  console.log(`request received at ${new Date().toUTCString()}`);
+  //TODO: CHANGE EMPLOYER TO EMPLOYEE
+  await client
+    .get(rpn.lookUpRpnByEmployer())
+    .then(response => {
+      res.set('Content-Type', 'text/xml');
+      res
+        .status(200)
+        .send(js2xmlparser.parse('response', JSON.parse(response)));
+    })
+    .catch(err => {
+      res.status(err.statusCode || 500).send(err.message);
+    });
+});
 
-  res.set('Content-Type', 'text/xml');
-  res.status(200).send(xml(rosResponse));
-  //res.send('hello');
+/**
+ * GET api/rpn/rpnByEmployer
+ * @desc   Lookup RPNs by Employer
+ * @access Public
+ */
+router.get('/rpnByEmployer', async (req, res) => {
+  //TODO: Add parameters
+
+  await client
+    .get(rpn.lookUpRpnByEmployer())
+    .then(response => {
+      res.set('Content-Type', 'text/xml');
+      res
+        .status(200)
+        .send(js2xmlparser.parse('response', JSON.parse(response)));
+    })
+    .catch(err => {
+      res.status(err.statusCode || 500).send(err.message);
+    });
 });
 
 module.exports = router;

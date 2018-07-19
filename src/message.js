@@ -10,6 +10,7 @@ var Cert = require('./cert');
  * Wrapper for a https request conforming to the proposed Cavage HTTP Signature Header standard
  * @param {any} options The request options object
  * @param {Cert} cert the digital certificate
+ * @param {any} payload
  * @link https://tools.ietf.org/html/draft-cavage-http-signatures-08#section-4
  */
 function Message(options, cert, payload = null) {
