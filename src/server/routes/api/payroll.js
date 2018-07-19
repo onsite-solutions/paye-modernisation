@@ -32,7 +32,11 @@ router.post(
           .send(js2xmlparser.parse('response', JSON.parse(response)));
       })
       .catch(err => {
-        res.status(err.statusCode || 500).send(err.message);
+        if (!res.headersSent) {
+          res.status(err.statusCode || 500).send(err.message);
+        } else {
+          console.log(err);
+        }
       });
   }
 );

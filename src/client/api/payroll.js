@@ -12,18 +12,58 @@ var Message = require('../../message');
  * @param {string} submissionId
  */
 function createPayrollSubmission(payrollRunReference, submissionId, payload) {
-  let { cert, config } = api.getCertAndConfig('test', 999963666); // or 999963665
+  let { cert, config } = api.getCertAndConfig('test', 999963665); // 999963665 or 999963666
 
-  let hostName = config.host;
   let endPoint = `${config.basePath}/payroll/${cert.epn}/${
     config.year
-  }/${payrollRunReference}/${submissionId}?softwareUsed=${encodeURIComponent(
+  }/${payrollRunReference}/${submissionId}?softwareUsed=${
     config.softwareName
-  )}&softwareVersion=${encodeURIComponent(config.softwareVersion)}`;
+  }&softwareVersion=${config.softwareVersion}`;
 
-  return new Message(api.options('POST', hostName, endPoint), cert, payload);
+  return new Message(api.options('POST', config.host, endPoint), cert, payload);
+}
+
+/**
+ * GET /payroll/:employerRegistrationNumber/:taxYear/:payrollRunReference/:submissionID
+ *
+ * Check the current status of a payroll submission
+ *
+ * @param {string} payrollRunReference
+ * @param {string} submissionId
+ */
+function checkPayrollSubmission(payrollRunReference, submissionId) {
+  let { cert, config } = api.getCertAndConfig('test', 999963665); // 999963665 or 999963666
+
+  let endPoint = `${config.basePath}/payroll/${cert.epn}/${
+    config.year
+  }/${payrollRunReference}/${submissionId}?softwareUsed=${
+    config.softwareName
+  }&softwareVersion=${config.softwareVersion}`;
+
+  return new Message(api.options('GET', config.host, endPoint), cert);
+}
+
+/**
+ * GET /payroll/:employerRegistrationNumber/:taxYear/:payrollRunReference
+ *
+ * Check the current status of a payroll run
+ *
+ * @param {string} payrollRunReference
+ */
+function checkPayrollRun(payrollRunReference) {
+  let { cert, config } = api.getCertAndConfig('test', 999963665); // 999963665 or 999963666
+
+  let endPoint = `${config.basePath}/payroll/${cert.epn}/${
+    config.year
+  }/${payrollRunReference}?softwareUsed=${
+    config.softwareName
+  }&softwareVersion=${config.softwareVersion}`;
+
+  return new Message(api.options('GET', config.host, endPoint), cert);
 }
 
 module.exports = {
-  createPayrollSubmission
+  createPayrollSubmission,
+  checkPayrollSubmission,
+  checkPayrollRun
 };

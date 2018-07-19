@@ -7,35 +7,7 @@ const js2xmlparser = require('js2xmlparser');
 const client = require('../../../client');
 const rpn = require('../../../client/api/rpn');
 
-/**
- * GET api/rpn/rpnByEmployee
- * @desc   Lookup RPNs by Employee
- * @access Public
- */
-router.get('/rpnByEmployee', async (req, res) => {
-  let employees = { employees: [] };
-
-  JSON.parse(req.query.rpnList).forEach(emp => {
-    employees.employees.push({ employee: emp });
-  });
-
-  employees.employees.forEach(emp => {
-    console.log(`${new Date().toUTCString()}: ${emp.employee}`);
-  });
-
-  //TODO: CHANGE EMPLOYER TO EMPLOYEE
-  await client
-    .get(rpn.lookUpRpnByEmployer())
-    .then(response => {
-      res.set('Content-Type', 'text/xml');
-      res
-        .status(200)
-        .send(js2xmlparser.parse('response', JSON.parse(response)));
-    })
-    .catch(err => {
-      res.status(err.statusCode || 500).send(err.message);
-    });
-});
+const payload = require('../../../client/api/test-payloads/newRpn');
 
 /**
  * GET api/rpn/rpnByEmployer
@@ -54,7 +26,65 @@ router.get('/rpnByEmployer', async (req, res) => {
         .send(js2xmlparser.parse('response', JSON.parse(response)));
     })
     .catch(err => {
-      res.status(err.statusCode || 500).send(err.message);
+      if (!res.headersSent) {
+        res.status(err.statusCode || 500).send(err.message);
+      } else {
+        console.log(err);
+      }
+    });
+});
+
+/**
+ * GET api/rpn/rpnByEmployee
+ * @desc   Lookup RPNs by Employee
+ * @access Public
+ */
+router.get('/rpnByEmployee', async (req, res) => {
+  let employees = [];
+
+  JSON.parse(req.query.rpnList).forEach(emp => {
+    employees.push(emp);
+  });
+
+  console.log(employees[0]);
+
+  await client
+    .get(rpn.lookupRpnByEmployee(employees[0].toString()))
+    .then(response => {
+      res.set('Content-Type', 'text/xml');
+      res
+        .status(200)
+        .send(js2xmlparser.parse('response', JSON.parse(response)));
+    })
+    .catch(err => {
+      if (!res.headersSent) {
+        res.status(err.statusCode || 500).send(err.message);
+      } else {
+        console.log(err);
+      }
+    });
+});
+
+/**
+ * POST api/rpn/createNewRpn
+ * @desc   Create new RPN
+ * @access Public
+ */
+router.post('/createNewRpn', async (req, res) => {
+  await client
+    .post(rpn.createNewRpn(JSON.stringify(payload)))
+    .then(response => {
+      res.set('Content-Type', 'text/xml');
+      res
+        .status(200)
+        .send(js2xmlparser.parse('response', JSON.parse(response)));
+    })
+    .catch(err => {
+      if (!res.headersSent) {
+        res.status(err.statusCode || 500).send(err.message);
+      } else {
+        console.log(err);
+      }
     });
 });
 

@@ -4,14 +4,11 @@
 const https = require('https');
 const Message = require('./message');
 
-//TODO: Test error handling
-
 /**
  * Sends the provided Message object to ROS as a GET request
  * @param {Message} message
  */
 function get(message) {
-  // TESTING REJECTION: message.options.headers.Signature = null;
   return new Promise((resolve, reject) => {
     https
       .get(message.options, res => {

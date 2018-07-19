@@ -3,7 +3,6 @@
 var Cert = require('../../cert');
 var certs = require('../certs/certs');
 var environments = require('../../../config/environments');
-var utils = require('../../utils');
 
 /**
  * Returns the digital certificate and the environment configuration
@@ -20,12 +19,11 @@ function getCertAndConfig(envName, certId) {
 }
 
 /**
- * Builds the request-promise options object for client API requests
+ * Builds the options object for https requests
  *
  * @param {string} method
  * @param {string} hostName
  * @param {string} endPoint
- * @param {any} payload
  */
 function options(method, hostName, endPoint) {
   let utcDate = new Date().toUTCString();
