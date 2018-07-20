@@ -1,6 +1,8 @@
 //@ts-check
 'use strict';
 
+const moment = require('moment');
+
 /**
  * Indicates whether an object or primitive is empty
  * @param {any} value Object to check if is empty
@@ -14,6 +16,16 @@ function isEmpty(value) {
   );
 }
 
+/**
+ * Determines whether a date string is valid
+ *
+ * @param {string} date Date in the format YYYY-MM-DD
+ */
+function isValidDate(date) {
+  return !isEmpty(date) && moment(date, 'YYYY-MM-DD').isValid();
+}
+
 module.exports = {
-  isEmpty
+  isEmpty,
+  isValidDate
 };

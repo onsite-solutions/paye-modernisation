@@ -4,6 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const payroll = require('./server/routes/api/payroll');
+const returnsReconciliation = require('./server/routes/api/returns-reconciliation');
 const rpn = require('./server/routes/api/rpn');
 
 const app = express();
@@ -14,6 +15,7 @@ app.use(bodyParser.json());
 
 // Use routes
 app.use('/api/payroll', payroll);
+app.use('/api/returns_reconciliation', returnsReconciliation);
 app.use('/api/rpn', rpn);
 
 // Testing locally on port 5000

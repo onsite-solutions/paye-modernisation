@@ -3,7 +3,6 @@
 const express = require('express');
 const router = express.Router();
 const js2xmlparser = require('js2xmlparser');
-const moment = require('moment');
 
 const client = require('../../../client');
 const rpn = require('../../../client/api/rpn');
@@ -22,11 +21,9 @@ router.get('/rpnByEmployer', async (req, res) => {
   let dateLastUpdated = req.query.dateLastUpdated.toString();
   let employeeIds = null;
 
-  // Check the provided date. I f it is not a valid date in the format YYYY-MM-DD, nullify it
-  if (!utils.isEmpty(dateLastUpdated)) {
-    if (!moment(dateLastUpdated, 'YYYY-MM-DD').isValid()) {
-      dateLastUpdated = null;
-    }
+  // Check the provided date. Nullify if it is not a valid date in the format YYYY-MM-DD
+  if (!utils.isValidDate(dateLastUpdated)) {
+    dateLastUpdated = null;
   }
 
   await client

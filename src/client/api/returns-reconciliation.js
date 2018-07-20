@@ -17,9 +17,9 @@ function lookupPayrollByReturnPeriod(startDate, endDate) {
   let hostName = config.host;
   let endPoint = `${config.basePath}/returns_reconciliation/${
     cert.epn
-  }?softwareUsed=${config.softwareName}&softwareVersion=${
-    config.softwareVersion
-  }`;
+  }?periodStartDate=${startDate}&periodEndDate=${endDate}&softwareUsed=${
+    config.softwareName
+  }&softwareVersion=${config.softwareVersion}`;
 
   return new Message(api.options('GET', hostName, endPoint), cert);
 }
