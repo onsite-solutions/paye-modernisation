@@ -14,15 +14,6 @@ function isEmpty(value) {
   );
 }
 
-/**
- * Remove keys with null values from an object
- * @param {any} obj The object from which null value keys are to be removed
- */
-const removeEmpty = obj => {
-  Object.keys(obj).forEach(key => obj[key] == null && delete obj[key]);
-};
-
 module.exports = {
-  isEmpty,
-  removeEmpty
+  isEmpty
 };

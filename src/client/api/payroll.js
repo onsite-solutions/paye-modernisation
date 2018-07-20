@@ -12,7 +12,7 @@ var Message = require('../../message');
  * @param {string} submissionId
  */
 function createPayrollSubmission(payrollRunReference, submissionId, payload) {
-  let { cert, config } = api.getCertAndConfig('test', 999963665); // 999963665 or 999963666
+  let { cert, config } = api.getCertAndConfig();
 
   let endPoint = `${config.basePath}/payroll/${cert.epn}/${
     config.year
@@ -32,7 +32,7 @@ function createPayrollSubmission(payrollRunReference, submissionId, payload) {
  * @param {string} submissionId
  */
 function checkPayrollSubmission(payrollRunReference, submissionId) {
-  let { cert, config } = api.getCertAndConfig('test', 999963665); // 999963665 or 999963666
+  let { cert, config } = api.getCertAndConfig();
 
   let endPoint = `${config.basePath}/payroll/${cert.epn}/${
     config.year
@@ -51,7 +51,7 @@ function checkPayrollSubmission(payrollRunReference, submissionId) {
  * @param {string} payrollRunReference
  */
 function checkPayrollRun(payrollRunReference) {
-  let { cert, config } = api.getCertAndConfig('test', 999963665); // 999963665 or 999963666
+  let { cert, config } = api.getCertAndConfig();
 
   let endPoint = `${config.basePath}/payroll/${cert.epn}/${
     config.year

@@ -3,9 +3,11 @@
 const express = require('express');
 const router = express.Router();
 const js2xmlparser = require('js2xmlparser');
+const moment = require('moment');
 
 const client = require('../../../client');
 const rpn = require('../../../client/api/rpn');
+const utils = require('../../../utils');
 
 const payload = require('../../../client/api/test-payloads/newRpn');
 
@@ -17,8 +19,18 @@ const payload = require('../../../client/api/test-payloads/newRpn');
 router.get('/rpnByEmployer', async (req, res) => {
   //TODO: Add parameters
 
+  let dateLastUpdated = req.query.dateLastUpdated.toString();
+  let employeeIds = null;
+
+  // Check the provided date. I f it is not a valid date in the format YYYY-MM-DD, nullify it
+  if (!utils.isEmpty(dateLastUpdated)) {
+    if (!moment(dateLastUpdated, 'YYYY-MM-DD').isValid()) {
+      dateLastUpdated = null;
+    }
+  }
+
   await client
-    .get(rpn.lookUpRpnByEmployer())
+    .get(rpn.lookUpRpnByEmployer(dateLastUpdated, req.query.employeeIds))
     .then(response => {
       res.set('Content-Type', 'text/xml');
       res
@@ -36,25 +48,23 @@ router.get('/rpnByEmployer', async (req, res) => {
 
 /**
  * GET api/rpn/rpnByEmployee
- * @desc   Lookup RPNs by Employee
+ * @desc   Lookup RPNs by Employee PPSN
  * @access Public
  */
-router.get('/rpnByEmployee', async (req, res) => {
-  let employees = [];
-
-  JSON.parse(req.query.rpnList).forEach(emp => {
-    employees.push(emp);
-  });
-
-  console.log(employees[0]);
-
+router.get('/rpnByEmployee/:employeeId', async (req, res) => {
   await client
-    .get(rpn.lookupRpnByEmployee(employees[0].toString()))
+    // TODO: Change this to employee once ROS fix on their end
+    //.get(rpn.lookupRpnByEmployee(req.params.employeeId))
+    .get(rpn.lookUpRpnByEmployer())
     .then(response => {
+      let json = getEmployeeResponseJson(
+        JSON.parse(response),
+        req.params.employeeId
+      );
+      let xml = js2xmlparser.parse('response', json);
+
       res.set('Content-Type', 'text/xml');
-      res
-        .status(200)
-        .send(js2xmlparser.parse('response', JSON.parse(response)));
+      res.status(200).send(xml);
     })
     .catch(err => {
       if (!res.headersSent) {
@@ -64,6 +74,14 @@ router.get('/rpnByEmployee', async (req, res) => {
       }
     });
 });
+
+/**
+ * TEMPORARY FUNCTION WHILE ROS WEB SERVICE IS NOT RETURNING RESULTS
+ */
+function getEmployeeResponseJson(json, ppsn) {
+  json.rpns[0].employeeID.employeePpsn = ppsn;
+  return json;
+}
 
 /**
  * POST api/rpn/createNewRpn
