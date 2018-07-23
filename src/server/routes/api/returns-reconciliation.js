@@ -6,7 +6,7 @@ const js2xmlparser = require('js2xmlparser');
 
 const client = require('../../../client');
 const returnsReconciliation = require('../../../client/api/returns-reconciliation');
-const utils = require('../../../utils');
+const validation = require('../../../validation');
 
 /**
  * GET api/returns_reconciliation/payrollByReturnPeriod
@@ -18,11 +18,11 @@ router.get('/payrollByReturnPeriod', async (req, res) => {
   let endDate = req.query.endDate.toString();
 
   // Check the provided startDate & endDate. Nullify if not a valid date in the format YYYY-MM-DD
-  if (!utils.isValidDate(startDate)) {
+  if (!validation.isDate(startDate)) {
     startDate = null;
   }
 
-  if (!utils.isValidDate(endDate)) {
+  if (!validation.isDate(endDate)) {
     endDate = null;
   }
 

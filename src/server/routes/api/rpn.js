@@ -6,7 +6,7 @@ const js2xmlparser = require('js2xmlparser');
 
 const client = require('../../../client');
 const rpn = require('../../../client/api/rpn');
-const utils = require('../../../utils');
+const validation = require('../../../validation');
 
 const payload = require('../../../client/api/test-payloads/newRpn');
 
@@ -22,7 +22,7 @@ router.get('/rpnByEmployer', async (req, res) => {
   let employeeIds = null;
 
   // Check the provided date. Nullify if it is not a valid date in the format YYYY-MM-DD
-  if (!utils.isValidDate(dateLastUpdated)) {
+  if (!validation.isDate(dateLastUpdated)) {
     dateLastUpdated = null;
   }
 

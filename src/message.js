@@ -3,7 +3,7 @@
 
 var forge = require('node-forge');
 
-var utils = require('./utils');
+var validation = require('./validation');
 var Cert = require('./cert');
 
 /**
@@ -20,7 +20,7 @@ function Message(options, cert, payload = null) {
   let headers = options.headers;
 
   //If there is a POST body/payload, create the Digest header
-  if (headers.Method === 'POST' && !utils.isEmpty(this.payload)) {
+  if (headers.Method === 'POST' && !validation.isEmpty(this.payload)) {
     this.digest = this.getDigest(this.payload);
     this.options.headers.Digest = this.digest;
   }
@@ -67,7 +67,7 @@ Message.prototype.getHeaderString = function() {
   // x-date
 
   // digest
-  if (hdrs.Method === 'POST' && !utils.isEmpty(hdrs.Digest)) {
+  if (hdrs.Method === 'POST' && !validation.isEmpty(hdrs.Digest)) {
     headerString += 'digest ';
   }
 
@@ -102,7 +102,7 @@ Message.prototype.getSigningString = function() {
   // x-date
 
   // digest
-  if (hdrs.Method === 'POST' && !utils.isEmpty(hdrs.Digest)) {
+  if (hdrs.Method === 'POST' && !validation.isEmpty(hdrs.Digest)) {
     signString.push(`digest: ${hdrs.Digest}`);
   }
 

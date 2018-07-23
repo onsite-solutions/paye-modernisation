@@ -2,7 +2,7 @@
 
 var api = require('./api');
 var Message = require('../../message');
-var utils = require('../../utils');
+var validation = require('../../validation');
 
 /**
  * GET /rpn/:employerRegistrationNumber/:taxYear
@@ -17,7 +17,7 @@ function lookUpRpnByEmployer(dateLastUpdated = null, employeeIds = null) {
 
   let endpoint = `${config.basePath}/rpn/${cert.epn}/${config.year}?`;
 
-  if (!utils.isEmpty(dateLastUpdated)) {
+  if (!validation.isEmpty(dateLastUpdated)) {
     endpoint += `dateLastUpdated=${dateLastUpdated}&`;
   }
 
@@ -26,7 +26,7 @@ function lookUpRpnByEmployer(dateLastUpdated = null, employeeIds = null) {
   }`;
 
   //TODO: test array functionality
-  if (!utils.isEmpty(employeeIds)) {
+  if (!validation.isEmpty(employeeIds)) {
     console.log(employeeIds);
     endpoint += `&employeeIDs=${employeeIds}`;
   }
