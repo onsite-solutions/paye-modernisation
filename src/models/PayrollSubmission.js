@@ -28,7 +28,7 @@ const PayrollSubmissionSchema = new mongoose.Schema({
           minLength: 8,
           maxLength: 10,
           match: '[0-9A-Za-z]*',
-          upppercase: true
+          uppercase: true
         },
         employmentID: {
           type: String,
@@ -110,7 +110,7 @@ const PayrollSubmissionSchema = new mongoose.Schema({
         countryCode: {
           type: String,
           match: '[A-Za-z]{3}',
-          upppercase: true
+          uppercase: true
         },
         dateOfBirth: Date,
         startDate: Date,
