@@ -60,6 +60,6 @@ typings/
 # next.js build output
 .next
 
-# certs
+# certs and keys
 *.p12
 certs.js

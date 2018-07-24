@@ -4,6 +4,17 @@
 const moment = require('moment');
 
 /**
+ * Checks whether the provided string is an Eircode
+ *
+ * @param {string} eircode The Eircode to be validated
+ */
+function isEircode(eircode) {
+  let eircodeRegex = /([AC-FHKNPRTV-Y]\d{2}|D6W)[0-9AC-FHKNPRTV-Y]{4}/;
+
+  return eircodeRegex.test(eircode.toUpperCase());
+}
+
+/**
  * Indicates whether an object or primitive is empty
  * @param {any} value Object to check if is empty
  */
@@ -62,6 +73,7 @@ function isPpsn(ppsn) {
 }
 
 module.exports = {
+  isEircode,
   isEmpty,
   isDate,
   isPpsn
