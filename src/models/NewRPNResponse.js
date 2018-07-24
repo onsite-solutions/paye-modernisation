@@ -3,9 +3,9 @@
 const mongoose = require('mongoose');
 
 /**
- * Employer's Lookup RPN Response. Will either return RPN detail or details of validation errors.
+ * Employer's New RPN Response. Will either return RPN detail or details of validation errors.
  */
-const LookupRPNResponseSchema = new mongoose.Schema({
+const NewRPNResponseSchema = new mongoose.Schema({
   employerName: {
     type: String,
     required: true,
@@ -16,21 +16,12 @@ const LookupRPNResponseSchema = new mongoose.Schema({
     type: String,
     required: true,
     minLength: 0,
-    maxLength: 100
+    maxLength: 100,
+    match: '[0-9]{7,8}[A-Wa-w][A-ITWXZa-itwxz ]?'
   },
   agentTain: {
     type: String,
     match: '[0-9]{5}[A-Wa-w]'
-  },
-  taxYear: {
-    type: Number,
-    required: true,
-    min: 2000.0,
-    max: 2100.0
-  },
-  totalRPNCount: {
-    type: Number,
-    required: true
   },
   dateTimeEffective: {
     type: Date,
@@ -211,11 +202,8 @@ const LookupRPNResponseSchema = new mongoose.Schema({
   ]
 });
 
-const LookupRPNResponse = mongoose.model(
-  'LookupRPNResponse',
-  LookupRPNResponseSchema
-);
+const NewRPNResponse = mongoose.model('NewRPNResponse', NewRPNResponseSchema);
 
 module.exports = {
-  LookupRPNResponse: LookupRPNResponse
+  NewRPNResponse: NewRPNResponse
 };
