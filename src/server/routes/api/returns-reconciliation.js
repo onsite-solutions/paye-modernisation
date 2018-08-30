@@ -8,6 +8,8 @@ const client = require('../../../client');
 const returnsReconciliation = require('../../../client/api/returns-reconciliation');
 const validation = require('../../../validation');
 
+const LookupPayrollByReturnPeriodResponse = require('../../../models/LookupPayrollByReturnPeriodResponse');
+
 /**
  * GET api/returns_reconciliation/payrollByReturnPeriod
  * @desc   Look up payroll by returns period based on a range of dates
@@ -29,6 +31,10 @@ router.get('/payrollByReturnPeriod', async (req, res) => {
   await client
     .get(returnsReconciliation.lookupPayrollByReturnPeriod(startDate, endDate))
     .then(response => {
+      let lookupPayrollByReturnPeriodResponse = new LookupPayrollByReturnPeriodResponse(
+        {}
+      );
+
       res.set('Content-Type', 'text/xml');
       res
         .status(200)

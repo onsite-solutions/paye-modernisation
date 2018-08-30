@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 /**
  * Response that lets the employer view a return for a specific period.
  */
-const LookupPayrollDetailsByReturnPeriodResponseSchema = new mongoose.Schema({
+const LookupPayrollByReturnPeriodResponseSchema = new mongoose.Schema({
   employerReg: {
     type: String,
     required: true,
@@ -111,11 +111,11 @@ const LookupPayrollDetailsByReturnPeriodResponseSchema = new mongoose.Schema({
   ]
 });
 
-const LookupPayrollDetailsByReturnPeriodResponse = mongoose.model(
-  'LookupPayrollDetailsByReturnPeriodResponse',
-  LookupPayrollDetailsByReturnPeriodResponseSchema
+const LookupPayrollByReturnPeriodResponse = mongoose.model(
+  'LookupPayrollByReturnPeriodResponse',
+  LookupPayrollByReturnPeriodResponseSchema
 );
 
 module.exports = {
-  LookupPayrollDetailsByReturnPeriodResponse: LookupPayrollDetailsByReturnPeriodResponse
+  LookupPayrollByReturnPeriodResponse: LookupPayrollByReturnPeriodResponse
 };
