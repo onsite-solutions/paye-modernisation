@@ -14,6 +14,7 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+/**
 // Connect to MongoDB
 mongoose
   .connect(
@@ -22,6 +23,7 @@ mongoose
   )
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.log(err));
+**/
 
 // Use routes
 app.use('/api/payroll', payroll);

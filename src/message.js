@@ -28,7 +28,6 @@ function Message(options, cert, payload = null) {
   this.headerString = this.getHeaderString();
   this.signingString = this.getSigningString();
   this.httpSignatureHeader = this.getSignatureHeader();
-
   this.options.headers.Signature = this.httpSignatureHeader;
 }
 
