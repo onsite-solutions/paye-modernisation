@@ -50,18 +50,12 @@ router.get('/rpnByEmployer', async (req, res) => {
  */
 router.get('/rpnByEmployee/:employeeId', async (req, res) => {
   await client
-    // TODO: Change this to employee once ROS fix on their end
-    //.get(rpn.lookupRpnByEmployee(req.params.employeeId))
-    .get(rpn.lookUpRpnByEmployer())
+    .get(rpn.lookupRpnByEmployee(req.params.employeeId))
     .then(response => {
-      let json = getEmployeeResponseJson(
-        JSON.parse(response),
-        req.params.employeeId
-      );
-      let xml = js2xmlparser.parse('response', json);
-
       res.set('Content-Type', 'text/xml');
-      res.status(200).send(xml);
+      res
+        .status(200)
+        .send(js2xmlparser.parse('response', JSON.parse(response)));
     })
     .catch(err => {
       if (!res.headersSent) {
@@ -71,14 +65,6 @@ router.get('/rpnByEmployee/:employeeId', async (req, res) => {
       }
     });
 });
-
-/**
- * TEMPORARY FUNCTION WHILE ROS WEB SERVICE IS NOT RETURNING RESULTS
- */
-function getEmployeeResponseJson(json, ppsn) {
-  json.rpns[0].employeeID.employeePpsn = ppsn;
-  return json;
-}
 
 /**
  * POST api/rpn/createNewRpn
