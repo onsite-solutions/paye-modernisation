@@ -2,14 +2,13 @@
 
 var Cert = require('../../cert');
 var certs = require('../certs/certs');
-var environments = require('../../../config/environments');
+var config = require(`../../config/${process.env.NODE_ENV || 'development'}`);
 
 /**
  * Returns the digital certificate and the environment configuration
  */
 function getCertAndConfig() {
-  let config = environments.find(x => x.name === 'test').config;
-  let params = certs.find(c => c.id === 999963665); // 999963665 or 999963666
+  let params = certs.find(c => c.id === 999962941);
   let cert = new Cert(params.id, params.epn, params.name, params.password);
 
   return { cert, config };

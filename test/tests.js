@@ -8,8 +8,8 @@ var assert = require('assert');
 var Cert = require('../src/cert');
 var Message = require('../src/message');
 var validation = require('../src/validation');
-var Config = require('../config/config');
-var environments = require('../config/environments');
+var Config = require('../src/config/config');
+var environments = require('../src/config/environments');
 var certs = require('../src/client/certs/certs');
 
 //var testGet = require('./requests/testGet');
