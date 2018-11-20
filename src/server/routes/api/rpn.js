@@ -8,8 +8,6 @@ const client = require('../../../client');
 const rpn = require('../../../client/api/rpn');
 const validation = require('../../../validation');
 
-const payload = require('../../../client/api/test-payloads/newRpn');
-
 /**
  * GET api/rpn/rpnByEmployer
  * @desc   Lookup RPNs by Employer
@@ -73,7 +71,7 @@ router.get('/rpnByEmployee/:employeeId', async (req, res) => {
  */
 router.post('/createNewRpn', async (req, res) => {
   await client
-    .post(rpn.createNewRpn(JSON.stringify(payload)))
+    .post(rpn.createNewRpn(JSON.stringify(req.body)))
     .then(response => {
       res.set('Content-Type', 'text/xml');
       res
