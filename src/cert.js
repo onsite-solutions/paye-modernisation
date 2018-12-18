@@ -94,6 +94,7 @@ Cert.prototype.getCertificateAndKeyFromKeyStore = function(pkcs12KeyStore) {
  */
 Cert.prototype.encodeCertificate = function(certificate) {
   return forge.util.encode64(
+    //@ts-ignore
     forge.asn1.toDer(forge.pki.certificateToAsn1(certificate)).getBytes()
   );
 };
