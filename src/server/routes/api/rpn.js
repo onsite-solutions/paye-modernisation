@@ -13,9 +13,10 @@ const validation = require('../../../validation');
  * @desc   Lookup RPNs by Employer
  * @access Public
  */
+
 router.get('/rpnByEmployer', async (req, res) => {
   //TODO: Add parameters
-
+  console.log('qqq');
   let dateLastUpdated = req.query.dateLastUpdated.toString();
   let employeeIds = null;
 
@@ -77,12 +78,13 @@ router.post('/createNewRpn', async (req, res) => {
       res
         .status(200)
         .send(js2xmlparser.parse('response', JSON.parse(response)));
+        console.log(JSON.stringify(response));
     })
     .catch(err => {
       if (!res.headersSent) {
         res.status(err.statusCode || 500).send(err.message);
       } else {
-        console.log(err);
+        console.log(JSON.stringify(err));
       }
     });
 });

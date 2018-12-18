@@ -12,7 +12,8 @@ var validation = require('../../validation');
  * @param {any} dateLastUpdated Look for RPN updated on or since a given date (YYYY-MM-DD)
  * @param {string[]} employeeIds Look up multiple employees at once
  */
-function lookUpRpnByEmployer(dateLastUpdated = null, employeeIds = null) {
+function lookUpRpnByEmployer(dateLastUpdated = null, employeeIDs = null) {
+ 
   let { cert, config } = api.getCertAndConfig();
 
   let endpoint = `${config.basePath}/rpn/${cert.epn}/${config.year}?`;
@@ -26,11 +27,11 @@ function lookUpRpnByEmployer(dateLastUpdated = null, employeeIds = null) {
   }`;
 
   //TODO: test array functionality
-  if (!validation.isEmpty(employeeIds)) {
+  if (!validation.isEmpty(employeeIDs)) {
     console.log(employeeIds);
-    endpoint += `&employeeIDs=${employeeIds}`;
+    endpoint += `&employeeIDs=${employeeIDs}`;
   }
-
+console.log(endpoint);
   return new Message(api.options('GET', config.host, endpoint), cert);
 }
 
@@ -61,6 +62,7 @@ function createNewRpn(payload) {
  * @param {string} employeeId
  */
 function lookupRpnByEmployee(employeeId) {
+  console.log(employeeId);
   let { cert, config } = api.getCertAndConfig();
 
   let endpoint = `${config.basePath}/rpn/${cert.epn}/${
