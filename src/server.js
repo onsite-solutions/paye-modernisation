@@ -2,7 +2,6 @@
 
 const express = require('express');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
 
 const payroll = require('./server/routes/api/payroll');
 const returnsReconciliation = require('./server/routes/api/returns-reconciliation');
@@ -15,16 +14,14 @@ const app = express();
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: false }));
 
-/**
 // Connect to MongoDB
 mongoose
   .connect(
-    'mongodb://localhost:27017/payemod',
+    'mongodb://192.168.0.74:27017/payemod',
     { useNewUrlParser: true }
   )
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.log(err));
-**/
 
 // Use routes
 app.use('/api/payroll', payroll);

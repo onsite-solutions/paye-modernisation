@@ -7,7 +7,7 @@ var crypto = require('crypto');
 
 /**
  * Represents a Digital certificate
- * @param {number} id Digital certificate identification number
+ * @param {string} id Digital certificate identification number
  * @param {string} epn
  * @param {string} name Employer name
  * @param {string} password Password for the Digital certificate
