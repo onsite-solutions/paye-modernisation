@@ -7,6 +7,7 @@ const payroll = require('./server/routes/api/payroll');
 const returnsReconciliation = require('./server/routes/api/returns-reconciliation');
 const rpn = require('./server/routes/api/rpn');
 const convert = require('./server/routes/api/convert');
+const handshake = require('./server/routes/api/handshake');
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use('/api/payroll', payroll);
 app.use('/api/returns_reconciliation', returnsReconciliation);
 app.use('/api/rpn', rpn);
 app.use('/api/convert', convert);
+app.use('/api/handshake/', handshake);
 
 // Testing locally on port 5000
 const port = process.env.PORT || 5000;
