@@ -25,12 +25,10 @@ function lookUpRpnByEmployer(dateLastUpdated = null, employeeIds = null) {
     config.softwareVersion
   }`;
 
-  //TODO: test array functionality
   if (!validation.isEmpty(employeeIds)) {
-    console.log(employeeIds);
     endpoint += `&employeeIDs=${employeeIds}`;
   }
-  console.log(endpoint);
+
   return new Message(api.options('GET', config.host, endpoint), cert);
 }
 

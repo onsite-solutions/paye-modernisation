@@ -15,18 +15,23 @@ const validation = require('../../../validation');
  */
 
 router.get('/rpnByEmployer', async (req, res) => {
-  //TODO: Add parameters
-  console.log('qqq');
   let dateLastUpdated = req.query.dateLastUpdated.toString();
-  let employeeIds = null;
+  let employeeIds = [];
 
   // Check the provided date. Nullify if it is not a valid date in the format YYYY-MM-DD
   if (!validation.isDate(dateLastUpdated)) {
     dateLastUpdated = null;
   }
 
+  // Populate the array of employeeIds if any were provided
+  if (!validation.isEmpty(req.query.employeeIDs)) {
+    employeeIds = req.query.employeeIDs.split(',');
+  } else {
+    employeeIds = null;
+  }
+
   await client
-    .get(rpn.lookUpRpnByEmployer(dateLastUpdated, req.query.employeeIds))
+    .get(rpn.lookUpRpnByEmployer(dateLastUpdated, employeeIds))
     .then(response => {
       res.set('Content-Type', 'text/xml');
       res
