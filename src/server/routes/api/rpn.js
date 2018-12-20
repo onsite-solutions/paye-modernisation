@@ -3,10 +3,13 @@
 const express = require('express');
 const router = express.Router();
 const js2xmlparser = require('js2xmlparser');
+const mongoose = require('mongoose');
 
 const client = require('../../../client');
 const rpn = require('../../../client/api/rpn');
 const validation = require('../../../validation');
+
+const LookupRPNResponse = require('../../../models/LookupRPNResponse');
 
 /**
  * GET api/rpn/rpnByEmployer
@@ -34,9 +37,8 @@ router.get('/rpnByEmployer', async (req, res) => {
     .get(rpn.lookUpRpnByEmployer(dateLastUpdated, employeeIds))
     .then(response => {
       res.set('Content-Type', 'text/xml');
-      res
-        .status(200)
-        .send(js2xmlparser.parse('response', JSON.parse(response)));
+      res.status(200).send(JSON.parse(response));
+      //.send(js2xmlparser.parse('response', JSON.parse(response)));
     })
     .catch(err => {
       if (!res.headersSent) {
