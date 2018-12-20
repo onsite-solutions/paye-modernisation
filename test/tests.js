@@ -8,8 +8,7 @@ var assert = require('assert');
 var Cert = require('../src/cert');
 var Message = require('../src/message');
 var validation = require('../src/validation');
-var Config = require('../src/config/config');
-var environments = require('../src/config/environments');
+var config = require('../src/config/development');
 var certs = require('../src/client/certs/certs');
 
 //var testGet = require('./requests/testGet');
@@ -37,8 +36,7 @@ if (
   logError('validation.isEmpty');
 }
 
-let config = environments.find(x => x.name === 'test').config;
-let params = certs.find(c => c.id === 999963665); // 999963665 or 999963666
+let params = certs.find(c => c.id === '999963665'); // 999963665 or 999963666
 let cert = new Cert(params.id, params.epn, params.name, params.password);
 
 // Is cert instantiated

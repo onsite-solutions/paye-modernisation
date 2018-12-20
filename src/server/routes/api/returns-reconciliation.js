@@ -31,9 +31,9 @@ router.get('/payrollByReturnPeriod', async (req, res) => {
   await client
     .get(returnsReconciliation.lookupPayrollByReturnPeriod(startDate, endDate))
     .then(response => {
-      let lookupPayrollByReturnPeriodResponse = new LookupPayrollByReturnPeriodResponse(
-        {}
-      );
+      //let lookupPayrollByReturnPeriodResponse = new LookupPayrollByReturnPeriodResponse(
+      //{}
+      //);
 
       res.set('Content-Type', 'text/xml');
       res
@@ -42,7 +42,9 @@ router.get('/payrollByReturnPeriod', async (req, res) => {
     })
     .catch(err => {
       if (!res.headersSent) {
-        res.status(err.statusCode || 500).send(err.message);
+        res
+          .status(err.statusCode || 500)
+          .send(js2xmlparser.parse('response', JSON.parse(err.message)));
       } else {
         console.log(err);
       }

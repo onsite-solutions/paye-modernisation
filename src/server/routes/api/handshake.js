@@ -23,7 +23,9 @@ router.get('/', async (req, res) => {
     })
     .catch(err => {
       if (!res.headersSent) {
-        res.status(err.statusCode || 500).send(err.message);
+        res
+          .status(err.statusCode || 500)
+          .send(js2xmlparser.parse('response', JSON.parse(err.message)));
       } else {
         console.log(err);
       }

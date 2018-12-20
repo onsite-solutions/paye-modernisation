@@ -35,7 +35,9 @@ router.get('/rpnByEmployer', async (req, res) => {
     })
     .catch(err => {
       if (!res.headersSent) {
-        res.status(err.statusCode || 500).send(err.message);
+        res
+          .status(err.statusCode || 500)
+          .send(js2xmlparser.parse('response', JSON.parse(err.message)));
       } else {
         console.log(err);
       }
@@ -58,7 +60,9 @@ router.get('/rpnByEmployee/:employeeId', async (req, res) => {
     })
     .catch(err => {
       if (!res.headersSent) {
-        res.status(err.statusCode || 500).send(err.message);
+        res
+          .status(err.statusCode || 500)
+          .send(js2xmlparser.parse('response', JSON.parse(err.message)));
       } else {
         console.log(err);
       }
@@ -78,11 +82,13 @@ router.post('/createNewRpn', async (req, res) => {
       res
         .status(200)
         .send(js2xmlparser.parse('response', JSON.parse(response)));
-        console.log(JSON.stringify(response));
+      console.log(JSON.stringify(response));
     })
     .catch(err => {
       if (!res.headersSent) {
-        res.status(err.statusCode || 500).send(err.message);
+        res
+          .status(err.statusCode || 500)
+          .send(js2xmlparser.parse('response', JSON.parse(err.message)));
       } else {
         console.log(JSON.stringify(err));
       }
