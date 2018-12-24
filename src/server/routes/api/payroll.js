@@ -7,8 +7,6 @@ const js2xmlparser = require('js2xmlparser');
 const client = require('../../../client');
 const payroll = require('../../../client/api/payroll');
 
-const payload = require('../../../client/api/test-payloads/payrollSubmission');
-
 /**
  * POST api/payroll/createPayrollSubmission/:payrollRunReference/:submissionId
  * @desc   Lookup RPNs by Employee
@@ -22,7 +20,7 @@ router.post(
         payroll.createPayrollSubmission(
           req.params.payrollRunReference,
           req.params.submissionId,
-          JSON.stringify(payload)
+          JSON.stringify(req.body)
         )
       )
       .then(response => {
