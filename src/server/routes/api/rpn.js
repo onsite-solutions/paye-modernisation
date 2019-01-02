@@ -16,7 +16,6 @@ const LookupRPNResponse = require('../../../models/LookupRPNResponse');
  * @desc   Lookup RPNs by Employer
  * @access Public
  */
-
 router.get('/rpnByEmployer', async (req, res) => {
   let dateLastUpdated = req.query.dateLastUpdated.toString();
   let employeeIds = [];
@@ -37,8 +36,18 @@ router.get('/rpnByEmployer', async (req, res) => {
     .get(rpn.lookUpRpnByEmployer(dateLastUpdated, employeeIds))
     .then(response => {
       res.set('Content-Type', 'text/xml');
-      res.status(200).send(JSON.parse(response));
-      //.send(js2xmlparser.parse('response', JSON.parse(response)));
+
+      // Save response to MongoDB
+      let rpn = new LookupRPNResponse(JSON.parse(response));
+
+      rpn
+        .Save()
+        .then(
+          res
+            .status(200)
+            .send(js2xmlparser.parse('response', JSON.parse(response)))
+        )
+        .catch(err => res.status(err.statusCode || 500).send(err.message));
     })
     .catch(err => {
       if (!res.headersSent) {

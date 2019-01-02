@@ -10,6 +10,8 @@ const js2xmlparser = require('js2xmlparser');
  * @access Public
  */
 router.post('/jsontoxml', (req, res) => {
+  console.log(js2xmlparser.parse('response', req.body));
+
   res.set('Content-Type', 'text/xml');
   res.status(200).send(js2xmlparser.parse('response', req.body));
 });
