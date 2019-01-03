@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>RPN Upload</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <link rel="icon" href="img/cdetb.ico" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="js/index.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="col-md-8 col-md-offset-2">
+        <h3>Select RPN File</h3>
+        <form method="POST" action="#" enctype="multipart/form-data">
+          <!-- COMPONENT START -->
+          <div class="form-group">
+            <div class="input-group input-file" name="Fichier1">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Choose a file..."
+              />
+              <span class="input-group-btn">
+                <button class="btn btn-default btn-choose" type="button">
+                  Choose
+                </button>
+              </span>
+            </div>
+          </div>
+          <!-- COMPONENT END -->
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary pull-right">
+              Submit
+            </button>
+            <button type="reset" class="btn btn-danger">Reset</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

@@ -35,11 +35,7 @@ router.get('/rpnByEmployer', async (req, res) => {
     .get(rpn.lookUpRpnByEmployer(dateLastUpdated, employeeIds))
     .then(response => {
       // Save response to MongoDB
-      let newRpnResponse = new RpnResponse(JSON.parse(response));
-
-      console.log(newRpnResponse);
-
-      newRpnResponse.save();
+      new RpnResponse(JSON.parse(response)).save();
 
       res.set('Content-Type', 'text/xml');
       res
@@ -47,10 +43,10 @@ router.get('/rpnByEmployer', async (req, res) => {
         .send(js2xmlparser.parse('response', JSON.parse(response)));
     })
     .catch(err => {
-      console.log(err);
       if (!res.headersSent) {
-        res.status(err.statusCode || 500).send(err.message);
-        //.send(js2xmlparser.parse('response', JSON.parse(err.message)));
+        res
+          .status(err.statusCode || 500)
+          .send(js2xmlparser.parse('response', JSON.parse(err.message)));
       } else {
         console.log(err);
       }
@@ -66,6 +62,9 @@ router.get('/rpnByEmployee/:employeeId', async (req, res) => {
   await client
     .get(rpn.lookupRpnByEmployee(req.params.employeeId))
     .then(response => {
+      // Save response to MongoDB
+      new RpnResponse(JSON.parse(response)).save();
+
       res.set('Content-Type', 'text/xml');
       res
         .status(200)

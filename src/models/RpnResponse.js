@@ -56,7 +56,6 @@ const RpnResponseSchema = new Schema({
         },
         employmentID: {
           type: String,
-          required: true,
           minLength: 0,
           maxLength: 20,
           match: /[A-Za-z0-9_\\-]*/
@@ -87,7 +86,6 @@ const RpnResponseSchema = new Schema({
       },
       previousEmployeePPSN: {
         type: String,
-        required: true,
         minLength: 8,
         maxLength: 10,
         match: /[0-9A-Za-z]*/,
@@ -178,7 +176,6 @@ const RpnResponseSchema = new Schema({
       },
       employmentID: {
         type: String,
-        required: true,
         minLength: 0,
         maxLength: 20,
         match: /[A-Za-z0-9_\\-]*/

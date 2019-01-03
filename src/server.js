@@ -8,12 +8,17 @@ const returnsReconciliation = require('./server/routes/api/returns-reconciliatio
 const rpn = require('./server/routes/api/rpn');
 const convert = require('./server/routes/api/convert');
 const handshake = require('./server/routes/api/handshake');
+const index = require('./server/index');
+const path = require('path');
 
 const app = express();
 
 // Body parser middleware
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: false }));
+
+// Static files
+app.use(express.static(path.join(__dirname, './public')));
 
 // Connect to MongoDB
 mongoose
@@ -30,6 +35,7 @@ app.use('/api/returns_reconciliation', returnsReconciliation);
 app.use('/api/rpn', rpn);
 app.use('/api/convert', convert);
 app.use('/api/handshake/', handshake);
+app.use('/', index);
 
 // Testing locally on port 5000
 const port = process.env.PORT || 5000;
