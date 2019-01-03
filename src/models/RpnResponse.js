@@ -1,12 +1,11 @@
 //@ts-check
-
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 /**
  * Employer's Lookup RPN Response. Will either return RPN detail or details of validation errors.
  */
-const LookupRPNResponseSchema = new Schema({
+const RpnResponseSchema = new Schema({
   employerName: {
     type: String,
     required: true,
@@ -44,7 +43,7 @@ const LookupRPNResponseSchema = new Schema({
         required: true,
         minLength: 0,
         maxLength: 20,
-        match: '[A-Za-z0-9_\\-]*'
+        match: /[A-Za-z0-9_\\-]*/
       },
       employeeID: {
         employeePpsn: {
@@ -52,7 +51,7 @@ const LookupRPNResponseSchema = new Schema({
           required: true,
           minLength: 8,
           maxLength: 10,
-          match: '[0-9A-Za-z]*',
+          match: /[0-9A-Za-z]*/,
           uppercase: true
         },
         employmentID: {
@@ -60,7 +59,7 @@ const LookupRPNResponseSchema = new Schema({
           required: true,
           minLength: 0,
           maxLength: 20,
-          match: '[A-Za-z0-9_\\-]*'
+          match: /[A-Za-z0-9_\\-]*/
         }
       },
       rpnIssueDate: {
@@ -91,7 +90,7 @@ const LookupRPNResponseSchema = new Schema({
         required: true,
         minLength: 8,
         maxLength: 10,
-        match: '[0-9A-Za-z]*',
+        match: /[0-9A-Za-z]*/,
         uppercase: true
       },
       effectiveDate: {
@@ -163,7 +162,7 @@ const LookupRPNResponseSchema = new Schema({
       },
       prsiClass: {
         type: String,
-        match: '[A-Za-z][0-9A-Za-z ]?'
+        match: /[A-Za-z][0-9A-Za-z ]?/
       }
     }
   ],
@@ -174,7 +173,7 @@ const LookupRPNResponseSchema = new Schema({
         required: true,
         minLength: 8,
         maxLength: 10,
-        match: '[0-9A-Za-z]*',
+        match: /[0-9A-Za-z]*/,
         uppercase: true
       },
       employmentID: {
@@ -182,7 +181,7 @@ const LookupRPNResponseSchema = new Schema({
         required: true,
         minLength: 0,
         maxLength: 20,
-        match: '[A-Za-z0-9_\\-]*'
+        match: /[A-Za-z0-9_\\-]*/
       }
     }
   ],
@@ -193,7 +192,7 @@ const LookupRPNResponseSchema = new Schema({
         required: true,
         minLength: 0,
         maxLength: 50,
-        pattern: '[A-Za-z0-9_\\-]*'
+        match: /[A-Za-z0-9_\\-]*/
       },
       path: {
         type: String,
@@ -210,9 +209,6 @@ const LookupRPNResponseSchema = new Schema({
   ]
 });
 
-const LookupRPNResponse = mongoose.model(
-  'LookupRPNResponse',
-  LookupRPNResponseSchema
-);
+const RpnResponse = mongoose.model('rpnResponse', RpnResponseSchema);
 
-module.exports = mongoose.model('LookupRPNResponse', LookupRPNResponseSchema);
+module.exports = RpnResponse;

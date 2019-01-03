@@ -18,7 +18,7 @@ app.use(express.urlencoded({ limit: '50mb', extended: false }));
 // Connect to MongoDB
 mongoose
   .connect(
-    'mongodb://192.168.0.74:27017/payemod',
+    'mongodb://192.168.0.74:27017/payeModTestDB',
     { useNewUrlParser: true }
   )
   .then(() => console.log('MongoDB connected'))

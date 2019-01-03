@@ -3,13 +3,12 @@
 const express = require('express');
 const router = express.Router();
 const js2xmlparser = require('js2xmlparser');
-const mongoose = require('mongoose');
 
 const client = require('../../../client');
 const rpn = require('../../../client/api/rpn');
 const validation = require('../../../validation');
 
-const LookupRPNResponse = require('../../../models/LookupRPNResponse');
+const RpnResponse = require('../../../models/RpnResponse');
 
 /**
  * GET api/rpn/rpnByEmployer
@@ -35,25 +34,23 @@ router.get('/rpnByEmployer', async (req, res) => {
   await client
     .get(rpn.lookUpRpnByEmployer(dateLastUpdated, employeeIds))
     .then(response => {
-      res.set('Content-Type', 'text/xml');
-
       // Save response to MongoDB
-      let rpn = new LookupRPNResponse(JSON.parse(response));
+      let newRpnResponse = new RpnResponse(JSON.parse(response));
 
-      rpn
-        .Save()
-        .then(
-          res
-            .status(200)
-            .send(js2xmlparser.parse('response', JSON.parse(response)))
-        )
-        .catch(err => res.status(err.statusCode || 500).send(err.message));
+      console.log(newRpnResponse);
+
+      newRpnResponse.save();
+
+      res.set('Content-Type', 'text/xml');
+      res
+        .status(200)
+        .send(js2xmlparser.parse('response', JSON.parse(response)));
     })
     .catch(err => {
+      console.log(err);
       if (!res.headersSent) {
-        res
-          .status(err.statusCode || 500)
-          .send(js2xmlparser.parse('response', JSON.parse(err.message)));
+        res.status(err.statusCode || 500).send(err.message);
+        //.send(js2xmlparser.parse('response', JSON.parse(err.message)));
       } else {
         console.log(err);
       }

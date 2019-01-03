@@ -1,21 +1,21 @@
 //@ts-check
-
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 /**
  * Response that lets the employer view a return for a specific period.
  */
-const LookupPayrollByReturnPeriodResponseSchema = new mongoose.Schema({
+const PayrollByReturnPeriodResponseSchema = new Schema({
   employerReg: {
     type: String,
     required: true,
     minLength: 0,
     maxLength: 100,
-    match: '[0-9]{7,8}[A-Wa-w][A-ITWXZa-itwxz ]?'
+    match: /[0-9]{7,8}[A-Wa-w][A-ITWXZa-itwxz ]?/
   },
   agentTAIN: {
     type: String,
-    match: '[0-9]{5}[A-Wa-w]'
+    match: /[0-9]{5}[A-Wa-w]/
   },
   returnPeriod: {
     periodStartDate: {
@@ -58,7 +58,7 @@ const LookupPayrollByReturnPeriodResponseSchema = new mongoose.Schema({
         required: true,
         minLength: 0,
         maxLength: 50,
-        match: '[A-Za-z0-9_\\-]*'
+        match: /[A-Za-z0-9_\\-]*/
       },
       runDate: {
         type: Date,
@@ -94,7 +94,7 @@ const LookupPayrollByReturnPeriodResponseSchema = new mongoose.Schema({
         required: true,
         minLength: 0,
         maxLength: 50,
-        match: '[A-Za-z0-9_\\-]*'
+        match: /[A-Za-z0-9_\\-]*/
       },
       path: {
         type: String,
@@ -111,11 +111,9 @@ const LookupPayrollByReturnPeriodResponseSchema = new mongoose.Schema({
   ]
 });
 
-const LookupPayrollByReturnPeriodResponse = mongoose.model(
-  'LookupPayrollByReturnPeriodResponse',
-  LookupPayrollByReturnPeriodResponseSchema
+const PayrollByReturnPeriodResponse = mongoose.model(
+  'payrollByReturnPeriodResponse',
+  PayrollByReturnPeriodResponseSchema
 );
 
-module.exports = {
-  LookupPayrollByReturnPeriodResponse: LookupPayrollByReturnPeriodResponse
-};
+module.exports = PayrollByReturnPeriodResponse;

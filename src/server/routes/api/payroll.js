@@ -7,6 +7,9 @@ const js2xmlparser = require('js2xmlparser');
 const client = require('../../../client');
 const payroll = require('../../../client/api/payroll');
 
+const PayrollRunResponse = require('../../../models/PayrollRunResponse');
+const PayrollSubmissionResponse = require('../../../models/PayrollSubmissionResponse');
+
 /**
  * POST api/payroll/createPayrollSubmission/:payrollRunReference/:submissionId
  * @desc   Lookup RPNs by Employee
@@ -57,6 +60,9 @@ router.get(
         )
       )
       .then(response => {
+        // Save the response to MongoDB
+        new PayrollSubmissionResponse(JSON.parse(response)).save();
+        // Return XML response to the client
         res.set('Content-Type', 'text/xml');
         res
           .status(200)
@@ -83,6 +89,10 @@ router.get('/checkPayrollRun/:payrollRunReference', async (req, res) => {
   await client
     .get(payroll.checkPayrollRun(req.params.payrollRunReference))
     .then(response => {
+      let newPayrollRunResponse = new PayrollRunResponse(JSON.parse(response));
+
+      newPayrollRunResponse.save();
+
       res.set('Content-Type', 'text/xml');
       res
         .status(200)

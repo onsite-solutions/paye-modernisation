@@ -1,11 +1,11 @@
 //@ts-check
-
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 /**
  * Employer's PAYE Payroll Submission Request
  */
-const PayrollSubmissionSchema = new mongoose.Schema({
+const PayrollSubmissionSchema = new Schema({
   payslips: [
     {
       lineItemID: {
@@ -13,13 +13,13 @@ const PayrollSubmissionSchema = new mongoose.Schema({
         required: true,
         minLength: 0,
         maxLength: 50,
-        match: '[A-Za-z0-9_\\-]*'
+        match: /[A-Za-z0-9_\\-]*/
       },
       previousLineItemID: {
         type: String,
         minLength: 0,
         maxLength: 50,
-        match: '[A-Za-z0-9_\\-]*'
+        match: /[A-Za-z0-9_\\-]*/
       },
       employeeID: {
         employeePpsn: {
@@ -27,7 +27,7 @@ const PayrollSubmissionSchema = new mongoose.Schema({
           required: true,
           minLength: 8,
           maxLength: 10,
-          match: '[0-9A-Za-z]*',
+          match: /[0-9A-Za-z]*/,
           uppercase: true
         },
         employmentID: {
@@ -35,7 +35,7 @@ const PayrollSubmissionSchema = new mongoose.Schema({
           required: true,
           minLength: 0,
           maxLength: 20,
-          match: '[A-Za-z0-9_\\-]*'
+          match: /[A-Za-z0-9_\\-]*/
         }
       },
       employerReference: {
@@ -105,11 +105,11 @@ const PayrollSubmissionSchema = new mongoose.Schema({
           type: String,
           minLength: 7,
           maxLength: 8,
-          match: '[A-Za-z0-9 ]*'
+          match: /[A-Za-z0-9 ]*/
         },
         countryCode: {
           type: String,
-          match: '[A-Za-z]{3}',
+          match: /[A-Za-z]{3}/,
           uppercase: true
         },
         dateOfBirth: Date,
@@ -144,7 +144,7 @@ const PayrollSubmissionSchema = new mongoose.Schema({
           type: String,
           minLength: 0,
           maxLength: 20,
-          pattern: '[A-Za-z0-9_\\-]*'
+          pattern: /[A-Za-z0-9_\\-]*/
         },
         taxCredits: Number,
         taxRates: [
@@ -213,7 +213,7 @@ const PayrollSubmissionSchema = new mongoose.Schema({
             prsiClass: {
               type: String,
               required: true,
-              match: '[A-Za-z][0-9A-Za-z ]?'
+              match: /[A-Za-z][0-9A-Za-z ]?/
             },
             insurableWeeks: Number
           }
@@ -260,17 +260,15 @@ const PayrollSubmissionSchema = new mongoose.Schema({
         type: String,
         minLength: 0,
         maxLength: 50,
-        match: '[A-Za-z0-9_\\-]*'
+        match: /[A-Za-z0-9_\\-]*/
       }
     }
   ]
 });
 
 const PayrollSubmission = mongoose.model(
-  'PayrollSubmission',
+  'payrollSubmission',
   PayrollSubmissionSchema
 );
 
-module.exports = {
-  PayrollSubmission: PayrollSubmission
-};
+module.exports = PayrollSubmission;

@@ -1,19 +1,19 @@
 //@ts-check
-
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 /**
  * Return the current status of an Employer's PAYE Payroll Submission.
  *
  * If processed, includes summary totals of valid payslips and validation errors for invalid payslips.
  */
-const CheckPayrollSubmissionResponseSchema = new mongoose.Schema({
+const PayrollSubmissionResponseSchema = new Schema({
   submissionID: {
     type: String,
     required: true,
     minLength: 0,
     maxLength: 50,
-    pattern: '[A-Za-z0-9_\\-]*'
+    pattern: /[A-Za-z0-9_\\-]*/
   },
   status: {
     type: String,
@@ -66,16 +66,16 @@ const CheckPayrollSubmissionResponseSchema = new mongoose.Schema({
         required: true,
         minLength: 0,
         maxLength: 50,
-        pattern: '[A-Za-z0-9_\\-]*'
+        pattern: /[A-Za-z0-9_\\-]*/
       },
-      errors: [
+      error: [
         {
           code: {
             type: String,
             required: true,
             minLength: 0,
             maxLength: 50,
-            match: '[A-Za-z0-9_\\-]*'
+            match: /[A-Za-z0-9_\\-]*/
           },
           path: {
             type: String,
@@ -99,7 +99,7 @@ const CheckPayrollSubmissionResponseSchema = new mongoose.Schema({
         required: true,
         minLength: 0,
         maxLength: 50,
-        match: '[A-Za-z0-9_\\-]*'
+        match: /[A-Za-z0-9_\\-]*/
       },
       warnings: [
         {
@@ -108,7 +108,7 @@ const CheckPayrollSubmissionResponseSchema = new mongoose.Schema({
             required: true,
             minLength: 0,
             maxLength: 50,
-            match: '[A-Za-z0-9_\\-]*'
+            match: /[A-Za-z0-9_\\-]*/
           },
           path: {
             type: String,
@@ -132,7 +132,7 @@ const CheckPayrollSubmissionResponseSchema = new mongoose.Schema({
         required: true,
         minLength: 0,
         maxLength: 50,
-        match: '[A-Za-z0-9_\\-]*'
+        match: /[A-Za-z0-9_\\-]*/
       },
       path: {
         type: String,
@@ -149,11 +149,9 @@ const CheckPayrollSubmissionResponseSchema = new mongoose.Schema({
   ]
 });
 
-const CheckPayrollSubmissionResponse = mongoose.model(
-  'CheckPayrollSubmissionResponse',
-  CheckPayrollSubmissionResponseSchema
+const PayrollSubmissionResponse = mongoose.model(
+  'payrollSubmissionResponse',
+  PayrollSubmissionResponseSchema
 );
 
-module.exports = {
-  CheckPayrollSubmissionResponse: CheckPayrollSubmissionResponse
-};
+module.exports = PayrollSubmissionResponse;

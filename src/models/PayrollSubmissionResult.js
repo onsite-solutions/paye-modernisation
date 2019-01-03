@@ -1,11 +1,11 @@
 //@ts-check
-
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 /**
  * Acknowledges the receipt of an Employer's PAYE Payroll Submission Request or Validation Errors if validation failed.
  */
-const PayrollSubmissionResultSchema = new mongoose.Schema({
+const PayrollSubmissionResultSchema = new Schema({
   acknowledgementStatus: {
     type: String,
     required: true,
@@ -15,7 +15,7 @@ const PayrollSubmissionResultSchema = new mongoose.Schema({
     type: String,
     minLength: 0,
     maxLength: 50,
-    match: '[A-Za-z0-9_\\-]*'
+    match: /[A-Za-z0-9_\\-]*/
   },
   validationErrors: [
     {
@@ -24,7 +24,7 @@ const PayrollSubmissionResultSchema = new mongoose.Schema({
         required: true,
         minLength: 0,
         maxLength: 50,
-        pattern: '[A-Za-z0-9_\\-]*'
+        pattern: /[A-Za-z0-9_\\-]*/
       },
       path: {
         type: String,
@@ -42,10 +42,8 @@ const PayrollSubmissionResultSchema = new mongoose.Schema({
 });
 
 const PayrollSubmissionResult = mongoose.model(
-  'PayrollSubmissionResult',
+  'payrollSubmissionResult',
   PayrollSubmissionResultSchema
 );
 
-module.exports = {
-  PayrollSubmissionResult: PayrollSubmissionResult
-};
+module.exports = PayrollSubmissionResult;

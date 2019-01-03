@@ -1,17 +1,17 @@
 //@ts-check
-
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 /**
  * RPN details for new employee(s)
  */
-const NewRPNSchema = new mongoose.Schema({
+const NewRpnSchema = new Schema({
   requestId: {
     type: String,
     required: true,
     minLength: 0,
     maxLength: 50,
-    match: '[A-Za-z0-9_\\-]*'
+    match: /[A-Za-z0-9_\\-]*/
   },
   newEmployeeDetails: [
     {
@@ -22,7 +22,7 @@ const NewRPNSchema = new mongoose.Schema({
           required: true,
           minLength: 8,
           maxLength: 10,
-          match: '[0-9A-Za-z]*',
+          match: /[0-9A-Za-z]*/,
           uppercase: true
         },
         employmentID: {
@@ -30,7 +30,7 @@ const NewRPNSchema = new mongoose.Schema({
           required: true,
           minLength: 0,
           maxLength: 20,
-          match: '[A-Za-z0-9_\\-]*'
+          match: /[A-Za-z0-9_\\-]*/
         }
       },
       name: {
@@ -53,8 +53,6 @@ const NewRPNSchema = new mongoose.Schema({
   ]
 });
 
-const NewRPN = mongoose.model('NewRPN', NewRPNSchema);
+const NewRpn = mongoose.model('newRpn', NewRpnSchema);
 
-module.exports = {
-  NewRPN: NewRPN
-};
+module.exports = NewRpn;

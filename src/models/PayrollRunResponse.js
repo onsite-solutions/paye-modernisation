@@ -1,11 +1,11 @@
 //@ts-check
-
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 /**
  * Return the current status of an Employer's PAYE Payroll Run. Includes list of submissions that make up the payroll run and includes summary details of processed submissions.
  */
-const CheckPayrollRunResponseSchema = new mongoose.Schema({
+const PayrollRunResponseSchema = new Schema({
   status: {
     type: String,
     required: true,
@@ -22,7 +22,7 @@ const CheckPayrollRunResponseSchema = new mongoose.Schema({
         required: true,
         minLength: 0,
         maxLength: 50,
-        match: '[A-Za-z0-9_\\-]*'
+        match: /[A-Za-z0-9_\\-]*/
       },
       status: {
         type: String,
@@ -64,7 +64,7 @@ const CheckPayrollRunResponseSchema = new mongoose.Schema({
         required: true,
         minLength: 0,
         maxLength: 50,
-        match: '[A-Za-z0-9_\\-]*'
+        match: /[A-Za-z0-9_\\-]*/
       },
       path: {
         type: String,
@@ -86,7 +86,7 @@ const CheckPayrollRunResponseSchema = new mongoose.Schema({
         required: true,
         minLength: 0,
         maxLength: 50,
-        match: '[A-Za-z0-9_\\-]*'
+        match: /[A-Za-z0-9_\\-]*/
       },
       employeeID: {
         employeePpsn: {
@@ -94,7 +94,7 @@ const CheckPayrollRunResponseSchema = new mongoose.Schema({
           required: true,
           minLength: 8,
           maxLength: 10,
-          match: '[0-9A-Za-z]*',
+          match: /[0-9A-Za-z]*/,
           uppercase: true
         },
         employmentID: {
@@ -102,7 +102,7 @@ const CheckPayrollRunResponseSchema = new mongoose.Schema({
           required: true,
           minLength: 0,
           maxLength: 20,
-          match: '[A-Za-z0-9_\\-]*'
+          match: /[A-Za-z0-9_\\-]*/
         }
       },
       employerReference: {
@@ -130,11 +130,9 @@ const CheckPayrollRunResponseSchema = new mongoose.Schema({
   ]
 });
 
-const CheckPayrollRunResponse = mongoose.model(
-  'CheckPayrollRunResponse',
-  CheckPayrollRunResponseSchema
+const PayrollRunResponse = mongoose.model(
+  'payrollRunResponse',
+  PayrollRunResponseSchema
 );
 
-module.exports = {
-  CheckPayrollRunResponse: CheckPayrollRunResponse
-};
+module.exports = PayrollRunResponse;
