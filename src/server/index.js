@@ -30,10 +30,11 @@ router.get('/', (req, res) => {
 router.post('/', upload.single('file-to-upload'), (req, res) => {
   fs.readFile(req.file.path, 'utf8', (err, data) => {
     let fileBody = '';
+    let fileName = req.file.originalname;
 
     // Check if we have been passed a .json file extension
     if (
-      req.file.originalname
+      fileName
         .split('.')
         .pop()
         .toUpperCase() !== 'JSON'
@@ -64,12 +65,24 @@ router.post('/', upload.single('file-to-upload'), (req, res) => {
     // Save the data to the database
     newRpnResponse.save();
 
+    // Create the xml file body
+    let xmlBody = js2xmlparser.parse('root', fileBody);
+    let xmlFileName = fileName.replace('.json', '.xml');
+
+    // Create the xml version of the file
+
+    fs.writeFile(req.file.destination + xmlFileName, xmlBody, err => {
+      if (err) {
+        return res.status(400).json({ error: 'Failed to create XML file' });
+      }
+    });
+
     // FTP the file to payrolls server
     let c = new Client();
     c.on('ready', function() {
       c.put(
-        data,
-        '/usr/synergy_live/payrolls/shared/' + req.file.originalname,
+        xmlBody,
+        '/usr/synergy_live/payrolls/shared/' + xmlFileName,
         function(err) {
           if (err) throw err;
           c.end();
@@ -79,8 +92,16 @@ router.post('/', upload.single('file-to-upload'), (req, res) => {
     // connect to payroll server and transfer file
     c.connect({ host: '192.168.0.55', user: 'mikeigoe', password: 'Tr1fy1pt' });
 
-    // Delete the local file
+    // Delete the local files
     fs.unlink(req.file.path, err => {
+      if (err) {
+        return res
+          .status(400)
+          .json({ error: 'Unable to delete the temporary file' });
+      }
+    });
+
+    fs.unlink(req.file.destination + xmlFileName, err => {
       if (err) {
         return res
           .status(400)
