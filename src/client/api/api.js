@@ -4,7 +4,6 @@ var Cert = require('../../cert');
 var certs = require('../certs/certs');
 // TODO: have this switch depending on environment
 var config = require(`../../config/${process.env.NODE_ENV || 'development'}`);
-//var config = require('../../config/production');
 
 /**
  * Returns the digital certificate and the environment configuration

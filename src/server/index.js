@@ -9,6 +9,7 @@ const multer = require('multer');
 const fs = require('fs');
 const validation = require('../validation');
 const Client = require('ftp');
+const config = require(`../config/${process.env.NODE_ENV || 'development'}`);
 
 const upload = multer({ dest: path.join(__dirname, '../uploads/') });
 
@@ -90,7 +91,11 @@ router.post('/', upload.single('file-to-upload'), (req, res) => {
       );
     });
     // connect to payroll server and transfer file
-    c.connect({ host: '192.168.0.55', user: 'mikeigoe', password: 'Tr1fy1pt' });
+    c.connect({
+      host: config.ftpHost,
+      user: config.ftpUser,
+      password: config.ftpPassword
+    });
 
     // Delete the local files
     fs.unlink(req.file.path, err => {
