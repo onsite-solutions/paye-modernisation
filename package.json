@@ -18,12 +18,13 @@
   },
   "homepage": "https://github.com/onsite-solutions/paye-modernisation#readme",
   "dependencies": {
-    "body-parser": "^1.18.3",
     "buffer": "^5.1.0",
     "express": "^4.16.3",
+    "ftp": "^0.3.10",
     "js2xmlparser": "^3.0.0",
     "moment": "^2.22.2",
     "mongoose": "^5.2.4",
+    "multer": "^1.4.1",
     "node-forge": "^0.7.5"
   },
   "devDependencies": {

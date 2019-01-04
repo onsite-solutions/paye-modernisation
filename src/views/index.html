@@ -10,34 +10,33 @@
     />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="js/index.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
   </head>
   <body>
-    <div class="container">
-      <div class="col-md-8 col-md-offset-2">
-        <h3>Select RPN File</h3>
-        <form method="POST" action="#" enctype="multipart/form-data">
-          <!-- COMPONENT START -->
+    <nav
+      class="navbar navbar-expand-lg navbar-light"
+      style="background-color: #e3f2fd;"
+    >
+      <a href="#" class="navbar-left"
+        ><img src="img/cdetb_banner.png" width="113px" height="42px"
+      /></a>
+    </nav>
+    <div class="container-fluid" style="border:1px solid #cecece;">
+      <div class="col-md-8">
+        <h3>Upload RPN File</h3>
+        <p>
+          Please select a Revenue Payroll Notification JSON file for upload to
+          CDETB Payroll:
+        </p>
+        <form action="/" enctype="multipart/form-data" method="post">
           <div class="form-group">
-            <div class="input-group input-file" name="Fichier1">
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Choose a file..."
-              />
-              <span class="input-group-btn">
-                <button class="btn btn-default btn-choose" type="button">
-                  Choose
-                </button>
-              </span>
-            </div>
+            <label class="btn btn-default btn-file">
+              <input class="input-normal" type="file" name="file-to-upload" />
+            </label>
           </div>
-          <!-- COMPONENT END -->
           <div class="form-group">
-            <button type="submit" class="btn btn-primary pull-right">
-              Submit
-            </button>
-            <button type="reset" class="btn btn-danger">Reset</button>
+            <button type="submit" class="btn btn-primary">Upload</button>
           </div>
         </form>
       </div>

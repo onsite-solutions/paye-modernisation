@@ -36,6 +36,10 @@ const RpnResponseSchema = new Schema({
     type: Date,
     required: true
   },
+  dateUploaded: {
+    type: Date,
+    default: Date.now
+  },
   rpns: [
     {
       rpnNumber: {
