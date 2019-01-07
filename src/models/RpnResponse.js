@@ -40,6 +40,7 @@ const RpnResponseSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  dateImported: Date,
   rpns: [
     {
       rpnNumber: {
