@@ -9,9 +9,11 @@ const js2xmlparser = require('js2xmlparser');
 const Rpn = require('../../../models/Rpn');
 const RpnResponse = require('../../../models/RpnResponse');
 
+const EmployeeRpnListing = require('../../../reports/employeeRpnListing');
+
 /**
- * GET api/db/rpns/employeePpsn/ppsn
- * @desc   Fetch the RPN history for an employee from the database
+ * GET api/report/rpns/employeePpsn
+ * @desc   Return a report of the RPN history for an employee
  * @access Public
  */
 router.get('/rpns/:employeePpsn/', (req, res) => {
@@ -34,23 +36,22 @@ router.get('/rpns/:employeePpsn/', (req, res) => {
       }
     } else {
       try {
-        let response = { rpns: [] };
+        let rpns = [];
 
         // Result may have multiple arrays of RPNs. Loop through these
-        for (let i = 0; i < results.length; i++) {
+        for (var i = 0; i < results.length; i++) {
           // Loop through each RPN in the array
-          for (let j = 0; j < results[i].rpns.length; j++) {
+          for (var j = 0; j < results[i].rpns.length; j++) {
             // Add the RPN to the response collection
-            response.rpns.push(new Rpn(results[i].rpns[j]));
+            rpns.push(new Rpn(results[i].rpns[j]));
           }
         }
 
+        // Create the report object
+        let report = new EmployeeRpnListing(rpns);
+
         res.set('Content-Type', 'text/xml');
-        res
-          .status(200)
-          .send(
-            js2xmlparser.parse('response', JSON.parse(JSON.stringify(response)))
-          );
+        res.status(200).send(rpns);
       } catch (error) {
         console.log(error);
       }
