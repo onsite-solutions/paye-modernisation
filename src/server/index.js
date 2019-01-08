@@ -14,13 +14,6 @@ const config = require(`../config/${process.env.NODE_ENV || 'development'}`);
 const upload = multer({ dest: path.join(__dirname, '../uploads/') });
 
 /**
- * GET /transfer/
- * @desc   Upload JSON RPN file to Payroll
- * @access Public
- */
-router.get('/transfer/', (req, res) => {});
-
-/**
  * GET /
  * @desc   Upload JSON RPN file to Payroll
  * @access Public

@@ -7,6 +7,7 @@ const payroll = require('./server/routes/api/payroll');
 const returnsReconciliation = require('./server/routes/api/returns-reconciliation');
 const rpn = require('./server/routes/api/rpn');
 const convert = require('./server/routes/api/convert');
+const db = require('./server/routes/api/db');
 const handshake = require('./server/routes/api/handshake');
 const index = require('./server/index');
 const path = require('path');
@@ -34,6 +35,7 @@ app.use('/api/payroll', payroll);
 app.use('/api/returns_reconciliation', returnsReconciliation);
 app.use('/api/rpn', rpn);
 app.use('/api/convert', convert);
+app.use('/api/db/', db);
 app.use('/api/handshake/', handshake);
 app.use('/', index);
 
