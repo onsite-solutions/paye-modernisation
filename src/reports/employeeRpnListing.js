@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const moment = require('moment');
 const validation = require('../validation');
 
+const EmployeeRpn = require('./employeeRpn');
 const Rpn = require('../models/Rpn');
 
 /**
@@ -18,26 +19,37 @@ function EmployeeRpnListing(rpns) {
 
   this.setHeaders();
 
-  console.log(this.header);
-  console.log(this.subHeader);
+  this.setEmployeeRpns();
 
   this.setRows();
 
-  console.log(this.rows);
+  console.log(this.columns);
+  console.log(this.employeeRpns[0]);
 }
 
+EmployeeRpnListing.prototype.getReport = function() {
+  let report = [];
+
+  report.push(this.header);
+  report.push(this.subHeader);
+
+  for (let i = 0; i < this.rows.length; i++) {
+    report.push(this.rows[i]);
+  }
+
+  return report.join('\r\n');
+};
+
 /**
- * Constructs a column definition
- * @param {number} index the zero-based index of the column
+ * Adds a column definition
  * @param {string} name the column name (displayed as header on report)
  * @param {number} length the total character length of the column
  */
-EmployeeRpnListing.prototype.column = function(index, name, length) {
-  return {
-    index: index,
+EmployeeRpnListing.prototype.addColumn = function(name, length) {
+  this.columns.push({
     name: name,
     length: length
-  };
+  });
 };
 
 /**
@@ -46,39 +58,39 @@ EmployeeRpnListing.prototype.column = function(index, name, length) {
 EmployeeRpnListing.prototype.setColumns = function() {
   this.columns = [];
 
-  this.columns.push(this.column(0, 'RPN', 4));
-  this.columns.push(this.column(1, 'PPSN', 10));
-  this.columns.push(this.column(2, 'Employment ID', 4));
-  this.columns.push(this.column(3, 'RPN Issue Date', 10));
-  this.columns.push(this.column(4, 'Employer Reference', 50));
-  this.columns.push(this.column(5, 'First Name', 50));
-  this.columns.push(this.column(6, 'Surname', 50));
-  this.columns.push(this.column(7, 'Previous PPSN', 13));
-  this.columns.push(this.column(8, 'Effective Date', 15));
-  this.columns.push(this.column(9, 'End Date', 11));
-  this.columns.push(this.column(10, 'Income Tax Basis', 10));
-  this.columns.push(this.column(11, 'Exclusion Order', 3));
-  this.columns.push(this.column(12, 'Yearly Tax Credits', 10));
-  this.columns.push(this.column(13, 'Tax Rate 1', 5));
-  this.columns.push(this.column(14, 'Tax Rate 1 Yearly Cut Off', 10));
-  this.columns.push(this.column(15, 'Tax Rate 2', 5));
-  this.columns.push(this.column(16, 'Tax Rate 2 Yearly Cut Off', 10));
-  this.columns.push(this.column(17, 'Pay For Income Tax To Date', 10));
-  this.columns.push(this.column(18, 'Income Tax Deducted To Date', 10));
-  this.columns.push(this.column(19, 'USC Status', 8));
-  this.columns.push(this.column(20, 'USC 1 Rate', 5));
-  this.columns.push(this.column(21, 'USC 1 Yearly Cut Off', 10));
-  this.columns.push(this.column(22, 'USC 2 Rate', 5));
-  this.columns.push(this.column(23, 'USC 2 Yearly Cut Off', 10));
-  this.columns.push(this.column(24, 'USC 3 Rate', 5));
-  this.columns.push(this.column(25, 'USC 3 Yearly Cut Off', 10));
-  this.columns.push(this.column(26, 'USC 4 Rate', 5));
-  this.columns.push(this.column(27, 'USC 4 Yearly Cut Off', 10));
-  this.columns.push(this.column(28, 'Pay For USC To Date', 10));
-  this.columns.push(this.column(29, 'USC Deducted To Date', 10));
-  this.columns.push(this.column(30, 'LPT To Deduct', 10));
-  this.columns.push(this.column(31, 'PRSI Exempt', 3));
-  this.columns.push(this.column(32, 'PRSI Class', 2));
+  this.addColumn('RPN', 4);
+  this.addColumn('PPSN', 10);
+  this.addColumn('Employment ID', 4);
+  this.addColumn('RPN Issue Date', 10);
+  this.addColumn('Employer Reference', 10);
+  this.addColumn('First Name', 25);
+  this.addColumn('Surname', 25);
+  this.addColumn('Previous PPSN', 10);
+  this.addColumn('Effective Date', 15);
+  this.addColumn('End Date', 11);
+  this.addColumn('Income Tax Basis', 11);
+  this.addColumn('Exclusion Order', 4);
+  this.addColumn('Yearly Tax Credits', 10);
+  this.addColumn('Tax Rate 1', 5);
+  this.addColumn('Tax Rate 1 Yearly Cut Off', 10);
+  this.addColumn('Tax Rate 2', 5);
+  this.addColumn('Tax Rate 2 Yearly Cut Off', 10);
+  this.addColumn('Pay For Income Tax To Date', 10);
+  this.addColumn('Income Tax Deducted To Date', 10);
+  this.addColumn('USC Status', 8);
+  this.addColumn('USC 1 Rate', 5);
+  this.addColumn('USC 1 Yearly Cut Off', 10);
+  this.addColumn('USC 2 Rate', 5);
+  this.addColumn('USC 2 Yearly Cut Off', 10);
+  this.addColumn('USC 3 Rate', 5);
+  this.addColumn('USC 3 Yearly Cut Off', 10);
+  this.addColumn('USC 4 Rate', 5);
+  this.addColumn('USC 4 Yearly Cut Off', 10);
+  this.addColumn('Pay For USC To Date', 10);
+  this.addColumn('USC Deducted To Date', 10);
+  this.addColumn('LPT To Deduct', 10);
+  this.addColumn('PRSI Exempt', 3);
+  this.addColumn('PRSI Class', 2);
 };
 
 /**
@@ -96,88 +108,34 @@ EmployeeRpnListing.prototype.setHeaders = function() {
   }
 };
 
-EmployeeRpnListing.prototype.setRows = function() {
-  this.rows = [];
+/**
+ * Populates the employeeRpns array
+ */
+EmployeeRpnListing.prototype.setEmployeeRpns = function() {
+  this.employeeRpns = [];
 
   for (let i = 0; i < this.rpns.length; i++) {
-    this.rows.push(this.getRow(this.rpns[i]));
+    this.employeeRpns.push(new EmployeeRpn(this.rpns[i]));
   }
 };
 
 /**
- * Adds a data row to the report
- * @param {Rpn} rpn The RPN object from which to build the record
+ * Populates the rows array
  */
-EmployeeRpnListing.prototype.getRow = function(rpn) {
-  let row = [];
+EmployeeRpnListing.prototype.setRows = function() {
+  this.rows = [];
 
-  row.push(this.pad(rpn.rpnNumber, this.columns[0].length));
-  row.push(this.pad(rpn.employeeID.employeePpsn, this.columns[1].length));
-  row.push(this.pad(rpn.employeeID.employmentID, this.columns[2].length));
-  row.push(
-    this.pad(
-      moment(rpn.rpnIssueDate).format('DD/MM/YYYY'),
-      this.columns[3].length
-    )
-  );
-  row.push(this.pad(rpn.employerReference, this.columns[4].length));
-  row.push(this.pad(rpn.name.firstName, this.columns[5].length));
-  row.push(this.pad(rpn.name.familyName, this.columns[6].length));
-  row.push(this.pad(rpn.previousEmployeePPSN, this.columns[7].length));
-  row.push(
-    this.pad(
-      moment(rpn.effectiveDate).format('DD/MM/YYYY'),
-      this.columns[8].length
-    )
-  );
-  row.push(
-    this.pad(moment(rpn.endDate).format('DD/MM/YYYY'), this.columns[9].length)
-  );
-  row.push(this.pad(rpn.incomeTaxCalculationBasis, this.columns[10].length));
-  row.push(
-    this.pad(rpn.exclusionOrder ? 'Yes' : 'No', this.columns[11].length)
-  );
-  row.push(this.pad(rpn.yearlyTaxCredits, this.columns[12].length));
-  row.push(this.pad(rpn.taxRates[0].taxRatePercent, this.columns[13].length));
-  row.push(this.pad(rpn.taxRates[0].yearlyRateCutOff, this.columns[14].length));
-  row.push(this.pad(rpn.taxRates[1].taxRatePercent, this.columns[15].length));
-  row.push(this.pad(rpn.taxRates[1].yearlyRateCutOff, this.columns[16].length));
-  row.push(this.pad(rpn.payForIncomeTaxToDate, this.columns[17].length));
-  row.push(this.pad(rpn.incomeTaxDeductedToDate, this.columns[18].length));
+  for (let i = 0; i < this.employeeRpns.length; i++) {
+    let row = [];
 
-  //row.push(this.pad(rpn.____, this.columns[_].length));
+    for (let j = 0; j < this.columns.length; j++) {
+      row.push(
+        this.employeeRpns[i].items[j].padEnd(this.columns[j].length, ' ')
+      );
+    }
 
-  //Pay For Income Tax To Date  10
-  //Income Tax Deducted To Date 10
-  //USC Status          8
-  //USC 1 Rate        5
-  //USC 1 Yearly Cut Off  10
-  //USC 2 Rate        5
-  //USC 2 Yearly Cut Off  10
-  //USC 3 Rate        5
-  //USC 3 Yearly Cut Off  10
-  //USC 4 Rate        5
-  //USC 4 Yearly Cut Off  10
-  //Pay For USC To Date   10
-  //USC Deducted To Date  10
-  //LPT To Deduct     10
-  //PRSI Exempt       3
-  //PRSI Class        2
-
-  return row.join('');
-};
-
-EmployeeRpnListing.prototype.pad = function(value, length) {
-  if (validation.isEmpty(value)) {
-    let res = '';
-    return res.padEnd(length, ' ');
-  } else if (value.length < length) {
-    return value.padEnd(length, ' ');
-  } else {
-    return value;
+    this.rows.push(row.join(''));
   }
 };
-
-EmployeeRpnListing.prototype.formatBool;
 
 module.exports = EmployeeRpnListing;

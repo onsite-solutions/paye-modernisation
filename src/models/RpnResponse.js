@@ -24,14 +24,10 @@ const RpnResponseSchema = new Schema({
   },
   taxYear: {
     type: Number,
-    required: true,
     min: 2000.0,
     max: 2100.0
   },
-  totalRPNCount: {
-    type: Number,
-    required: true
-  },
+  totalRPNCount: Number,
   dateTimeEffective: {
     type: Date,
     required: true

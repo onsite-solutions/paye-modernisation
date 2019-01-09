@@ -51,7 +51,7 @@ router.get('/rpns/:employeePpsn/', (req, res) => {
         let report = new EmployeeRpnListing(rpns);
 
         res.set('Content-Type', 'text/xml');
-        res.status(200).send(rpns);
+        res.status(200).send(report.getReport());
       } catch (error) {
         console.log(error);
       }

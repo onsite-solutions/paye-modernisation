@@ -10,6 +10,7 @@ const fs = require('fs');
 const validation = require('../validation');
 const Client = require('ftp');
 const config = require(`../config/${process.env.NODE_ENV || 'development'}`);
+//const config = require(`../config/production`);
 
 const upload = multer({ dest: path.join(__dirname, '../uploads/') });
 
@@ -68,7 +69,7 @@ router.post('/', upload.single('file-to-upload'), (req, res) => {
 
     // Create the xml file body
     let xmlBody = js2xmlparser.parse('root', fileBody);
-    let xmlFileName = fileName.replace('.json', '.xml');
+    let xmlFileName = fileName.replace('.json', '.xml').toUpperCase();
 
     // Create the xml version of the file
 
