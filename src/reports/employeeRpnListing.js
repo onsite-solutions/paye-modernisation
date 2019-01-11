@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const moment = require('moment');
 const validation = require('../validation');
 
-const EmployeeRpn = require('./employeeRpn');
+const employeeRpn = require('./employeeRpn');
 const Rpn = require('../models/Rpn');
 
 /**
@@ -26,6 +26,20 @@ function EmployeeRpnListing(rpns) {
   console.log(this.columns);
   console.log(this.employeeRpns[0]);
 }
+
+/**
+ * Generate the report item for a single rpn
+ *
+ */
+EmployeeRpnListing.prototype.getReportNew = function(rpn) {
+  let report = [];
+  let line = '';
+  //let rpn = this.rpns[1];
+
+  //line = `RPN No. ${this.rpn}`;
+
+  //line = `Employment `;
+};
 
 EmployeeRpnListing.prototype.getReport = function() {
   let report = [];
@@ -113,6 +127,8 @@ EmployeeRpnListing.prototype.setHeaders = function() {
  */
 EmployeeRpnListing.prototype.setEmployeeRpns = function() {
   this.employeeRpns = [];
+
+  let test = employeeRpn(this.rpns[0]);
 
   for (let i = 0; i < this.rpns.length; i++) {
     this.employeeRpns.push(new EmployeeRpn(this.rpns[i]));
