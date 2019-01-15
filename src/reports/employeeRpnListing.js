@@ -10,28 +10,34 @@ const Rpn = require('../models/Rpn');
 /**
  * Constructs a report from the provided list of JSON RPNs
  * @param {Rpn[]} rpns Collection of RPN objects to display in the report
- * @link https://tools.ietf.org/html/draft-cavage-http-signatures-08#section-4
+ * @param {boolean} csv Indicates whether the report should be CSV or text
  */
-function EmployeeRpnListing(rpns) {
+function EmployeeRpnListing(rpns, csv) {
   this.rpns = rpns;
 
-  this.setColumns();
+  if (csv) {
+    // CSV version of report
+  } else {
+    // Plain text version of report
+  }
 
-  this.setHeaders();
+  //this.setColumns();
 
-  this.setEmployeeRpns();
+  //this.setHeaders();
 
-  this.setRows();
+  //this.setEmployeeRpns();
 
-  console.log(this.columns);
-  console.log(this.employeeRpns[0]);
+  //this.setRows();
+
+  //console.log(this.columns);
+  //console.log(this.employeeRpns[0]);
 }
 
 /**
  * Generate the report item for a single rpn
  *
  */
-EmployeeRpnListing.prototype.getReportNew = function(rpn) {
+EmployeeRpnListing.prototype.getReportText = function(rpn) {
   let report = [];
   let line = '';
   //let rpn = this.rpns[1];
@@ -41,7 +47,7 @@ EmployeeRpnListing.prototype.getReportNew = function(rpn) {
   //line = `Employment `;
 };
 
-EmployeeRpnListing.prototype.getReport = function() {
+EmployeeRpnListing.prototype.getReportCsv = function() {
   let report = [];
 
   report.push(this.header);

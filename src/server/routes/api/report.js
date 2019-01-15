@@ -9,14 +9,14 @@ const js2xmlparser = require('js2xmlparser');
 const Rpn = require('../../../models/Rpn');
 const RpnResponse = require('../../../models/RpnResponse');
 
-const EmployeeRpnListing = require('../../../reports/employeeRpnListing');
+const csvReport = require('../../../reports/employeeRpnReportCsv');
 
 /**
- * GET api/report/rpns/employeePpsn
+ * GET api/report/rpns/format/employeePpsn
  * @desc   Return a report of the RPN history for an employee
  * @access Public
  */
-router.get('/rpns/:employeePpsn/', (req, res) => {
+router.get('/rpns/:format/:employeePpsn/', (req, res) => {
   // Get the RPN records where the PPSN matches the provided value
   RpnResponse.find(
     { 'rpns.employeeID.employeePpsn': req.params.employeePpsn },
@@ -47,11 +47,14 @@ router.get('/rpns/:employeePpsn/', (req, res) => {
           }
         }
 
-        // Create the report object
-        let report = new EmployeeRpnListing(rpns);
+        res.set('Content-Type', 'text/plain');
 
-        res.set('Content-Type', 'text/xml');
-        res.status(200).send(report.getReport());
+        if (req.params.format.toLowerCase() == 'csv') {
+          // Create the report object
+          res.status(200).send(csvReport(rpns));
+        } else {
+          res.status(200).send();
+        }
       } catch (error) {
         console.log(error);
       }
