@@ -35,12 +35,11 @@ router.get('/rpnByEmployer', async (req, res) => {
     .get(rpn.lookUpRpnByEmployer(dateLastUpdated, employeeIds))
     .then(response => {
       // Save response to MongoDB
-      new RpnResponse(JSON.parse(response)).save();
+      //new RpnResponse(JSON.parse(response)).save();
 
       res.set('Content-Type', 'text/xml');
-      res
-        .status(200)
-        .send(js2xmlparser.parse('response', JSON.parse(response)));
+      res.status(200).send(JSON.parse(response));
+      //.send(js2xmlparser.parse('response', JSON.parse(response)));
     })
     .catch(err => {
       if (!res.headersSent) {

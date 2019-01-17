@@ -9,14 +9,15 @@ const js2xmlparser = require('js2xmlparser');
 const Rpn = require('../../../models/Rpn');
 const RpnResponse = require('../../../models/RpnResponse');
 
-const csvReport = require('../../../reports/employeeRpnReportCsv');
+const rpnReportCsv = require('../../../reports/rpnReportCsv');
+const rpnReportText = require('../../../reports/rpnReportText.js');
 
 /**
- * GET api/report/rpns/format/employeePpsn
+ * GET api/report/rpnReport/byEmployeePpsn/format/employeePpsn
  * @desc   Return a report of the RPN history for an employee
  * @access Public
  */
-router.get('/rpns/:format/:employeePpsn/', (req, res) => {
+router.get('/rpnReport/byEmployeePpsn/:format/:employeePpsn/', (req, res) => {
   // Get the RPN records where the PPSN matches the provided value
   RpnResponse.find(
     { 'rpns.employeeID.employeePpsn': req.params.employeePpsn },
@@ -50,11 +51,54 @@ router.get('/rpns/:format/:employeePpsn/', (req, res) => {
         res.set('Content-Type', 'text/plain');
 
         if (req.params.format.toLowerCase() == 'csv') {
-          // Create the report object
-          res.status(200).send(csvReport(rpns));
+          // Send the CSV report
+          res.status(200).send(rpnReportCsv(rpns));
+        } else if (req.params.format.toLowerCase() == 'text') {
+          // Send the text report
+          let report = new rpnReportText(rpns);
+
+          res.status(200).send(report.getReport());
         } else {
           res.status(200).send();
         }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  });
+});
+
+/**
+ * GET api/report/rpnReport/byObjectId/format/employeePpsn
+ * @desc   Return a report of the RPN history for a file (by MongoDB Object ID)
+ * @access Public
+ */
+router.get('/rpnReport/byObjectId/:objectId/', (req, res) => {
+  // Get the RPN records where the PPSN matches the provided value
+  RpnResponse.findOne({ _id: req.params.objectId }).exec((err, results) => {
+    if (err) {
+      if (!res.headersSent) {
+        res
+          .status(err.statusCode || 500)
+          .send(js2xmlparser.parse('response', JSON.parse(err.message)));
+      } else {
+        console.log(err);
+      }
+    } else {
+      try {
+        let rpns = [];
+
+        // Loop through each RPN in the array
+        for (var i = 0; i < results.rpns.length; i++) {
+          // Add the RPN to the response collection
+          rpns.push(new Rpn(results.rpns[i]));
+        }
+
+        console.log(results);
+
+        // Send the CSV report
+        res.set('Content-Type', 'text/plain');
+        res.status(200).send(rpnReportCsv(rpns));
       } catch (error) {
         console.log(error);
       }

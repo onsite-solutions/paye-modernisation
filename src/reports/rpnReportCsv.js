@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const moment = require('moment');
 const validation = require('../validation');
 
-const employeeRpn = require('./employeeRpn');
+const rpnReportItem = require('./rpnReportItem');
 const Rpn = require('../models/Rpn');
 
 /**
@@ -21,7 +21,7 @@ function getReport(rpns) {
 
   for (let i = 0; i < rpns.length; i++) {
     let row = [];
-    let empRpn = employeeRpn(rpns[i]);
+    let empRpn = rpnReportItem(rpns[i]);
 
     for (let j in empRpn) {
       row.push(empRpn[j]);

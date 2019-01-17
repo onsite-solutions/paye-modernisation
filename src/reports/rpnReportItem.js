@@ -10,7 +10,7 @@ const Rpn = require('../models/Rpn');
  * Creates an RPN object for placement on a text report
  * @param {Rpn} rpn the RPN objects from which to construct the report object
  */
-function getEmployeeRpn(rpn) {
+function rpnReportItem(rpn) {
   return {
     rpnNumber: getString(rpn.rpnNumber),
     employeePpsn: getString(rpn.employeeID.employeePpsn),
@@ -60,4 +60,4 @@ function getString(value) {
   }
 }
 
-module.exports = getEmployeeRpn;
+module.exports = rpnReportItem;
