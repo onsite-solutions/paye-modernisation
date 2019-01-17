@@ -35,7 +35,7 @@ EmployeeRpnReportText.prototype.getReport = function() {
     report.push(this.getRow(this.rpns[i]));
   }
 
-  return report.join('\r\n');
+  return report.join('\n');
 };
 
 EmployeeRpnReportText.prototype.getRow = function(rpn) {
@@ -108,7 +108,7 @@ EmployeeRpnReportText.prototype.getRow = function(rpn) {
   row.push('-'.repeat(80));
   row.push('');
 
-  return row.join('\r\n');
+  return row.join('\n');
 };
 
 module.exports = EmployeeRpnReportText;

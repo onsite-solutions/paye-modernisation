@@ -26,7 +26,7 @@ app.use(express.static(path.join(__dirname, './public')));
 // Connect to MongoDB
 mongoose
   .connect(
-    'mongodb://192.168.0.74:27017/payeModDB',
+    'mongodb://192.168.0.74:27017/payeModTestDB',
     { useNewUrlParser: true }
   )
   .then(() => console.log('MongoDB connected'))

@@ -30,7 +30,7 @@ function getReport(rpns) {
     report.push('"' + row.join('","') + '"');
   }
 
-  return report.join('\r\n');
+  return report.join('\n');
 }
 
 module.exports = getReport;
