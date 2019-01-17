@@ -10,6 +10,13 @@ const Rpn = require('../../../models/Rpn');
 const RpnResponse = require('../../../models/RpnResponse');
 
 /**
+ * POST /api/db/rpns/dateInitialised/fileName
+ * @desc   Update the DateInitialised value for an RPN response file
+ * @access Public
+ */
+router.post('/rpns/dateInitialised/:fileName', (req, res) => {});
+
+/**
  * GET api/db/rpns/employeePpsn/ppsn
  * @desc   Fetch the RPN history for an employee from the database
  * @access Public

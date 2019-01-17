@@ -13,8 +13,6 @@ const Rpn = require('../models/Rpn');
  */
 function EmployeeRpnReportText(rpns) {
   this.rpns = rpns;
-
-  console.log(this.getReport());
 }
 
 EmployeeRpnReportText.prototype.getReport = function() {

@@ -61,9 +61,6 @@ router.get('/rpnByEmployee/:employeeId', async (req, res) => {
   await client
     .get(rpn.lookupRpnByEmployee(req.params.employeeId))
     .then(response => {
-      // Save response to MongoDB
-      new RpnResponse(JSON.parse(response)).save();
-
       res.set('Content-Type', 'text/xml');
       res
         .status(200)
@@ -93,7 +90,6 @@ router.post('/createNewRpn', async (req, res) => {
       res
         .status(200)
         .send(js2xmlparser.parse('response', JSON.parse(response)));
-      console.log(JSON.stringify(response));
     })
     .catch(err => {
       if (!res.headersSent) {

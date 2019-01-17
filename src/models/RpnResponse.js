@@ -32,13 +32,15 @@ const RpnResponseSchema = new Schema({
     type: Date,
     required: true
   },
+  fileName: String,
   dateUploaded: {
     type: Date,
     default: Date.now
   },
-  dateImported: Date,
+  dateInitialised: Date,
   rpns: [
     {
+      dateUploaded: Date,
       rpnNumber: {
         type: String,
         required: true,
