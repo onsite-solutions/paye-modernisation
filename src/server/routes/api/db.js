@@ -3,11 +3,21 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-
+const moment = require('moment');
 const js2xmlparser = require('js2xmlparser');
+const fs = require('fs');
+const validation = require('../../../validation');
+const Client = require('ftp');
+const client = require('../../../client');
+const rpn = require('../../../client/api/rpn');
+const config = require(`../../../config/${process.env.NODE_ENV ||
+  'development'}`);
+//const config = require(`../config/production`);
+const upload = require('../../../upload');
 
 const Rpn = require('../../../models/Rpn');
 const RpnResponse = require('../../../models/RpnResponse');
+const RpnFileLog = require('../../../models/RpnFileLog');
 
 /**
  * POST /api/db/rpns/dateInitialised/fileName
@@ -19,13 +29,9 @@ router.post('/rpns/dateInitialised/:fileName', (req, res) => {
   RpnResponse.findOne({ fileName: req.params.fileName }).exec(
     (err, results) => {
       if (err) {
-        if (!res.headersSent) {
-          res
-            .status(err.statusCode || 500)
-            .send(js2xmlparser.parse('response', JSON.parse(err.message)));
-        } else {
-          console.log(err);
-        }
+        res
+          .status(err.statusCode || 500)
+          .send(js2xmlparser.parse('response', JSON.parse(err.message)));
       } else {
         // Set the dateInitialised field, save and return success
         try {
@@ -33,13 +39,9 @@ router.post('/rpns/dateInitialised/:fileName', (req, res) => {
           results.save();
           res.status(200).send(js2xmlparser.parse('response', 'success'));
         } catch (error) {
-          if (!res.headersSent) {
-            res
-              .status(error.statusCode || 500)
-              .send(js2xmlparser.parse('response', JSON.parse(error.message)));
-          } else {
-            console.log(error);
-          }
+          res
+            .status(error.statusCode || 500)
+            .send(js2xmlparser.parse('response', JSON.parse(error.message)));
         }
       }
     }
@@ -57,13 +59,9 @@ router.post('/rpns/dateUploaded/:ppsn/:rpn/:empNo', (req, res) => {
     'rpns.rpnNumber': req.params.rpn
   }).exec((err, results) => {
     if (err) {
-      if (!res.headersSent) {
-        res
-          .status(err.statusCode || 500)
-          .send(js2xmlparser.parse('response', JSON.parse(err.message)));
-      } else {
-        console.log(err);
-      }
+      res
+        .status(err.statusCode || 500)
+        .send(js2xmlparser.parse('response', JSON.parse(err.message)));
     } else {
       for (let i = 0; i < results.length; i++) {
         let rpn = new RpnResponse(results[i]);
@@ -85,6 +83,28 @@ router.post('/rpns/dateUploaded/:ppsn/:rpn/:empNo', (req, res) => {
       res.status(200).send(js2xmlparser.parse('response', 'success'));
     }
   });
+});
+
+/**
+ * POST /api/db/rpns/getNewRpns
+ * @desc   Looks up RPNs since date last update, saves to database and transfers to Payroll
+ * @access Public
+ */
+router.post('/rpns/getNewRpns', async (req, res) => {
+  await upload
+    .getNewRpns()
+    .then(response => {
+      res.set('Content-Type', 'text/xml');
+      res.status(200).send(response);
+    })
+    .catch(err => {
+      if (!res.headersSent) {
+        res.status(err.statusCode || 500).send(err.message);
+        //.send(js2xmlparser.parse('response', JSON.parse(err.message)));
+      } else {
+        console.log(err);
+      }
+    });
 });
 
 module.exports = router;

@@ -23,13 +23,16 @@ app.use(express.urlencoded({ limit: '50mb', extended: false }));
 // Static files
 app.use(express.static(path.join(__dirname, './public')));
 
+//TODO: add this to config
+let mongoUri = 'mongodb://192.168.0.74:27017/payeModTestDB';
+
 // Connect to MongoDB
 mongoose
   .connect(
-    'mongodb://192.168.0.74:27017/payeModTestDB',
+    mongoUri,
     { useNewUrlParser: true }
   )
-  .then(() => console.log('MongoDB connected'))
+  .then(() => console.log(`Connected to ${mongoUri}`))
   .catch(err => console.log(err));
 
 // Use routes
