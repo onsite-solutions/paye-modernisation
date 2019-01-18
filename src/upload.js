@@ -48,7 +48,15 @@ function getNewRpns() {
 
         if (lastFromDate.isSame(today)) {
           // We are rerunning the current day, so remove the earlier file
-          RpnResponse.remove({ fileName: lastFileLog.fileName });
+          RpnResponse.findOneAndRemove(
+            { fileName: lastFileLog.fileName },
+            err => {
+              if (err) {
+                reject(err.message);
+                return;
+              }
+            }
+          );
         }
       }
 
@@ -61,16 +69,26 @@ function getNewRpns() {
         )
         .then(response => {
           let rpnResponse = new RpnResponse(JSON.parse(response));
+          rpnResponse.fileName = newFileLog.fileName;
           newFileLog.rpnCount = rpnResponse.totalRPNCount;
 
           // Save the new RpnFileLog
           newFileLog.save(err => {
             if (err) {
-              console.log(`A ${err.message}`);
               reject(err.message);
               return;
             }
           });
+
+          // Save the new RpnResponse
+          rpnResponse.save(err => {
+            if (err) {
+              reject(err.message);
+              return;
+            }
+          });
+
+          // Now we need to create the file on the payroll server
 
           resolve(response);
           return;
@@ -82,44 +100,7 @@ function getNewRpns() {
         });
     });
 
-    //console.log(lastFileLog.F);
-    //reject('test error A');
-
-    //});
-    // Check if the file already exists
-
-    // TODO: Need to get RPN count here
-    // Create the file log entry
-    //});
-
     /*
-    await client
-      .get(rpn.lookUpRpnByEmployer(fromDate))
-      .then(response => {
-        let rpnResponse = new RpnResponse(JSON.parse(response));
-
-        rpnResponse.fileName = moment().format('YYYYMMDD');
-
-        // Check if there is already a file for this date in the database
-
-        //
-
-        //new RpnResponse(JSON.parse(response)).save();
-
-        res.set('Content-Type', 'text/xml');
-        res.status(200).send(JSON.parse(response));
-        //.send(js2xmlparser.parse('response', JSON.parse(response)));
-      })
-      .catch(err => {
-        if (!res.headersSent) {
-          res
-            .status(err.statusCode || 500)
-            .send(js2xmlparser.parse('response', JSON.parse(err.message)));
-        } else {
-          console.log(err);
-        }
-      });
-
     fs.readFile(req.file.path, 'utf8', (err, data) => {
       let fileBody = '';
       let fileName = req.file.originalname;
