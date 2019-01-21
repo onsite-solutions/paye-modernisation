@@ -46,6 +46,8 @@ app.use('/api/rpn', rpn);
 
 app.use('/', index);
 
+console.log(process.env);
+
 // Testing locally on port 5000
 const port = process.env.PORT || 5000;
 
