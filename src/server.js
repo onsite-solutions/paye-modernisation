@@ -24,7 +24,13 @@ app.use(express.urlencoded({ limit: '50mb', extended: false }));
 app.use(express.static(path.join(__dirname, './public')));
 
 //TODO: add this to config
-let mongoUri = 'mongodb://192.168.0.74:27017/payeModTestDB';
+let mongoUri;
+
+if (process.env.NODE_ENV === 'production') {
+  mongoUri = 'mongodb://192.168.0.74:27017/payeModDB';
+} else {
+  mongoUri = 'mongodb://192.168.0.74:27017/payeModTestDB';
+}
 
 // Connect to MongoDB
 mongoose
@@ -45,8 +51,6 @@ app.use('/api/returns_reconciliation', returnsReconciliation);
 app.use('/api/rpn', rpn);
 
 app.use('/', index);
-
-console.log(process.env);
 
 // Testing locally on port 5000
 const port = process.env.PORT || 5000;
