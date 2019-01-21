@@ -1,9 +1,8 @@
 {
   "name": "paye-modernisation",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "PAYE Modernisation API Server",
   "scripts": {
-    "test": "mocha",
     "client": "nodemon ./src/client.js",
     "server": "nodemon ./src/server.js"
   },
