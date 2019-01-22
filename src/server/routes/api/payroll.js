@@ -6,6 +6,7 @@ const js2xmlparser = require('js2xmlparser');
 
 const client = require('../../../client');
 const payroll = require('../../../client/api/payroll');
+const config = require('../../../config');
 
 const PayrollRunResponse = require('../../../models/PayrollRunResponse');
 const PayrollSubmissionResponse = require('../../../models/PayrollSubmissionResponse');
@@ -97,9 +98,12 @@ router.get('/checkPayrollRun/:payrollRunReference', async (req, res) => {
   await client
     .get(payroll.checkPayrollRun(req.params.payrollRunReference))
     .then(response => {
-      let newPayrollRunResponse = new PayrollRunResponse(JSON.parse(response));
+      let payrollRunResponse = new PayrollRunResponse(JSON.parse(response));
 
-      newPayrollRunResponse.save();
+      payrollRunResponse.year = config.year;
+      payrollRunResponse.payrollRunReference = req.params.payrollRunReference;
+
+      payrollRunResponse.save();
 
       res.set('Content-Type', 'text/xml');
       res

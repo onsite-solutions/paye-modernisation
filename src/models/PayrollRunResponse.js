@@ -6,6 +6,16 @@ const Schema = mongoose.Schema;
  * Return the current status of an Employer's PAYE Payroll Run. Includes list of submissions that make up the payroll run and includes summary details of processed submissions.
  */
 const PayrollRunResponseSchema = new Schema({
+  year: {
+    type: Number,
+    required: true
+  },
+  payrollRunReference: {
+    type: String,
+    required: true,
+    minLength: 0,
+    maxLength: 50
+  },
   status: {
     type: String,
     required: true,
