@@ -63,3 +63,4 @@ typings/
 # certs and keys
 *.p12
 certs.js
+config.js

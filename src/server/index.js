@@ -9,8 +9,7 @@ const multer = require('multer');
 const fs = require('fs');
 const validation = require('../validation');
 const Client = require('ftp');
-const config = require(`../config/${process.env.NODE_ENV || 'development'}`);
-//const config = require(`../config/production`);
+const config = require('../config');
 
 const upload = multer({ dest: path.join(__dirname, '../uploads/') });
 

@@ -11,10 +11,7 @@ const validation = require('./validation');
 const ftp = require('ftp');
 const client = require('./client');
 const rpn = require('./client/api/rpn');
-
-const config = require(`./config/${process.env.NODE_ENV || 'development'}`);
-//const config = require(`../config/production`);
-
+const config = require('./config');
 const RpnResponse = require('./models/RpnResponse');
 const RpnFileLog = require('./models/RpnFileLog');
 

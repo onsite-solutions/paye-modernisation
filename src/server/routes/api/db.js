@@ -3,21 +3,10 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const moment = require('moment');
 const js2xmlparser = require('js2xmlparser');
-const fs = require('fs');
-const validation = require('../../../validation');
-const Client = require('ftp');
-const client = require('../../../client');
-const rpn = require('../../../client/api/rpn');
-const config = require(`../../../config/${process.env.NODE_ENV ||
-  'development'}`);
-//const config = require(`../config/production`);
 const upload = require('../../../upload');
 
-const Rpn = require('../../../models/Rpn');
 const RpnResponse = require('../../../models/RpnResponse');
-const RpnFileLog = require('../../../models/RpnFileLog');
 
 /**
  * POST /api/db/rpns/dateInitialised/fileName

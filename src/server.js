@@ -1,7 +1,9 @@
 //@ts-check
+'use strict';
 
 const express = require('express');
 const mongoose = require('mongoose');
+const config = require('./config');
 
 const convert = require('./server/routes/api/convert');
 const db = require('./server/routes/api/db');
@@ -23,22 +25,13 @@ app.use(express.urlencoded({ limit: '50mb', extended: false }));
 // Static files
 app.use(express.static(path.join(__dirname, './public')));
 
-//TODO: add this to config
-let mongoUri;
-
-if (process.env.NODE_ENV === 'production') {
-  mongoUri = 'mongodb://192.168.0.74:27017/payeModDB';
-} else {
-  mongoUri = 'mongodb://192.168.0.74:27017/payeModTestDB';
-}
-
 // Connect to MongoDB
 mongoose
   .connect(
-    mongoUri,
+    config.mongoUrl,
     { useNewUrlParser: true }
   )
-  .then(() => console.log(`Connected to ${mongoUri}`))
+  .then(() => console.log(`Connected to ${config.mongoUrl}`))
   .catch(err => console.log(err));
 
 // Use routes
@@ -52,7 +45,6 @@ app.use('/api/rpn', rpn);
 
 app.use('/', index);
 
-// Testing locally on port 5000
-const port = process.env.PORT || 5000;
-
-app.listen(port, () => console.log(`Listening at http://localhost:${port}/`));
+app.listen(config.port, () =>
+  console.log(`Listening at http://localhost:${config.port}/`)
+);

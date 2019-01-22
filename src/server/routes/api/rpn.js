@@ -16,17 +16,19 @@ const RpnResponse = require('../../../models/RpnResponse');
  * @access Public
  */
 router.get('/rpnByEmployer', async (req, res) => {
-  let dateLastUpdated = req.query.dateLastUpdated.toString();
+  let dateLastUpdated = '';
   let employeeIds = [];
 
   // Check the provided date. Nullify if it is not a valid date in the format YYYY-MM-DD
-  if (!validation.isDate(dateLastUpdated)) {
+  if (validation.isDate(req.query.dateLastUpdated)) {
+    dateLastUpdated = req.query.dateLastUpdated.toString();
+  } else {
     dateLastUpdated = null;
   }
 
   // Populate the array of employeeIds if any were provided
   if (!validation.isEmpty(req.query.employeeIDs)) {
-    employeeIds = req.query.employeeIDs.split(',');
+    employeeIds = req.query.employeeIDs.replace(/\s+/g, '').split(',');
   } else {
     employeeIds = null;
   }
@@ -36,18 +38,21 @@ router.get('/rpnByEmployer', async (req, res) => {
     .then(response => {
       // Save response to MongoDB
       //new RpnResponse(JSON.parse(response)).save();
-
-      res.set('Content-Type', 'text/xml');
-      res.status(200).send(JSON.parse(response));
-      //.send(js2xmlparser.parse('response', JSON.parse(response)));
+      res
+        .set('Content-Type', 'text/xml')
+        .send(js2xmlparser.parse('response', JSON.parse(response)));
     })
     .catch(err => {
       if (!res.headersSent) {
-        res
-          .status(err.statusCode || 500)
-          .send(js2xmlparser.parse('response', JSON.parse(err.message)));
+        try {
+          res
+            .status(err.statusCode || 500)
+            .send(js2xmlparser.parse('response', err.message));
+        } catch (sendError) {
+          console.error(sendError);
+        }
       } else {
-        console.log(err);
+        console.error(err);
       }
     });
 });
@@ -68,11 +73,15 @@ router.get('/rpnByEmployee/:employeeId', async (req, res) => {
     })
     .catch(err => {
       if (!res.headersSent) {
-        res
-          .status(err.statusCode || 500)
-          .send(js2xmlparser.parse('response', JSON.parse(err.message)));
+        try {
+          res
+            .status(err.statusCode || 500)
+            .send(js2xmlparser.parse('response', err.message));
+        } catch (sendError) {
+          console.error(sendError);
+        }
       } else {
-        console.log(err);
+        console.error(err);
       }
     });
 });
@@ -93,11 +102,15 @@ router.post('/createNewRpn', async (req, res) => {
     })
     .catch(err => {
       if (!res.headersSent) {
-        res
-          .status(err.statusCode || 500)
-          .send(js2xmlparser.parse('response', JSON.parse(err.message)));
+        try {
+          res
+            .status(err.statusCode || 500)
+            .send(js2xmlparser.parse('response', err.message));
+        } catch (sendError) {
+          console.error(sendError);
+        }
       } else {
-        console.log(JSON.stringify(err));
+        console.error(err);
       }
     });
 });
