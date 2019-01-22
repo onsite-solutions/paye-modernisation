@@ -42,11 +42,15 @@ router.get('/payrollByReturnPeriod', async (req, res) => {
     })
     .catch(err => {
       if (!res.headersSent) {
-        res
-          .status(err.statusCode || 500)
-          .send(js2xmlparser.parse('response', JSON.parse(err.message)));
+        try {
+          res
+            .status(err.statusCode || 500)
+            .send(js2xmlparser.parse('response', err.message));
+        } catch (sendError) {
+          console.error(sendError);
+        }
       } else {
-        console.log(err);
+        console.error(err);
       }
     });
 });
