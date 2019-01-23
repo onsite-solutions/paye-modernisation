@@ -19,8 +19,7 @@ function createPayrollSubmission(payrollRunReference, submissionId, payload) {
   }/${payrollRunReference}/${submissionId}?softwareUsed=${
     config.softwareName
   }&softwareVersion=${config.softwareVersion}`;
-  console.log(payload);
-  console.log(endPoint);
+
   return new Message(api.options('POST', config.host, endPoint), cert, payload);
 }
 

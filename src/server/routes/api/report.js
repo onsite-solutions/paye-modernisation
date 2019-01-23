@@ -177,11 +177,7 @@ router.get(
         }
       } else {
         try {
-          console.log(results);
-          if (
-            validation.isEmpty(results) ||
-            !results.hasOwnProperty('payslipSummaries')
-          ) {
+          if (validation.isEmpty(results) || !results.payslipSummaries) {
             res.status(200).send('No records found');
             return;
           }

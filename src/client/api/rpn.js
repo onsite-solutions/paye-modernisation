@@ -59,7 +59,6 @@ function createNewRpn(payload) {
  * @param {string} employeeId
  */
 function lookupRpnByEmployee(employeeId) {
-  console.log(employeeId);
   let { cert, config } = api.getCertAndConfig();
 
   let endpoint = `${config.basePath}/rpn/${cert.epn}/${
