@@ -32,8 +32,6 @@ function getNewRpns() {
     });
 
     // Get the most recent to date that is less than the current date
-
-    // Get the most recent RpnLogFile in the database
     RpnFileLog.findOne(
       { toDate: { $lt: today } },
       {},
@@ -48,20 +46,16 @@ function getNewRpns() {
           // Set the new fromDate to match the most recent toDate
           newFileLog.fromDate = lastFileLog.toDate;
 
-          let lastFromDate = moment(lastFileLog.fromDate);
-
-          if (lastFromDate.isSame(today)) {
-            // We are rerunning the current day, so remove the earlier file
-            RpnResponse.findOneAndRemove(
-              { fileName: lastFileLog.fileName },
-              err => {
-                if (err) {
-                  reject(err.message);
-                  return;
-                }
+          // If there is already a file for this range, remove it
+          RpnResponse.findOneAndRemove(
+            { fromDate: newFileLog.fromDate, toDate: newFileLog.toDate },
+            err => {
+              if (err) {
+                reject(err.message);
+                return;
               }
-            );
-          }
+            }
+          );
         }
 
         // Get the file contents
