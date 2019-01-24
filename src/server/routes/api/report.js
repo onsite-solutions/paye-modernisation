@@ -65,13 +65,14 @@ router.get('/rpnReport/byEmployeePpsn/:format/:employeePpsn/', (req, res) => {
           // Loop through each RPN in the array
           for (var j = 0; j < results[i].rpns.length; j++) {
             // Add the RPN to the response collection
+            //console.log(new Rpn(results[i].rpns[j]));
             rpns.push(new Rpn(results[i].rpns[j]));
           }
         }
 
         // Sort the results by RPN Issue Date and then RPN Number
         rpns.sort((a, b) => {
-          if ((a.rpnIssueDate = b.rpnIssueDate)) {
+          if (a.rpnIssueDate == b.rpnIssueDate) {
             return a.rpnNumber - b.rpnNumber;
           } else {
             // Sort by date (unary +new to coerce the date value to a number)
