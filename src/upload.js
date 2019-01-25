@@ -1,8 +1,6 @@
 //@ts-check
 'use strict';
 
-const express = require('express');
-const router = express.Router();
 const mongoose = require('mongoose');
 const moment = require('moment');
 const js2xmlparser = require('js2xmlparser');
@@ -48,7 +46,7 @@ function getNewRpns() {
 
           // If there is already a file for this range, remove it
           RpnResponse.findOneAndRemove(
-            { fromDate: newFileLog.fromDate, toDate: newFileLog.toDate },
+            { fileName: newFileLog.fileName },
             err => {
               if (err) {
                 reject(err.message);
@@ -130,15 +128,7 @@ function getNewRpns() {
             });
 
             // Respond with 'NORPNS' if there are no RPNs on the file, else filename
-            let message = '';
-
-            if (newFileLog.rpnCount == 0) {
-              message = 'NORPNS';
-            } else {
-              message = xmlFileName;
-            }
-
-            resolve(message);
+            resolve(newFileLog.rpnCount == 0 ? 'NORPNS' : xmlFileName);
             return;
           })
           .catch(err => {
