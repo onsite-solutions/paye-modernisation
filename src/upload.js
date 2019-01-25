@@ -100,9 +100,9 @@ function getNewRpns() {
             // FTP the file to payrolls server
             let c = new ftp();
             c.on('ready', function() {
-              c.put(xmlBody, config.ftpDirectory + xmlFileName, function(err) {
+              c.put(xmlBody, config.ftp.directory + xmlFileName, function(err) {
                 if (err) throw err;
-                let command = `chmod 666 ${config.ftpDirectory}${xmlFileName}`;
+                let command = `chmod 666 ${config.ftp.directory}${xmlFileName}`;
                 c.site(command, (error, response) => {
                   if (error) {
                     console.error(error.message);
@@ -114,9 +114,9 @@ function getNewRpns() {
 
             // connect to payroll server and transfer file
             c.connect({
-              host: config.ftpHost,
-              user: config.ftpUser,
-              password: config.ftpPassword
+              host: config.ftp.host,
+              user: config.ftp.user,
+              password: config.ftp.password
             });
 
             // Delete the local copy of the file
