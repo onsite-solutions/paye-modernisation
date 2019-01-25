@@ -3,6 +3,8 @@ module.exports = {
     {
       name: 'PAYE Modernisation',
       script: './src/server.js',
+      error_file: './log/err.log',
+      out_file: './log/out.log',
       instances: 1,
       autorestart: true,
       watch: true,
