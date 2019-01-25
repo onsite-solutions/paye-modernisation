@@ -89,7 +89,6 @@ router.post('/rpns/getNewRpns', async (req, res) => {
     .catch(err => {
       if (!res.headersSent) {
         res.status(err.statusCode || 500).send(err.message);
-        //.send(js2xmlparser.parse('response', JSON.parse(err.message)));
       } else {
         console.log(err);
       }

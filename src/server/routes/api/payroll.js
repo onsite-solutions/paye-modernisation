@@ -97,11 +97,21 @@ router.get(
 router.get('/checkPayrollRun/:payrollRunReference', async (req, res) => {
   await client
     .get(payroll.checkPayrollRun(req.params.payrollRunReference))
-    .then(response => {
+    .then(async response => {
       let payrollRunResponse = new PayrollRunResponse(JSON.parse(response));
 
       payrollRunResponse.year = config.year;
       payrollRunResponse.payrollRunReference = req.params.payrollRunReference;
+
+      // If there is already a file for this payrollRunReference, remove it
+      await PayrollRunResponse.findOneAndRemove(
+        { payrollRunReference: payrollRunResponse.payrollRunReference },
+        err => {
+          if (err) {
+            console.error(err.message);
+          }
+        }
+      );
 
       payrollRunResponse.save();
 

@@ -36,8 +36,6 @@ router.get('/rpnByEmployer', async (req, res) => {
   await client
     .get(rpn.lookUpRpnByEmployer(dateLastUpdated, employeeIds))
     .then(response => {
-      // Save response to MongoDB
-      //new RpnResponse(JSON.parse(response)).save();
       res
         .set('Content-Type', 'text/xml')
         .send(js2xmlparser.parse('response', JSON.parse(response)));
