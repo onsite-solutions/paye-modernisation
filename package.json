@@ -22,6 +22,8 @@
     "js2xmlparser": "^3.0.0",
     "moment": "^2.22.2",
     "mongoose": "^5.2.4",
+    "mysql": "^2.16.0",
+    "node-cron": "^2.0.3",
     "node-forge": "^0.7.5"
   },
   "devDependencies": {
