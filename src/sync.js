@@ -20,7 +20,7 @@ const query = util.promisify(connection.query).bind(connection);
  */
 async function getCycles() {
   try {
-    const result = await query('call get_payroll_run_references();');
+    const result = await query('call get_cycles();');
     return result[0];
   } catch (error) {
     throw Error(error);
