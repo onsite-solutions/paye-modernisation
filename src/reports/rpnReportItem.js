@@ -1,10 +1,11 @@
 //@ts-nocheck
+'use strict';
 
 const mongoose = require('mongoose');
 const moment = require('moment');
 const validation = require('../validation');
 
-const Rpn = require('../models/Rpn');
+const Rpn = require('../models/mongodb/Rpn');
 
 /**
  * Creates an RPN object for placement on a text report

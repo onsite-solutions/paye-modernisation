@@ -6,111 +6,130 @@ const Schema = mongoose.Schema;
  * Employer's PAYE Payroll Submission Request
  */
 const PayrollSubmissionSchema = new Schema({
-  payslips: [
-    {
-      lineItemID: {
-        type: String,
-        required: true,
-        minLength: 0,
-        maxLength: 50,
-        match: /[A-Za-z0-9_\\-]*/
-      },
-      previousLineItemID: {
-        type: String,
-        minLength: 0,
-        maxLength: 50,
-        match: /[A-Za-z0-9_\\-]*/
-      },
-      employeeID: {
-        employeePpsn: {
-          type: String,
-          required: true,
-          minLength: 8,
-          maxLength: 10,
-          match: /[0-9A-Za-z]*/,
-          uppercase: true
-        },
-        employmentID: {
+  requestType: {
+    type: String,
+    required: true,
+    enum: ['payrollSubmission']
+  },
+  employerRegistrationNumber: {
+    type: String,
+    required: true
+  },
+  taxYear: {
+    type: Number,
+    required: true
+  },
+  softwareUsed: {
+    type: String,
+    required: true
+  },
+  softwareVersion: {
+    type: String,
+    required: true
+  },
+  payrollRunReference: String,
+  submissionID: String,
+  requestBody: {
+    payslips: [
+      {
+        lineItemID: {
           type: String,
           required: true,
           minLength: 0,
-          maxLength: 20,
+          maxLength: 50,
           match: /[A-Za-z0-9_\\-]*/
-        }
-      },
-      employerReference: {
-        type: String,
-        minLength: 0,
-        maxLength: 50
-      },
-      name: {
-        required: true,
-        firstName: {
+        },
+        previousLineItemID: {
           type: String,
-          required: true,
           minLength: 0,
-          maxLength: 100
+          maxLength: 50,
+          match: /[A-Za-z0-9_\\-]*/
         },
-        familyName: {
+        employeeID: {
+          employeePpsn: {
+            type: String,
+            required: true,
+            minLength: 8,
+            maxLength: 10,
+            match: /[0-9A-Za-z]*/,
+            uppercase: true
+          },
+          employmentID: {
+            type: String,
+            minLength: 0,
+            maxLength: 20,
+            match: /[A-Za-z0-9_\\-]*/
+          }
+        },
+        employerReference: {
           type: String,
-          required: true,
           minLength: 0,
-          maxLength: 100
-        }
-      },
-      address: {
-        addressLines: {
-          type: [String],
-          minLength: 0,
-          maxLength: 100
+          maxLength: 50
         },
-        county: {
-          type: String,
-          enum: [
-            'ANTRIM',
-            'ARMAGH',
-            'CARLOW',
-            'CAVAN',
-            'CLARE',
-            'CORK',
-            'DERRY',
-            'DONEGAL',
-            'DOWN',
-            'DUBLIN',
-            'FERMANAGH',
-            'GALWAY',
-            'KERRY',
-            'KILDARE',
-            'KILKENNY',
-            'LAOIS',
-            'LEITRIM',
-            'LIMERICK',
-            'LONGFORD',
-            'LOUTH',
-            'MAYO',
-            'MEATH',
-            'MONAGHAN',
-            'OFFALY',
-            'ROSCOMMON',
-            'SLIGO',
-            'TIPPERARY',
-            'TYRONE',
-            'WATERFORD',
-            'WEXFORD',
-            'WESTMEATH',
-            'WICKLOW'
-          ]
+        name: {
+          firstName: {
+            type: String,
+            required: true,
+            minLength: 0,
+            maxLength: 100
+          },
+          familyName: {
+            type: String,
+            required: true,
+            minLength: 0,
+            maxLength: 100
+          }
         },
-        eircode: {
-          type: String,
-          minLength: 7,
-          maxLength: 8,
-          match: /[A-Za-z0-9 ]*/
-        },
-        countryCode: {
-          type: String,
-          match: /[A-Za-z]{3}/,
-          uppercase: true
+        address: {
+          addressLines: [{ type: String }],
+          county: {
+            type: String,
+            enum: [
+              'ANTRIM',
+              'ARMAGH',
+              'CARLOW',
+              'CAVAN',
+              'CLARE',
+              'CORK',
+              'DERRY',
+              'DONEGAL',
+              'DOWN',
+              'DUBLIN',
+              'FERMANAGH',
+              'GALWAY',
+              'KERRY',
+              'KILDARE',
+              'KILKENNY',
+              'LAOIS',
+              'LEITRIM',
+              'LIMERICK',
+              'LONGFORD',
+              'LOUTH',
+              'MAYO',
+              'MEATH',
+              'MONAGHAN',
+              'OFFALY',
+              'ROSCOMMON',
+              'SLIGO',
+              'TIPPERARY',
+              'TYRONE',
+              'WATERFORD',
+              'WEXFORD',
+              'WESTMEATH',
+              'WICKLOW'
+            ]
+          },
+          eircode: {
+            type: String,
+            minLength: 7,
+            maxLength: 8,
+            match: /[A-Za-z0-9 ]*/
+          },
+          countryCode: {
+            type: String,
+            match: /[A-Za-z]{3}/,
+            uppercase: true
+          }
         },
         dateOfBirth: Date,
         startDate: Date,
@@ -252,18 +271,18 @@ const PayrollSubmissionSchema = new Schema({
         employeeRAC: Number,
         employeeAVC: Number
       }
-    }
-  ],
-  lineItemIDsToDelete: [
-    {
-      lineItem: {
-        type: String,
-        minLength: 0,
-        maxLength: 50,
-        match: /[A-Za-z0-9_\\-]*/
+    ],
+    lineItemIDsToDelete: [
+      {
+        lineItem: {
+          type: String,
+          minLength: 0,
+          maxLength: 50,
+          match: /[A-Za-z0-9_\\-]*/
+        }
       }
-    }
-  ]
+    ]
+  }
 });
 
 const PayrollSubmission = mongoose.model(

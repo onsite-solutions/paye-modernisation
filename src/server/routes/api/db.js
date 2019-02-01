@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const js2xmlparser = require('js2xmlparser');
 const upload = require('../../../upload');
 
-const RpnResponse = require('../../../models/RpnResponse');
+const RpnResponse = require('../../../models/mongodb/RpnResponse');
 
 /**
  * POST /api/db/rpns/dateInitialised/fileName

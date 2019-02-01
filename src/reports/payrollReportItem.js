@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const moment = require('moment');
 const validation = require('../validation');
 
-const PayslipSummary = require('../models/PayslipSummary');
+const PayslipSummary = require('../models/mongodb/PayslipSummary');
 
 /**
  * Creates a Payslip Summary object for placement on a text report

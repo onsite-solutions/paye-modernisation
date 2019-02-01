@@ -8,8 +8,8 @@ const client = require('../../../client');
 const payroll = require('../../../client/api/payroll');
 const config = require('../../../config');
 
-const PayrollRunResponse = require('../../../models/PayrollRunResponse');
-const PayrollSubmissionResponse = require('../../../models/PayrollSubmissionResponse');
+const PayrollRunResponse = require('../../../models/mongodb/PayrollRunResponse');
+const PayrollSubmissionResponse = require('../../../models/mongodb/PayrollSubmissionResponse');
 
 /**
  * POST api/payroll/createPayrollSubmission/:payrollRunReference/:submissionId

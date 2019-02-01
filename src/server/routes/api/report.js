@@ -7,10 +7,10 @@ const validation = require('../../../validation');
 
 const js2xmlparser = require('js2xmlparser');
 
-const PayslipSummary = require('../../../models/PayslipSummary');
-const Rpn = require('../../../models/Rpn');
-const RpnResponse = require('../../../models/RpnResponse');
-const PayrollRunResponse = require('../../../models/PayrollRunResponse');
+const PayslipSummary = require('../../../models/mongodb/PayslipSummary');
+const Rpn = require('../../../models/mongodb/Rpn');
+const RpnResponse = require('../../../models/mongodb/RpnResponse');
+const PayrollRunResponse = require('../../../models/mongodb/PayrollRunResponse');
 
 const rpnReportCsv = require('../../../reports/rpnReportCsv');
 const rpnReportText = require('../../../reports/rpnReportText.js');

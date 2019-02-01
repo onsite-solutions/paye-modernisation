@@ -3,14 +3,14 @@
 
 const mysql = require('mysql');
 const mongoose = require('mongoose');
-const config = require('./config');
+const config = require('../config');
 const util = require('util');
-const client = require('./client');
-const payroll = require('./client/api/payroll');
+const client = require('../client');
+const payroll = require('../client/api/payroll');
 
-const PayrollRunResponse = require('./models/PayrollRunResponse');
+const PayrollRunResponse = require('../models/mongodb/PayrollRunResponse');
 
-const connection = mysql.createPool(config.mysql);
+const connection = mysql.createConnection(config.mysql);
 
 const query = util.promisify(connection.query).bind(connection);
 

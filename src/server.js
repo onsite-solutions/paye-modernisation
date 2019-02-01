@@ -5,7 +5,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const config = require('./config');
 const cron = require('node-cron');
-const sync = require('./sync');
+//const syncPayrollRuns = require('./export/syncPayrollRuns');
+const copyRpns = require('./sql/copyRpns');
 
 const convert = require('./server/routes/api/convert');
 const db = require('./server/routes/api/db');
@@ -22,9 +23,12 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: false }));
 
 // Cron job to sync payroll submissions every 15 minutes
-cron.schedule('*/15 * * * *', () => {
-  sync().catch(err => console.error(err));
-});
+
+//TODO: put back in
+
+//cron.schedule('*/15 * * * *', () => {
+//syncPayrollRuns().catch(err => console.error(err));
+//});
 
 // Connect to MongoDB
 mongoose
@@ -47,3 +51,6 @@ app.use('/api/rpn', rpn);
 app.listen(config.port, () =>
   console.log(`Listening at http://localhost:${config.port}/`)
 );
+
+//TODO: Add to cron job
+copyRpns.copyRpnsToMySql();

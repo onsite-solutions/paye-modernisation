@@ -16,15 +16,17 @@
   },
   "homepage": "https://github.com/onsite-solutions/paye-modernisation#readme",
   "dependencies": {
+    "@types/sequelize": "^4.27.34",
     "buffer": "^5.1.0",
     "express": "^4.16.3",
     "ftp": "^0.3.10",
     "js2xmlparser": "^3.0.0",
     "moment": "^2.22.2",
     "mongoose": "^5.2.4",
-    "mysql": "^2.16.0",
+    "mysql2": "^1.6.4",
     "node-cron": "^2.0.3",
-    "node-forge": "^0.7.5"
+    "node-forge": "^0.7.5",
+    "sequelize": "^4.42.0"
   },
   "devDependencies": {
     "@types/mongodb": "^3.1.17",

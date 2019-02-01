@@ -5,7 +5,7 @@ const moment = require('moment');
 const validation = require('../validation');
 
 const rpnReportItem = require('./rpnReportItem');
-const Rpn = require('../models/Rpn');
+const Rpn = require('../models/mongodb/Rpn');
 
 /**
  * Constructs a CSV report from the provided list of JSON RPNs

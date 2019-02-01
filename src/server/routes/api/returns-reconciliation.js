@@ -8,7 +8,7 @@ const client = require('../../../client');
 const returnsReconciliation = require('../../../client/api/returns-reconciliation');
 const validation = require('../../../validation');
 
-const PayrollByReturnPeriodResponse = require('../../../models/PayrollByReturnPeriodResponse');
+const PayrollByReturnPeriodResponse = require('../../../models/mongodb/PayrollByReturnPeriodResponse');
 
 /**
  * GET api/returns_reconciliation/payrollByReturnPeriod

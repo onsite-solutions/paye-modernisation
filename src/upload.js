@@ -11,8 +11,8 @@ const ftp = require('ftp');
 const client = require('./client');
 const rpn = require('./client/api/rpn');
 const config = require('./config');
-const RpnResponse = require('./models/RpnResponse');
-const RpnFileLog = require('./models/RpnFileLog');
+const RpnResponse = require('./models/mongodb/RpnResponse');
+const RpnFileLog = require('./models/mongodb/RpnFileLog');
 
 function getNewRpns() {
   return new Promise((resolve, reject) => {

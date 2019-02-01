@@ -5,7 +5,7 @@ const moment = require('moment');
 const validation = require('../validation');
 
 const payrollReportItem = require('./payrollReportItem');
-const PayslipSummary = require('../models/PayslipSummary');
+const PayslipSummary = require('../models/mongodb/PayslipSummary');
 
 /**
  * Constructs a CSV report from the provided list of JSON Payslip Summary items
