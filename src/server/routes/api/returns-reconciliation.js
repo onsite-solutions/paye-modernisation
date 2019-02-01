@@ -8,8 +8,6 @@ const client = require('../../../client');
 const returnsReconciliation = require('../../../client/api/returns-reconciliation');
 const validation = require('../../../validation');
 
-const PayrollByReturnPeriodResponse = require('../../../models/mongodb/PayrollByReturnPeriodResponse');
-
 /**
  * GET api/returns_reconciliation/payrollByReturnPeriod
  * @desc   Look up payroll by returns period based on a range of dates
@@ -31,9 +29,6 @@ router.get('/payrollByReturnPeriod', async (req, res) => {
   await client
     .get(returnsReconciliation.lookupPayrollByReturnPeriod(startDate, endDate))
     .then(response => {
-      // Save the response to MongoDB
-      new PayrollByReturnPeriodResponse(JSON.parse(response)).save();
-
       // Return XML response to the client
       res.set('Content-Type', 'text/xml');
       res

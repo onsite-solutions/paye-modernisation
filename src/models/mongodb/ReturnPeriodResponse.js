@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 /**
  * Response that lets the employer view a return for a specific period.
  */
-const PayrollByReturnPeriodResponseSchema = new Schema({
+const ReturnPeriodResponseSchema = new Schema({
   employerReg: {
     type: String,
     required: true,
@@ -111,9 +111,9 @@ const PayrollByReturnPeriodResponseSchema = new Schema({
   ]
 });
 
-const PayrollByReturnPeriodResponse = mongoose.model(
-  'payrollByReturnPeriodResponse',
-  PayrollByReturnPeriodResponseSchema
+const ReturnPeriodResponse = mongoose.model(
+  'returnPeriodResponse',
+  ReturnPeriodResponseSchema
 );
 
-module.exports = PayrollByReturnPeriodResponse;
+module.exports = ReturnPeriodResponse;

@@ -7,6 +7,7 @@ const config = require('./config');
 const cron = require('node-cron');
 //const syncPayrollRuns = require('./export/syncPayrollRuns');
 const copyRpns = require('./sql/copyRpns');
+const getMonthlyReturns = require('./mongodb/getMonthlyReturns');
 
 const convert = require('./server/routes/api/convert');
 const db = require('./server/routes/api/db');
@@ -53,4 +54,6 @@ app.listen(config.port, () =>
 );
 
 //TODO: Add to cron job
-copyRpns.copyRpnsToMySql();
+//copyRpns.copyRpnsToMySql();
+
+getMonthlyReturns();
