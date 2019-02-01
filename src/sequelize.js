@@ -4,7 +4,7 @@
 const config = require('./config');
 const Sequelize = require('sequelize');
 const RpnModel = require('./models/sql/rpn');
-const RpnFileModel = require('./models/sql/rpnFile');
+const RpnResponseModel = require('./models/sql/rpnResponse');
 
 const sequelise = new Sequelize(
   config.mysql.database,
@@ -13,12 +13,12 @@ const sequelise = new Sequelize(
   {
     dialect: 'mysql',
     host: config.mysql.host,
-    logging: false,
+    logging: config.mysql.logging,
     operatorsAliases: false
   }
 );
 
 const Rpn = RpnModel(sequelise, Sequelize);
-const RpnFile = RpnFileModel(sequelise, Sequelize);
+const RpnResponse = RpnResponseModel(sequelise, Sequelize);
 
-module.exports = { Rpn, RpnFile };
+module.exports = { Rpn, RpnResponse };

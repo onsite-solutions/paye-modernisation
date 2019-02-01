@@ -7,14 +7,13 @@ const SqlRpn = sequelize.Rpn;
 
 /**
  * Transform a MongoDB RPN model instance to a MySQL model instance
- * @param {number} year
- * @param {string} fileName
+ * @param {any} rpnResponse
  * @param {any} rpn
  */
-function rpnMongoToSql(year, fileName, rpn) {
+function transform(rpnResponse, rpn) {
   return SqlRpn.build({
-    year: year,
-    fileName: fileName,
+    year: rpnResponse.taxYear,
+    fileName: rpnResponse.fileName,
     ppsn: rpn.employeeID.employeePpsn,
     rpn: rpn.rpnNumber,
     employmentId: rpn.employeeID.employmentID,
@@ -51,4 +50,4 @@ function rpnMongoToSql(year, fileName, rpn) {
   });
 }
 
-module.exports = { rpnMongoToSql };
+module.exports = transform;

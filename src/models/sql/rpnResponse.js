@@ -4,8 +4,8 @@
 const sequelize = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  var RpnFile = sequelize.define(
-    'rpn_file',
+  var RpnResponse = sequelize.define(
+    'rpn_response',
     {
       fileName: {
         type: DataTypes.INTEGER,
@@ -16,6 +16,11 @@ module.exports = (sequelize, DataTypes) => {
       year: {
         type: DataTypes.SMALLINT,
         allowNull: false
+      },
+      rpnCount: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        field: 'rpn_count'
       },
       createdAt: {
         type: DataTypes.DATE(3),
@@ -36,9 +41,9 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
       timestamps: true,
       freezeTableName: true,
-      tableName: 'rpn_file'
+      tableName: 'rpn_response'
     }
   );
 
-  return RpnFile;
+  return RpnResponse;
 };
