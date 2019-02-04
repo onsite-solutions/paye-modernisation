@@ -5,11 +5,13 @@ const moment = require('moment');
 const getLastReturnPeriod = require('./getLastReturnPeriod');
 const getPayrollRun = require('./getPayrollRun');
 const getPayrollSubmission = require('./getPayrollSubmission');
+const copyRpnsToSql = require('./copyRpnsToSql');
+const copySubmissionsToSql = require('./copySubmissionsToSql');
 
 /**
- * Runs scheduled database maintenance tasks
+ * Queries API and updates ReturnPeriods, PayrollRuns and PayrollSubmissions to Mongo
  */
-async function run() {
+async function updateSubmissionsMongo() {
   try {
     const returnPeriod = await getLastReturnPeriod();
 
@@ -29,6 +31,21 @@ async function run() {
         getPayrollSubmission(year, payrollRunReference, submissionId);
       }
     }
+  } catch (error) {
+    throw Error(error);
+  }
+}
+
+/**
+ * Runs scheduled database maintenance tasks
+ */
+async function run() {
+  try {
+    await updateSubmissionsMongo();
+
+    await copyRpnsToSql();
+
+    await copySubmissionsToSql();
   } catch (error) {
     throw Error(error);
   }

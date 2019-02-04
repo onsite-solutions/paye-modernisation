@@ -5,6 +5,7 @@ const config = require('./config');
 const Sequelize = require('sequelize');
 const RpnModel = require('./models/sql/rpn');
 const RpnResponseModel = require('./models/sql/rpnResponse');
+const SubmissionModel = require('./models/sql/submission');
 
 const sequelise = new Sequelize(
   config.mysql.database,
@@ -20,5 +21,6 @@ const sequelise = new Sequelize(
 
 const Rpn = RpnModel(sequelise, Sequelize);
 const RpnResponse = RpnResponseModel(sequelise, Sequelize);
+const Submission = SubmissionModel(sequelise, Sequelize);
 
-module.exports = { Rpn, RpnResponse };
+module.exports = { Rpn, RpnResponse, Submission };

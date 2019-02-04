@@ -40,7 +40,11 @@ app.listen(config.port, () =>
   console.log(`Listening at http://localhost:${config.port}/`)
 );
 
-dailyTasks.run();
+const test = require('./tasks/copySubmissionsToSql');
+
+test();
+
+// dailyTasks.run();
 
 // Daily cron task at 7am
 //cron.schedule('0 7 * * *', () => {
