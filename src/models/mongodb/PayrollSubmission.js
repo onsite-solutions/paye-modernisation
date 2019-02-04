@@ -285,6 +285,11 @@ const PayrollSubmissionSchema = new Schema({
   }
 });
 
+PayrollSubmissionSchema.index(
+  { taxYear: 1, payrollRunReference: 1, submissionID: 1 },
+  { unique: true }
+);
+
 const PayrollSubmission = mongoose.model(
   'payrollSubmission',
   PayrollSubmissionSchema

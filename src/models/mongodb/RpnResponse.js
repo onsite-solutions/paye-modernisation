@@ -209,6 +209,8 @@ const RpnResponseSchema = new Schema({
   ]
 });
 
+RpnResponseSchema.index({ fileName: 1 }, { unique: true });
+
 const RpnResponse = mongoose.model('rpnResponse', RpnResponseSchema);
 
 module.exports = RpnResponse;
