@@ -111,6 +111,8 @@ const ReturnPeriodResponseSchema = new Schema({
   ]
 });
 
+ReturnPeriodResponseSchema.index({ returnPeriod: 1 }, { unique: true });
+
 const ReturnPeriodResponse = mongoose.model(
   'returnPeriodResponse',
   ReturnPeriodResponseSchema

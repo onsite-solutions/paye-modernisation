@@ -5,9 +5,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const config = require('./config');
 const cron = require('node-cron');
-const getPayrollRuns = require('./db_tasks/getPayrollRuns');
-const copyRpnsToSql = require('./db_tasks/copyRpnsToSql');
-const getMonthlyReturns = require('./db_tasks/getMonthlyReturns');
+const dailyTasks = require('./tasks/dailyTasks');
 
 const convert = require('./server/routes/api/convert');
 const db = require('./server/routes/api/db');
@@ -25,10 +23,7 @@ app.use(express.urlencoded({ limit: '50mb', extended: false }));
 
 // Connect to MongoDB
 mongoose
-  .connect(
-    config.mongoUrl,
-    { useNewUrlParser: true }
-  )
+  .connect(config.mongoUrl, { useNewUrlParser: true })
   .then(() => console.log(`Connected to ${config.mongoUrl}`))
   .catch(err => console.log(err));
 
@@ -45,9 +40,16 @@ app.listen(config.port, () =>
   console.log(`Listening at http://localhost:${config.port}/`)
 );
 
+dailyTasks.run();
+
+// Daily cron task at 7am
+//cron.schedule('0 7 * * *', () => {
+//dailyTasks.runAll();
+//});
+
 // Database maintenance cron jobs
-cron.schedule('*/15 * * * *', () => {
-  copyRpnsToSql().catch(err => console.error(err));
-  getPayrollRuns().catch(err => console.error(err));
-  getMonthlyReturns().catch(err => console.error(err));
-});
+//cron.schedule('*/15 * * * *', () => {
+//copyRpnsToSql().catch(err => console.error(err));
+//getPayrollRuns().catch(err => console.error(err));
+//getMonthlyReturns().catch(err => console.error(err));
+//});

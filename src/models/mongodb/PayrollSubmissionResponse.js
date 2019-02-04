@@ -8,6 +8,16 @@ const Schema = mongoose.Schema;
  * If processed, includes summary totals of valid payslips and validation errors for invalid payslips.
  */
 const PayrollSubmissionResponseSchema = new Schema({
+  year: {
+    type: Number,
+    required: true
+  },
+  payrollRunReference: {
+    type: String,
+    required: true,
+    minLength: 0,
+    maxLength: 50
+  },
   submissionID: {
     type: String,
     required: true,
@@ -148,6 +158,11 @@ const PayrollSubmissionResponseSchema = new Schema({
     }
   ]
 });
+
+PayrollSubmissionResponseSchema.index(
+  { year: 1, payrollRunReference: 1, submissionID: 1 },
+  { unique: true }
+);
 
 const PayrollSubmissionResponse = mongoose.model(
   'payrollSubmissionResponse',

@@ -128,17 +128,16 @@ const PayrollRunResponseSchema = new Schema({
         type: Number,
         required: true
       },
-      usc: {
-        type: Number,
-        required: true
-      },
-      lpt: {
-        type: Number,
-        required: true
-      }
+      usc: Number,
+      lpt: Number
     }
   ]
 });
+
+PayrollRunResponseSchema.index(
+  { year: 1, payrollRunReference: 1 },
+  { unique: true }
+);
 
 const PayrollRunResponse = mongoose.model(
   'payrollRunResponse',
