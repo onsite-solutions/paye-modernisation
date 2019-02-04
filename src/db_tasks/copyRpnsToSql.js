@@ -70,7 +70,7 @@ async function createRpnSql(rpnResponse) {
 /**
  * Copy RPNs from MongoDB to MySQL
  */
-async function copyRpnsToMySql() {
+async function copyRpnsToSql() {
   const rpnResponses = await getRpnResponsesMongo();
 
   const rpnFiles = await getRpnResponsesSql();
@@ -88,4 +88,4 @@ async function copyRpnsToMySql() {
   }
 }
 
-module.exports = { copyRpnsToMySql };
+module.exports = copyRpnsToSql;
