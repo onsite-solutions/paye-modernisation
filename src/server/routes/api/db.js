@@ -7,6 +7,7 @@ const js2xmlparser = require('js2xmlparser');
 const upload = require('../../../upload');
 
 const RpnResponse = require('../../../models/mongodb/RpnResponse');
+const PayrollSubmission = require('../../../models/mongodb/PayrollSubmission');
 
 /**
  * POST /api/db/rpns/dateInitialised/fileName
@@ -90,9 +91,48 @@ router.post('/rpns/getNewRpns', async (req, res) => {
       if (!res.headersSent) {
         res.status(err.statusCode || 500).send(err.message);
       } else {
-        console.log(err);
+        console.error(err);
       }
     });
+});
+
+/**
+ * POST /api/db/uploadPayrollSubmission
+ * @desc   Saves the provided Payroll Submission file to the database
+ * @access Public
+ */
+router.post('uploadPayrollSubmission', async (req, res) => {
+  try {
+    let submission = new PayrollSubmission(req.body);
+
+    // Delete the submission if it already exists
+    await PayrollSubmission.findOneAndRemove(
+      {
+        payrollRunReference: submission.payrollRunReference,
+        submissionID: submission.submissionID
+      },
+      error => {
+        if (error) {
+          if (!res.headersSent) {
+            res.status(error.statusCode || 500).send(error.message);
+          } else {
+            console.error(error);
+          }
+        }
+      }
+    );
+
+    await submission.save();
+
+    res.set('Content-Type', 'text/xml');
+    res.status(200).send(js2xmlparser.parse('response', 'success'));
+  } catch (error) {
+    if (!res.headersSent) {
+      res.status(error.statusCode || 500).send(error.message);
+    } else {
+      console.error(error);
+    }
+  }
 });
 
 module.exports = router;
