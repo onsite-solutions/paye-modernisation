@@ -17,7 +17,7 @@ async function getSubmissionsMongo() {
     });
     return result;
   } catch (error) {
-    throw Error(error);
+    throw new Error(error.message);
   }
 }
 
@@ -33,7 +33,7 @@ async function getSubmissionsSql() {
     });
     return result;
   } catch (error) {
-    throw Error(error);
+    throw new Error(error.message);
   }
 }
 
@@ -59,11 +59,9 @@ function sqlSubmissionExists(sql, mongo) {
  */
 function createSubmissionSql(submission) {
   try {
-    //transformSubmission(submission).save();
-    let test = transformSubmission(submission);
-    console.log(test);
+    transformSubmission(submission).save();
   } catch (error) {
-    return Error(error);
+    throw new Error(error.message);
   }
 }
 
@@ -77,7 +75,7 @@ async function createRpnSql(rpnResponse) {
       //transformRpn(rpnResponse, rpn).save();
     }
   } catch (error) {
-    return Error(error);
+    throw new Error(error.message);
   }
 }
 
@@ -93,11 +91,10 @@ async function copySubmissionsToSql() {
   for (const submission of mongoSubmissions) {
     if (!sqlSubmissionExists(sqlSubmissions, submission)) {
       try {
-        // TODO 04/02/2019: This not working.
         await createSubmissionSql(submission);
         //await createRpnSql(rpnResponse);
       } catch (error) {
-        return Error(error);
+        throw new Error(error.message);
       }
     }
   }

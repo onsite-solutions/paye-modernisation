@@ -7,21 +7,24 @@ module.exports = (sequelize, DataTypes) => {
   var Submission = sequelize.define(
     'submission',
     {
+      id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        primaryKey: true,
+        autoIncrement: true
+      },
       year: {
         type: DataTypes.SMALLINT,
-        allowNull: false,
-        primaryKey: true
+        allowNull: false
       },
       payrollRun: {
         type: DataTypes.STRING(50),
         allowNull: false,
-        primaryKey: true,
         field: 'payroll_run'
       },
       submissionId: {
         type: DataTypes.STRING(50),
         allowNull: false,
-        primaryKey: true,
         field: 'submission_id'
       },
       payslipCount: {

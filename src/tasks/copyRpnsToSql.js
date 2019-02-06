@@ -18,7 +18,7 @@ async function getRpnResponsesMongo() {
     });
     return result;
   } catch (error) {
-    throw Error(error);
+    throw new Error(error.message);
   }
 }
 
@@ -37,7 +37,7 @@ async function getRpnResponsesSql() {
       return x.fileName.toString();
     });
   } catch (error) {
-    throw Error(error);
+    throw new Error(error.message);
   }
 }
 
@@ -49,7 +49,7 @@ function createRpnResponseSql(rpnResponse) {
   try {
     transformRpnResponse(rpnResponse).save();
   } catch (error) {
-    return Error(error);
+    throw new Error(error.message);
   }
 }
 
@@ -63,7 +63,7 @@ async function createRpnSql(rpnResponse) {
       transformRpn(rpnResponse, rpn).save();
     }
   } catch (error) {
-    return Error(error);
+    throw new Error(error.message);
   }
 }
 
@@ -82,7 +82,7 @@ async function copyRpnsToSql() {
         await createRpnResponseSql(rpnResponse);
         await createRpnSql(rpnResponse);
       } catch (error) {
-        return Error(error);
+        throw new Error(error.message);
       }
     }
   }

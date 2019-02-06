@@ -44,7 +44,7 @@ const test = require('./tasks/copySubmissionsToSql');
 
 test();
 
-// dailyTasks.run();
+//dailyTasks.run();
 
 // Daily cron task at 7am
 //cron.schedule('0 7 * * *', () => {

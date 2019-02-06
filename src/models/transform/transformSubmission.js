@@ -9,12 +9,16 @@ const SqlSubmission = sequelize.Submission;
  * @param {any} submission
  */
 function transform(submission) {
-  return SqlSubmission.build({
-    year: submission.taxYear,
-    payrollRun: submission.payrollRunReference,
-    submissionId: submission.submissionID,
-    payslipCount: submission.payslips.length
-  });
+  try {
+    return SqlSubmission.build({
+      year: submission.taxYear,
+      payrollRun: submission.payrollRunReference,
+      submissionId: submission.submissionID,
+      payslipCount: submission.requestBody.payslips.length
+    });
+  } catch (error) {
+    throw new Error(error);
+  }
 }
 
 module.exports = transform;

@@ -32,7 +32,7 @@ async function updateSubmissionsMongo() {
       }
     }
   } catch (error) {
-    throw Error(error);
+    throw new Error(error.message);
   }
 }
 
@@ -47,7 +47,7 @@ async function run() {
 
     await copySubmissionsToSql();
   } catch (error) {
-    throw Error(error);
+    console.error(error);
   }
 }
 

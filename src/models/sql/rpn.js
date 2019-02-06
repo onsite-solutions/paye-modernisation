@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     'rpn',
     {
       id: {
-        type: DataTypes.SMALLINT,
+        type: DataTypes.INTEGER,
         allowNull: false,
         primaryKey: true,
         autoIncrement: true
