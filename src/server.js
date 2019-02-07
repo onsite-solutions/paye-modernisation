@@ -26,7 +26,9 @@ mongoose
   .connect(
     `mongodb://${config.mongodb.user}:${config.mongodb.password}@${
       config.mongodb.host
-    }:${config.mongodb.port}/${config.mongodb.database}`,
+    }:${config.mongodb.port}/${config.mongodb.database}?authSource=${
+      config.mongodb.authDatabase
+    }`,
     {
       useCreateIndex: true,
       useNewUrlParser: true,
