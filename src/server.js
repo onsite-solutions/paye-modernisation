@@ -23,14 +23,19 @@ app.use(express.urlencoded({ limit: '50mb', extended: false }));
 
 // Connect to MongoDB
 mongoose
-  .connect(config.mongoUrl, {
-    useCreateIndex: true,
-    useNewUrlParser: true,
-    autoReconnect: true,
-    reconnectTries: Number.MAX_VALUE,
-    reconnectInterval: 1000
-  })
-  .then(() => console.log(`Connected to ${config.mongoUrl}`))
+  .connect(
+    `mongodb://${config.mongodb.user}:${config.mongodb.password}@${
+      config.mongodb.host
+    }:${config.mongodb.port}/${config.mongodb.database}`,
+    {
+      useCreateIndex: true,
+      useNewUrlParser: true,
+      autoReconnect: true,
+      reconnectTries: Number.MAX_VALUE,
+      reconnectInterval: 1000
+    }
+  )
+  .then(() => console.log(`Connected to ${config.mongodb.database}`))
   .catch(err => console.log(err));
 
 // Use routes
