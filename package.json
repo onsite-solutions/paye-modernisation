@@ -16,13 +16,13 @@
   },
   "homepage": "https://github.com/onsite-solutions/paye-modernisation#readme",
   "dependencies": {
-    "@types/sequelize": "^4.27.34",
     "buffer": "^5.1.0",
     "express": "^4.16.3",
     "ftp": "^0.3.10",
+    "iconv-lite": "^0.4.24",
     "js2xmlparser": "^3.0.0",
     "moment": "^2.22.2",
-    "mongoose": "^5.2.4",
+    "mongoose": "^5.4.10",
     "mysql2": "^1.6.4",
     "node-cron": "^2.0.3",
     "node-forge": "^0.7.5",
@@ -33,6 +33,7 @@
     "@types/mongoose": "^5.3.5",
     "@types/node": "^10.3.4",
     "@types/node-forge": "^0.7.4",
+    "@types/sequelize": "^4.27.35",
     "nodemon": "^1.17.4",
     "typescript": "^2.9.2"
   }

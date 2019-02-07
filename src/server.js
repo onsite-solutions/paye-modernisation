@@ -23,7 +23,7 @@ app.use(express.urlencoded({ limit: '50mb', extended: false }));
 
 // Connect to MongoDB
 mongoose
-  .connect(config.mongoUrl, { useNewUrlParser: true })
+  .connect(config.mongoUrl, { useCreateIndex: true, useNewUrlParser: true })
   .then(() => console.log(`Connected to ${config.mongoUrl}`))
   .catch(err => console.log(err));
 
@@ -40,20 +40,7 @@ app.listen(config.port, () =>
   console.log(`Listening at http://localhost:${config.port}/`)
 );
 
-const test = require('./tasks/copySubmissionsToSql');
-
-//test();
-
-dailyTasks.run();
-
 // Daily cron task at 7am
-//cron.schedule('0 7 * * *', () => {
-//dailyTasks.runAll();
-//});
-
-// Database maintenance cron jobs
-//cron.schedule('*/15 * * * *', () => {
-//copyRpnsToSql().catch(err => console.error(err));
-//getPayrollRuns().catch(err => console.error(err));
-//getMonthlyReturns().catch(err => console.error(err));
-//});
+cron.schedule('0 7 * * *', () => {
+  dailyTasks.run();
+});

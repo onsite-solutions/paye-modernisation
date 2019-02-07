@@ -5,6 +5,7 @@ const moment = require('moment');
 const validation = require('../../validation');
 const sequelize = require('../../sequelize');
 const SqlPayslip = sequelize.Payslip;
+const iconv = require('iconv-lite');
 
 /**
  * Transform a MongoDB Payslip model instance to a MySQL model instance
@@ -15,10 +16,23 @@ function transform(submission, payslip) {
   let dateOfBirth = null;
   let startDate = null;
   let leaveDate = null;
-  let taxRate1 = null; // payslip.taxRates[0].index,
-  let taxRate1CutOff = null; //payslip.taxRates[0].rateCutOff,
-  let taxRate2 = null; //payslip.taxRates[1].index,
-  let taxRate2CutOff = null; //payslip.taxRates[1].rateCutOff,
+  let taxRate1 = null;
+  let taxRate1CutOff = null;
+  let taxRate2 = null;
+  let taxRate2CutOff = null;
+  let firstName = null;
+  let familyName = null;
+  let nameRegex = new RegExp(
+    /[A-Za-z0-9áéíóúÁÉÍÓÚ =_^,~!/'@:;£€$#%&\"'<>\\\\.*()\\[\\]{}+-?|]*/
+  );
+
+  if (nameRegex.test(payslip.name.firstName)) {
+    firstName = iconv.decode(new Buffer(payslip.name.firstName), 'latin1');
+  }
+
+  if (nameRegex.test(payslip.name.familyName)) {
+    familyName = iconv.decode(new Buffer(payslip.name.familyName), 'latin1');
+  }
 
   if (!validation.isEmpty(payslip.dateOfBirth)) {
     dateOfBirth = moment(payslip.dateOfBirth);
@@ -51,8 +65,8 @@ function transform(submission, payslip) {
     ppsn: payslip.employeeID.employeePpsn,
     employmentId: payslip.employeeID.employmentID,
     employerReference: payslip.employerReference,
-    firstName: '',
-    familyName: '',
+    firstName: firstName,
+    familyName: familyName,
     dateOfBirth: dateOfBirth,
     startDate: startDate,
     leaveDate: leaveDate,
