@@ -6,6 +6,7 @@ const sequelize = require('../sequelize');
 const SqlSubmission = sequelize.Submission;
 const MongoSubmission = require('../models/mongodb/PayrollSubmission');
 const transformSubmission = require('../models/transform/transformSubmission');
+const transformPayslip = require('../models/transform/transformPayslip');
 
 /**
  * Gets the available Payroll Submissions from MongoDB for the current year
@@ -66,13 +67,13 @@ function createSubmissionSql(submission) {
 }
 
 /**
- * Creates an Rpn record in the SQL database
- * @param {any} rpnResponse The MongoDB RpnResponse
+ * Creates Payslip records for a Submission in the SQL database
+ * @param {any} submission The MongoDB Submission
  */
-async function createRpnSql(rpnResponse) {
+async function createPayslipSql(submission) {
   try {
-    for (const rpn of rpnResponse.rpns) {
-      //transformRpn(rpnResponse, rpn).save();
+    for (const payslip of submission.requestBody.payslips) {
+      transformPayslip(submission, payslip).save();
     }
   } catch (error) {
     throw new Error(error.message);
@@ -87,12 +88,12 @@ async function copySubmissionsToSql() {
 
   const sqlSubmissions = await getSubmissionsSql();
 
-  // For all files in MongoDB but not in MySQL, create RpnFile and Rpn in MySQL
+  // For all files in MongoDB but not in MySQL, create Submission and Payslips in MySQL
   for (const submission of mongoSubmissions) {
     if (!sqlSubmissionExists(sqlSubmissions, submission)) {
       try {
         await createSubmissionSql(submission);
-        //await createRpnSql(rpnResponse);
+        await createPayslipSql(submission);
       } catch (error) {
         throw new Error(error.message);
       }

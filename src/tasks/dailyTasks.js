@@ -2,33 +2,74 @@
 'use strict';
 
 const moment = require('moment');
-const getLastReturnPeriod = require('./getLastReturnPeriod');
+const getReturnPeriod = require('./getReturnPeriod');
 const getPayrollRun = require('./getPayrollRun');
 const getPayrollSubmission = require('./getPayrollSubmission');
 const copyRpnsToSql = require('./copyRpnsToSql');
 const copySubmissionsToSql = require('./copySubmissionsToSql');
 
 /**
+ * Gets year, start of month and end of month for the previous month and current month
+ */
+function getPeriods() {
+  return [
+    {
+      year: moment()
+        .subtract(1, 'months')
+        .year(),
+      startDate: moment()
+        .subtract(1, 'months')
+        .startOf('month')
+        .format('YYYY-MM-DD'),
+      endDate: moment()
+        .subtract(1, 'months')
+        .endOf('month')
+        .format('YYYY-MM-DD')
+    },
+    {
+      year: moment().year(),
+      startDate: moment()
+        .startOf('month')
+        .format('YYYY-MM-DD'),
+      endDate: moment()
+        .endOf('month')
+        .format('YYYY-MM-DD')
+    }
+  ];
+}
+
+/**
  * Queries API and updates ReturnPeriods, PayrollRuns and PayrollSubmissions to Mongo
+ * Run for the last period and the current period
  */
 async function updateSubmissionsMongo() {
+  const periods = getPeriods();
+
   try {
-    const returnPeriod = await getLastReturnPeriod();
+    for (let i = 0; i < periods.length; i++) {
+      const returnPeriod = await getReturnPeriod(
+        periods[i].startDate,
+        periods[i].endDate
+      );
 
-    const year = moment()
-      .subtract(1, 'months')
-      .year();
+      for (let j = 0; j < returnPeriod.payrollRunDetails.length; j++) {
+        let payrollRunReference =
+          returnPeriod.payrollRunDetails[j].payrollRunReference;
 
-    for (let i = 0; i < returnPeriod.payrollRunDetails.length; i++) {
-      let payrollRunReference =
-        returnPeriod.payrollRunDetails[i].payrollRunReference;
+        let runResponse = await getPayrollRun(
+          periods[i].year,
+          payrollRunReference
+        );
 
-      let runResponse = await getPayrollRun(year, payrollRunReference);
+        for (let k = 0; k < runResponse.submissions.length; k++) {
+          let submissionId = runResponse.submissions[k].submissionID;
 
-      for (let j = 0; j < runResponse.submissions.length; j++) {
-        let submissionId = runResponse.submissions[j].submissionID;
-
-        getPayrollSubmission(year, payrollRunReference, submissionId);
+          getPayrollSubmission(
+            periods[i].year,
+            payrollRunReference,
+            submissionId
+          );
+        }
       }
     }
   } catch (error) {

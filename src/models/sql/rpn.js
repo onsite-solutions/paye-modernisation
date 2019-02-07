@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false
       },
       rpn: {
-        type: DataTypes.TINYINT,
+        type: DataTypes.INTEGER,
         allowNull: false
       },
       employmentId: {

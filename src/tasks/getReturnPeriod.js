@@ -9,18 +9,10 @@ const ReturnPeriodResponse = require('../models/mongodb/ReturnPeriodResponse');
 
 /**
  * Gets all completed monthly returns for the current year
+ * @param {string} startDate Period start date in the format YYYY-MM-DD
+ * @param {string} endDate Period end date in the format YYYY-MM-DD
  */
-async function getLastReturnPeriod() {
-  const startDate = moment()
-    .subtract(1, 'months')
-    .startOf('month')
-    .format('YYYY-MM-DD');
-
-  const endDate = moment()
-    .subtract(1, 'months')
-    .endOf('month')
-    .format('YYYY-MM-DD');
-
+async function getReturnPeriod(startDate, endDate) {
   let response = await client
     .get(returnsReconciliation.lookupPayrollByReturnPeriod(startDate, endDate))
     .catch(error => {
@@ -47,4 +39,4 @@ async function getLastReturnPeriod() {
   return returnPeriodResponse;
 }
 
-module.exports = getLastReturnPeriod;
+module.exports = getReturnPeriod;

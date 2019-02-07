@@ -101,7 +101,7 @@ router.post('/rpns/getNewRpns', async (req, res) => {
  * @desc   Saves the provided Payroll Submission file to the database
  * @access Public
  */
-router.post('uploadPayrollSubmission', async (req, res) => {
+router.post('/uploadPayrollSubmission', async (req, res) => {
   try {
     let submission = new PayrollSubmission(req.body);
 

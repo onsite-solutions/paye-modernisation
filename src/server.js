@@ -42,9 +42,9 @@ app.listen(config.port, () =>
 
 const test = require('./tasks/copySubmissionsToSql');
 
-test();
+//test();
 
-//dailyTasks.run();
+dailyTasks.run();
 
 // Daily cron task at 7am
 //cron.schedule('0 7 * * *', () => {
