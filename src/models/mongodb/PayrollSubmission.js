@@ -71,13 +71,15 @@ const PayrollSubmissionSchema = new Schema({
             type: String,
             required: true,
             minLength: 0,
-            maxLength: 100
+            maxLength: 100,
+            match: /[A-Za-z0-9áéíóúÁÉÍÓÚ =_^,~!/'@:;£€$#%&\"'<>\\\\.*()\\[\\]{}+-?|]*/
           },
           familyName: {
             type: String,
             required: true,
             minLength: 0,
-            maxLength: 100
+            maxLength: 100,
+            match: /[A-Za-z0-9áéíóúÁÉÍÓÚ =_^,~!/'@:;£€$#%&\"'<>\\\\.*()\\[\\]{}+-?|]*/
           }
         },
         address: {
