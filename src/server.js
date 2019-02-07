@@ -22,17 +22,13 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: false }));
 
 // Connect to MongoDB
-
 mongoose
   .connect(config.mongoUrl, {
     useCreateIndex: true,
     useNewUrlParser: true,
-    server: {
-      auto_reconnect: true,
-      reconnectTries: Number.MAX_VALUE,
-      reconnectInterval: 1000,
-      socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 }
-    }
+    autoReconnect: true,
+    reconnectTries: Number.MAX_VALUE,
+    reconnectInterval: 1000
   })
   .then(() => console.log(`Connected to ${config.mongoUrl}`))
   .catch(err => console.log(err));
