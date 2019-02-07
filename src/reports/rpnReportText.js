@@ -47,6 +47,8 @@ EmployeeRpnReportText.prototype.getRow = function(rpn) {
     `Name: ${(item.familyName + ' ' + item.firstName).padEnd(29)} ` +
       `RPN: ${item.rpnNumber.padEnd(19)} Issue Date: ${item.rpnIssueDate} `
   );
+  //@ts-ignore padEnd is an ES2017 feature and raising a TypeScript error
+  row.push(`${''.padEnd(60)} (${item.rpnIssuedDays} days old)`);
 
   row.push(
     `PPSN: ${item.employeePpsn.padEnd(29)} ` +

@@ -17,6 +17,7 @@ function rpnReportItem(rpn) {
     employeePpsn: getString(rpn.employeeID.employeePpsn),
     employmentId: getString(rpn.employeeID.employmentID),
     rpnIssueDate: getString(moment(rpn.rpnIssueDate).format('DD/MM/YYYY')),
+    rpnIssuedDays: getString(moment().diff(moment(rpn.rpnIssueDate), 'days')),
     employerReference: getString(rpn.employerReference),
     firstName: getString(rpn.name.firstName),
     familyName: getString(rpn.name.familyName),
