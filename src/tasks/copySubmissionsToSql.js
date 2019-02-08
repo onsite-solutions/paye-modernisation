@@ -11,12 +11,11 @@ const transformPayslip = require('../models/transform/transformPayslip');
 /**
  * Gets the available Payroll Submissions from MongoDB for the current year
  */
-async function getSubmissionsMongo() {
+function getSubmissionsMongo() {
   try {
-    const result = await MongoSubmission.find({
+    return MongoSubmission.find({
       taxYear: config.year
     });
-    return result;
   } catch (error) {
     throw new Error(error.message);
   }
@@ -25,14 +24,13 @@ async function getSubmissionsMongo() {
 /**
  * Gets the RpnResponses already uploaded to MySQL for the current year
  */
-async function getSubmissionsSql() {
+function getSubmissionsSql() {
   try {
-    const result = await SqlSubmission.findAll({
+    return SqlSubmission.findAll({
       where: {
         year: config.year
       }
     });
-    return result;
   } catch (error) {
     throw new Error(error.message);
   }

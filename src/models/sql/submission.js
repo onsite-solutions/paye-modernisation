@@ -27,10 +27,15 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         field: 'submission_id'
       },
-      payslipCount: {
+      payslips: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        field: 'payslip_count'
+        field: 'payslips'
+      },
+      payslipsToDelete: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        field: 'payslips_to_delete'
       },
       createdAt: {
         type: DataTypes.DATE(3),

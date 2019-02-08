@@ -11,12 +11,11 @@ const transformRpnResponse = require('../models/transform/transformRpnResponse')
 /**
  * Gets the available RpnResponses from MongoDB for the current year
  */
-async function getRpnResponsesMongo() {
+function getRpnResponsesMongo() {
   try {
-    const result = await MongoRpnResponse.find({
+    return MongoRpnResponse.find({
       taxYear: config.year
     });
-    return result;
   } catch (error) {
     throw new Error(error.message);
   }

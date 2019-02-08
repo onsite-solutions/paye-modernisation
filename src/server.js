@@ -32,6 +32,7 @@ mongoose
     {
       useCreateIndex: true,
       useNewUrlParser: true,
+      useFindAndModify: false,
       autoReconnect: true,
       reconnectTries: Number.MAX_VALUE,
       reconnectInterval: 1000
@@ -52,6 +53,9 @@ app.use('/api/rpn', rpn);
 app.listen(config.port, () =>
   console.log(`Listening at http://localhost:${config.port}/`)
 );
+
+// TODO: Delete
+dailyTasks.run();
 
 // Daily cron task at 7am
 cron.schedule('0 7 * * *', () => {

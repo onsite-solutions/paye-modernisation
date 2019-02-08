@@ -14,7 +14,8 @@ function transform(submission) {
       year: submission.taxYear,
       payrollRun: submission.payrollRunReference,
       submissionId: submission.submissionID,
-      payslipCount: submission.requestBody.payslips.length
+      payslips: submission.requestBody.payslips.length,
+      payslipsToDelete: submission.requestBody.lineItemIDsToDelete.length
     });
   } catch (error) {
     throw new Error(error);

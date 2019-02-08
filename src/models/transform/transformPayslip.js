@@ -1,7 +1,6 @@
 //@ts-check
 'use strict';
 
-const moment = require('moment');
 const validation = require('../../validation');
 const sequelize = require('../../sequelize');
 const SqlPayslip = sequelize.Payslip;
@@ -34,16 +33,16 @@ function transform(submission, payslip) {
     familyName = iconv.decode(new Buffer(payslip.name.familyName), 'latin1');
   }
 
-  if (!validation.isEmpty(payslip.dateOfBirth)) {
-    dateOfBirth = moment(payslip.dateOfBirth);
+  if (payslip.dateOfBirth !== undefined) {
+    dateOfBirth = payslip.dateOfBirth;
   }
 
-  if (!validation.isEmpty(payslip.startDate)) {
-    startDate = moment(payslip.startDate);
+  if (payslip.startDate !== undefined) {
+    startDate = payslip.startDate;
   }
 
-  if (!validation.isEmpty(payslip.leaveDate)) {
-    leaveDate = moment(payslip.leaveDate);
+  if (payslip.leaveDate !== undefined) {
+    leaveDate = payslip.leaveDate;
   }
 
   if (!validation.isEmpty(payslip.taxRates[0])) {
@@ -79,7 +78,7 @@ function transform(submission, payslip) {
     taxRate2: taxRate2,
     taxRate2CutOff: taxRate2CutOff,
     taxBasis: payslip.incomeTaxCalculationBasis,
-    payDate: moment(payslip.payDate),
+    payDate: payslip.payDate,
     grossPay: payslip.grossPay,
     payForIncomeTax: payslip.payForIncomeTax,
     incomeTaxPaid: payslip.incomeTaxPaid,

@@ -20,6 +20,13 @@ const sequelise = new Sequelize(
     define: {
       charset: 'latin1',
       collate: 'latin1_general_ci'
+    },
+    pool: {
+      max: 30,
+      min: 0,
+      idle: 20000,
+      acquire: 40000,
+      evict: 20000
     }
   }
 );
