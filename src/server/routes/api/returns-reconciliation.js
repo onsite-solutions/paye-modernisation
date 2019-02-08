@@ -29,7 +29,6 @@ router.get('/payrollByReturnPeriod', async (req, res) => {
   await client
     .get(returnsReconciliation.lookupPayrollByReturnPeriod(startDate, endDate))
     .then(response => {
-      // Return XML response to the client
       res.set('Content-Type', 'text/xml');
       res
         .status(200)

@@ -8,8 +8,6 @@ const client = require('../../../client');
 const rpn = require('../../../client/api/rpn');
 const validation = require('../../../validation');
 
-const RpnResponse = require('../../../models/mongodb/RpnResponse');
-
 /**
  * GET api/rpn/rpnByEmployer
  * @desc   Lookup RPNs by Employer

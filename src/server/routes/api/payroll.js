@@ -6,10 +6,6 @@ const js2xmlparser = require('js2xmlparser');
 
 const client = require('../../../client');
 const payroll = require('../../../client/api/payroll');
-const config = require('../../../config');
-
-const PayrollRunResponse = require('../../../models/mongodb/PayrollRunResponse');
-const PayrollSubmissionResponse = require('../../../models/mongodb/PayrollSubmissionResponse');
 
 /**
  * POST api/payroll/createPayrollSubmission/:payrollRunReference/:submissionId
@@ -65,9 +61,6 @@ router.get(
         )
       )
       .then(response => {
-        // Save the response to MongoDB
-        new PayrollSubmissionResponse(JSON.parse(response)).save();
-        // Return XML response to the client
         res.set('Content-Type', 'text/xml');
         res
           .status(200)

@@ -65,7 +65,6 @@ router.get('/rpnReport/byEmployeePpsn/:format/:employeePpsn/', (req, res) => {
           // Loop through each RPN in the array
           for (var j = 0; j < results[i].rpns.length; j++) {
             // Add the RPN to the response collection
-            //console.log(new Rpn(results[i].rpns[j]));
             rpns.push(new Rpn(results[i].rpns[j]));
           }
         }
