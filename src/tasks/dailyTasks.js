@@ -54,13 +54,11 @@ async function run() {
   try {
     await updateSubmissionsMongo();
 
-    //await getSubmissionsFromPayroll();
+    await getSubmissionsFromPayroll();
 
     await copyRpnsToSql();
 
     await copySubmissionsToSql();
-
-    console.log('Daily tasks completed');
   } catch (error) {
     console.error(error);
   }

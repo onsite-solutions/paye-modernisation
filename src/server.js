@@ -54,9 +54,6 @@ app.listen(config.port, () =>
   console.log(`Listening at http://localhost:${config.port}/`)
 );
 
-// TODO: Delete
-dailyTasks.run();
-
 // Daily cron task at 7am
 cron.schedule('0 7 * * *', () => {
   dailyTasks.run();

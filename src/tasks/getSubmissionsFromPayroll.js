@@ -1,15 +1,18 @@
 //@ts-check
 'use strict';
 
+const config = require('../config');
+const ssh = require('ssh2');
+const ftp = require('ftp');
 const months = require('./months');
-const moment = require('moment');
-const ReturnPeriodResponse = require('../models/mongodb/ReturnPeriodResponse');
+const PayrollSubmission = require('../models/mongodb/PayrollSubmission');
 const PayrollSubmissionResponse = require('../models/mongodb/PayrollSubmissionResponse');
+const ReturnPeriodResponse = require('../models/mongodb/ReturnPeriodResponse');
 
 /**
- * Gets ReturnPeriodResponses from the current month and previous month
+ * Gets an array of PayrollRunReferences for the current and previous months
  */
-function getReturnPeriodResponses() {
+function getPayrollRuns() {
   try {
     return ReturnPeriodResponse.find({
       $or: [
@@ -23,8 +26,8 @@ function getReturnPeriodResponses() {
 }
 
 /**
- * Get submission responses for the provided payroll run references
- * @param {string[]} payrollRuns payroll run references
+ * Get submission responses for all payroll runs in the current month and previous month
+ * @param {string[]} payrollRuns the array of payroll runs
  */
 function getPayrollSubmissionResponses(payrollRuns) {
   try {
@@ -39,24 +42,156 @@ function getPayrollSubmissionResponses(payrollRuns) {
 }
 
 /**
- * Gets PayrollSubmissions for the current month and previous month
+ * Gets payroll submissions already imported from payroll
+ * @param {string[]} payrollRuns the array of payroll runs
  */
-function getPayrollSubmissions() {}
+function getPayrollSubmissions(payrollRuns) {
+  try {
+    return PayrollSubmission.find({
+      payrollRunReference: {
+        $in: payrollRuns
+      }
+    });
+  } catch (error) {
+    throw new Error(error);
+  }
+}
 
-async function getSubmissionsFromPayroll() {
-  let returnPeriodResponses = await getReturnPeriodResponses();
+/**
+ * Checks if submission exists in the array of existing submissions
+ * @param {any} submissions The array of submissions to check against
+ * @param {any} submissionResponse The submission response being checked
+ */
+function submissionExists(submissions, submissionResponse) {
+  const exists = submissions.filter(s => {
+    return (
+      s.taxYear == submissionResponse.year &&
+      s.payrollRunReference == submissionResponse.payrollRunReference &&
+      s.submissionID == submissionResponse.submissionID
+    );
+  });
+  return exists.length > 0;
+}
 
-  let payrollSubmissionResponses = await getPayrollSubmissionResponses(
-    returnPeriodResponses
+function getSubmissionFilePath(payrollRunReference, submissionId) {
+  let client = new ssh.Client();
+  let command = `locate "${payrollRunReference}-${submissionId}.json"`;
+  let result = '';
+
+  return new Promise((resolve, reject) => {
+    client
+      .on('ready', () => {
+        client.exec(command, (err, channel) => {
+          if (err) throw err;
+          channel
+            .on('close', (code, signal) => {
+              client.end();
+              resolve(result);
+            })
+            .on('data', data => {
+              result += data;
+            })
+            .stderr.on('data', err => {
+              reject(err);
+            });
+        });
+      })
+      .on('error', e => {
+        reject(e);
+      })
+      .connect({
+        host: config.ftp.host,
+        username: config.ftp.user,
+        password: config.ftp.password
+      });
+  });
+}
+
+/**
+ * Gets the submission file body from the linux server
+ * @param {string} filePath
+ */
+function getSubmissionFileBody(filePath) {
+  return new Promise((resolve, reject) => {
+    let client = new ftp();
+
+    client.on('ready', function() {
+      client.get(filePath, (err, stream) => {
+        if (err) throw err;
+        let content = '';
+        stream.on('data', chunk => {
+          content += chunk.toString();
+        });
+        stream.on('end', () => {
+          client.end();
+          resolve(content.toString());
+        });
+        stream.on('error', err => {
+          reject(err);
+        });
+      });
+    });
+
+    client.connect({
+      host: config.ftp.host,
+      user: config.ftp.user,
+      password: config.ftp.password
+    });
+  });
+}
+
+/**
+ * Uploads the submission file to MongoDB
+ * @param {string} fileBody
+ */
+async function createSubmissionMongo(fileBody) {
+  let submission = new PayrollSubmission(JSON.parse(fileBody));
+
+  // If there is already a file for this PayrollSubmission, remove it
+  await PayrollSubmission.findOneAndRemove(
+    {
+      taxYear: submission.taxYear,
+      payrollRunReference: submission.payrollRunReference,
+      submissionID: submission.submissionID
+    },
+    error => {
+      if (error) {
+        console.log(error);
+      }
+    }
   );
 
-  //let submissions = await getNewPayrollSubmisison
+  // Save the record
+  try {
+    await submission.save();
+  } catch (error) {
+    throw Error(error);
+  }
+}
 
-  //let payrollRuns = returnPeriodResponses.map(x =>
-  //x.payrollRunDetails.map(y => y.payrollRunReference)
-  //);
+/**
+ * Identifies payroll submissions files to be uploaded to MongoDB and imports them from
+ * payroll
+ */
+async function getSubmissionsFromPayroll() {
+  let payrollRuns = await getPayrollRuns();
+  let allSubmissions = await getPayrollSubmissionResponses(payrollRuns);
+  let existingSubmissions = await getPayrollSubmissions(payrollRuns);
 
-  console.log(returnPeriodResponses);
+  for (const submission of allSubmissions) {
+    if (!submissionExists(existingSubmissions, submission)) {
+      let filePath = await getSubmissionFilePath(
+        submission.payrollRunReference,
+        submission.submissionID
+      );
+
+      if (filePath.length > 0) {
+        let fileBody = await getSubmissionFileBody(filePath);
+
+        createSubmissionMongo(fileBody);
+      }
+    }
+  }
 }
 
 module.exports = getSubmissionsFromPayroll;
