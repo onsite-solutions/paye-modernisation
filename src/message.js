@@ -2,7 +2,6 @@
 'use strict';
 
 var forge = require('node-forge');
-
 var validation = require('./validation');
 var Cert = require('./cert');
 
@@ -51,31 +50,14 @@ Message.prototype.getDigest = function(payload) {
  * Generates the headers string that forms part of the Signature header
  */
 Message.prototype.getHeaderString = function() {
-  let headerString = '';
-  let hdrs = this.options.headers;
+  let headerString = '(request-target) host date ';
 
-  // (request-target)
-  headerString += '(request-target) ';
-
-  // host
-  headerString += 'host ';
-
-  // date
-  headerString += 'date ';
-
-  // x-date
-
-  // digest
-  if (hdrs.Method === 'POST' && !validation.isEmpty(hdrs.Digest)) {
-    headerString += 'digest ';
-  }
-
-  // content-type
-  if (hdrs.Method === 'POST') {
+  if (this.options.headers.Method === 'POST') {
+    if (!validation.isEmpty(this.options.headers.Digest)) {
+      headerString += 'digest ';
+    }
     headerString += 'content-type ';
   }
-
-  // x-http-method-override
 
   return headerString.trimRight();
 };
@@ -84,35 +66,23 @@ Message.prototype.getHeaderString = function() {
  * Gets the string to be signed as part of the Signature String Construction
  */
 Message.prototype.getSigningString = function() {
-  let signString = [];
-  let hdrs = this.options.headers;
+  let result = [];
+  let headers = this.options.headers;
 
-  // (request-target)
-  signString.push(
-    `(request-target): ${hdrs.Method.toLowerCase()} ${hdrs.Path}`
+  result.push(
+    `(request-target): ${headers.Method.toLowerCase()} ${headers.Path}`
   );
+  result.push(`host: ${headers.Host}`);
+  result.push(`date: ${headers.Date}`);
 
-  // host
-  signString.push(`host: ${hdrs.Host}`);
-
-  // date
-  signString.push(`date: ${hdrs.Date}`);
-
-  // x-date
-
-  // digest
-  if (hdrs.Method === 'POST' && !validation.isEmpty(hdrs.Digest)) {
-    signString.push(`digest: ${hdrs.Digest}`);
+  if (headers.Method === 'POST') {
+    if (!validation.isEmpty(headers.Digest)) {
+      result.push(`digest: ${headers.Digest}`);
+    }
+    result.push('content-type: application/json');
   }
 
-  // content-type
-  if (hdrs.Method === 'POST') {
-    signString.push('content-type: application/json');
-  }
-
-  // x-http-method-override
-
-  return signString.join('\n');
+  return result.join('\n');
 };
 
 /**
