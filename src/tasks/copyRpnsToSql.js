@@ -4,6 +4,7 @@
 const config = require('../config');
 const sequelize = require('../sequelize');
 const SqlRpnResponse = sequelize.RpnResponse;
+const SqlRpn = sequelize.Rpn;
 const MongoRpnResponse = require('../models/mongodb/RpnResponse');
 const transformRpn = require('../models/transform/transformRpn');
 const transformRpnResponse = require('../models/transform/transformRpnResponse');
@@ -59,7 +60,16 @@ function createRpnResponseSql(rpnResponse) {
 async function createRpnSql(rpnResponse) {
   try {
     for (const rpn of rpnResponse.rpns) {
-      transformRpn(rpnResponse, rpn).save();
+      let newRpn = transformRpn(rpnResponse, rpn);
+
+      // Check if the RPN exists
+      let exists = await SqlRpn.findOne({
+        where: { year: newRpn.year, ppsn: newRpn.ppsn, rpn: newRpn.rpn }
+      });
+
+      if (exists === null) {
+        newRpn.save();
+      }
     }
   } catch (error) {
     throw new Error(error.message);
