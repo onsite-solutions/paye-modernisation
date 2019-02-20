@@ -27,6 +27,10 @@ const PayrollSubmissionSchema = new Schema({
     type: String,
     required: true
   },
+  dateUploaded: {
+    type: Date,
+    default: Date.now
+  },
   payrollRunReference: String,
   submissionID: String,
   requestBody: {
