@@ -115,7 +115,7 @@ function getSubmissionFileBody(filePath) {
   return new Promise((resolve, reject) => {
     let client = new ftp();
 
-    client.on('ready', function() {
+    client.on('ready', function () {
       client.get(filePath, (err, stream) => {
         if (err) throw err;
         let content = '';
@@ -146,6 +146,8 @@ function getSubmissionFileBody(filePath) {
  */
 async function createSubmissionMongo(fileBody) {
   let submission = new PayrollSubmission(JSON.parse(fileBody));
+
+  submission.dateUploaded = Date.now();
 
   // If there is already a file for this PayrollSubmission, remove it
   await PayrollSubmission.findOneAndRemove(

@@ -25,9 +25,9 @@ app.use(express.urlencoded({ limit: '50mb', extended: false }));
 mongoose
   .connect(
     `mongodb://${config.mongodb.user}:${config.mongodb.password}@${
-      config.mongodb.host
+    config.mongodb.host
     }:${config.mongodb.port}/${config.mongodb.database}?authSource=${
-      config.mongodb.authDatabase
+    config.mongodb.authDatabase
     }`,
     {
       useCreateIndex: true,
