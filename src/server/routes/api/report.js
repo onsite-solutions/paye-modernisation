@@ -82,7 +82,7 @@ router.get('/rpnReport/byEmployeePpsn/:format/:employeePpsn/', (req, res) => {
 
         // Sort the results by RPN Issue Date and then RPN Number
         rpns.sort((a, b) => {
-          if (a.rpnIssueDate == b.rpnIssueDate) {
+          if (+a.rpnIssueDate == +b.rpnIssueDate) {
             return a.rpnNumber - b.rpnNumber;
           } else {
             // Sort by date (unary +new to coerce the date value to a number)
