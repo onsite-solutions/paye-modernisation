@@ -64,8 +64,19 @@ router.get('/rpnReport/byEmployeePpsn/:format/:employeePpsn/', (req, res) => {
         for (var i = 0; i < results.length; i++) {
           // Loop through each RPN in the array
           for (var j = 0; j < results[i].rpns.length; j++) {
-            // Add the RPN to the response collection
-            rpns.push(new Rpn(results[i].rpns[j]));
+            let rpn = new Rpn(results[i].rpns[j]);
+            let exists = rpns.some(
+              r =>
+                r.rpnNumber == rpn.rpnNumber &&
+                +r.rpnIssueDate == +rpn.rpnIssueDate
+            );
+
+            // Add the RPN to the response collection if it doesn't exist
+            if (!exists) {
+              rpns.push(rpn);
+            } else {
+              console.log(rpn.rpnIssueDate);
+            }
           }
         }
 
