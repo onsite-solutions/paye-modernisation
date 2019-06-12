@@ -73,9 +73,8 @@ router.get('/rpnReport/byEmployeePpsn/:format/:employeePpsn/', (req, res) => {
 
             // Add the RPN to the response collection if it doesn't exist
             if (!exists) {
+              rpn.dateInitialised = results[i].dateInitialised;
               rpns.push(rpn);
-            } else {
-              console.log(rpn.rpnIssueDate);
             }
           }
         }

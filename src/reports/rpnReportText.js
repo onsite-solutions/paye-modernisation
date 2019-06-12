@@ -51,6 +51,12 @@ EmployeeRpnReportText.prototype.getRow = function(rpn) {
   row.push(`${''.padEnd(60)} (${item.rpnIssuedDays} days old)`);
 
   row.push(
+    `Date Uploaded: ${item.dateUploaded.padEnd(20)} Date Initialised: ${
+      item.dateInitialised
+    }`
+  );
+
+  row.push(
     `PPSN: ${item.employeePpsn.padEnd(29)} ` +
       `Staff No: ${item.employerReference.padEnd(14)} ` +
       `Employment ID: ${item.employmentId.padEnd(1)}`

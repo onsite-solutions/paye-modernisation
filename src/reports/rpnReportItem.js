@@ -46,7 +46,13 @@ function rpnReportItem(rpn) {
     uscDeductedToDate: getString(rpn.uscDeductedToDate),
     lptToDeduct: getString(rpn.lptToDeduct),
     prsiExempt: getString(rpn.prsiExempt),
-    prsiClass: getString(rpn.prsiClass)
+    prsiClass: getString(rpn.prsiClass),
+    dateUploaded: getString(
+      moment(rpn.dateUploaded).format('DD/MM/YYYY HH:mm')
+    ),
+    dateInitialised: getString(
+      moment(rpn.dateInitialised).format('DD/MM/YYYY HH:mm')
+    )
   };
 }
 

@@ -13,7 +13,7 @@ const Rpn = require('../models/mongodb/Rpn');
  */
 function getReport(rpns) {
   let header =
-    '"RPN","PPSN","Employment ID","RPN Issue Date","Days Old","Employer Reference","First Name","Surname","Previous PPSN","Effective Date","End Date","Income Tax Basis","Exclusion Order","Yearly Tax Credits","Tax Rate 1","Tax Rate 1 Yearly Cut Off","Tax Rate 2","Tax Rate 2 Yearly Cut Off","Pay For Income Tax To Date","Income Tax Deducted To Date","USC Status","USC 1 Rate","USC 1 Yearly Cut Off","USC 2 Rate","USC 2 Yearly Cut Off","USC 3 Rate","USC 3 Yearly Cut Off","USC 4 Rate","USC 4 Yearly Cut Off","Pay For USC To Date","USC Deducted To Date","LPT To Deduct","PRSI Exempt","PRSI Class"';
+    '"RPN","PPSN","Employment ID","RPN Issue Date","Days Old","Employer Reference","First Name","Surname","Previous PPSN","Effective Date","End Date","Income Tax Basis","Exclusion Order","Yearly Tax Credits","Tax Rate 1","Tax Rate 1 Yearly Cut Off","Tax Rate 2","Tax Rate 2 Yearly Cut Off","Pay For Income Tax To Date","Income Tax Deducted To Date","USC Status","USC 1 Rate","USC 1 Yearly Cut Off","USC 2 Rate","USC 2 Yearly Cut Off","USC 3 Rate","USC 3 Yearly Cut Off","USC 4 Rate","USC 4 Yearly Cut Off","Pay For USC To Date","USC Deducted To Date","LPT To Deduct","PRSI Exempt","PRSI Class","DateUploaded","Date Initialised"';
 
   let report = [];
 

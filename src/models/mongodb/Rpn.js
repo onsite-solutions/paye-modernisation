@@ -131,7 +131,9 @@ const RpnSchema = new Schema({
   prsiClass: {
     type: String,
     match: /[A-Za-z][0-9A-Za-z ]?/
-  }
+  },
+  dateUploaded: Date,
+  dateInitialised: Date
 });
 
 const Rpn = mongoose.model('rpn', RpnSchema);
