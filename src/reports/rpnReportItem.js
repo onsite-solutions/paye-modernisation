@@ -47,13 +47,22 @@ function rpnReportItem(rpn) {
     lptToDeduct: getString(rpn.lptToDeduct),
     prsiExempt: getString(rpn.prsiExempt),
     prsiClass: getString(rpn.prsiClass),
-    dateUploaded: getString(
-      moment(rpn.dateUploaded).format('DD/MM/YYYY HH:mm')
-    ),
-    dateInitialised: getString(
-      moment(rpn.dateInitialised).format('DD/MM/YYYY HH:mm')
-    )
+    dateUploaded: getStringDateTime(rpn.dateUploaded, 'DD/MM/YYYY HH:mm'),
+    dateInitialised: getStringDateTime(rpn.dateInitialised, 'DD/MM/YYYY HH:mm')
   };
+}
+
+/**
+ * 
+ * @param {any} value 
+ * @param {string} format 
+ */
+function getStringDateTime(value, format) {
+  if (value instanceof Date) {
+    return moment(value).format(format)
+  } else {
+    return '';
+  }
 }
 
 /**
