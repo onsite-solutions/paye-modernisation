@@ -21,7 +21,7 @@
     "ftp": "^0.3.10",
     "iconv-lite": "^0.4.24",
     "js2xmlparser": "^3.0.0",
-    "moment": "^2.22.2",
+    "moment": "^2.29.4",
     "mongoose": "^5.4.10",
     "mysql2": "^1.6.4",
     "node-cron": "^2.0.3",
